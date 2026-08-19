@@ -1,0 +1,27 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // All reads and writes go through Firebase Functions (server-side).
+    // The frontend only needs direct read access to public/org data;
+    // everything else is locked down.
+
+    // Public: org branding (portal needs it unauthenticated)
+    match /organization/{id} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Public: products (storefront browsing)
+    match /products/{id} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // All other collections: server-side only
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

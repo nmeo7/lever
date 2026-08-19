@@ -1,0 +1,96 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "erp-products",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "orgId", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "erp-payments",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "orgId", "order": "ASCENDING" },
+        { "fieldPath": "paymentDate", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "erp-payments",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "orgId", "order": "ASCENDING" },
+        { "fieldPath": "relatedId", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "erp-orders",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "orgId", "order": "ASCENDING" },
+        { "fieldPath": "orderDate", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "erp-inventory",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "orgId", "order": "ASCENDING" },
+        { "fieldPath": "lastUpdated", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "erp-inventory",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "orgId", "order": "ASCENDING" },
+        { "fieldPath": "productId", "order": "ASCENDING" },
+        { "fieldPath": "locationId", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "erp-inventoryMovements",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "orgId", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    }
+  ],
+  "fieldOverrides": [
+    {
+      "collectionGroup": "products",
+      "fieldPath": "embedding",
+      "indexes": [
+        {
+          "queryScope": "COLLECTION",
+          "order": "ASCENDING",
+          "vectorConfig": { "dimension": 1536, "flat": {} }
+        }
+      ]
+    },
+    {
+      "collectionGroup": "payments",
+      "fieldPath": "embedding",
+      "indexes": [
+        {
+          "queryScope": "COLLECTION",
+          "order": "ASCENDING",
+          "vectorConfig": { "dimension": 1536, "flat": {} }
+        }
+      ]
+    },
+    {
+      "collectionGroup": "documents",
+      "fieldPath": "embedding",
+      "indexes": [
+        {
+          "queryScope": "COLLECTION",
+          "order": "ASCENDING",
+          "vectorConfig": { "dimension": 1536, "flat": {} }
+        }
+      ]
+    }
+  ]
+}

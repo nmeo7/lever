@@ -1,0 +1,35 @@
+const express = require('express')
+const cors = require('cors')
+const { onRequest } = require('firebase-functions/v2/https')
+const { buildSystemPrompt } = require('./systemPrompt')
+const { getToolsForPlan } = require('./tools')
+const { dispatchTool } = require('./toolHandlers')
+const { getBusinessConfig } = require('./storage')
+
+const router = express.Router({ mergeParams: true })
+
+router.post('/:businessId/system-prompt', async (req, res) => {
+  const { businessId } = req.params
+  const systemPrompt = await buildSystemPrompt(businessId, req.body.summary)
+  res.json({ systemPrompt })
+})
+
+router.get('/:businessId/tools', async (req, res) => {
+  const config = await getBusinessConfig(req.params.businessId)
+  res.json(getToolsForPlan(config.plan ?? 'free'))
+})
+
+router.post('/:businessId/tools/execute', async (req, res) => {
+  const { businessId } = req.params
+  const { name, input, ctx } = req.body
+  const config = await getBusinessConfig(businessId)
+  const result = await dispatchTool({ name, input, ctx: { ...ctx, businessId, plan: config.plan ?? 'free' } })
+  res.json(result)
+})
+
+const app = express()
+app.use(cors({ origin: true }))
+app.use(express.json())
+app.use('/', router)
+
+exports.businessApi = onRequest(app)

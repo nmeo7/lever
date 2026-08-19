@@ -1,0 +1,480 @@
+{
+	"crm": {
+		"customers": {
+			"id": "",
+			"name": "",
+			"company": "",
+			"email": "",
+			"phone": "",
+			"address": "",
+			"source": "",
+			"status": "lead | active | inactive | blocked",
+			"estimatedValue": 0,
+			"summary": "",
+			"preferences": {},
+			"tags": [],
+			"metadata": {},
+			"attachments": [],
+			"assignedPersonId": "",
+			"createdAt": "",
+			"updatedAt": "",
+
+			"memories": [
+				{
+					"memory": "",
+					"importance": "low | medium | high",
+					"source": "manual | ai | workflow | transaction",
+					"embedding": [],
+					"createdAt": ""
+				}
+			]
+		},
+		"conversations": {
+			"customerId": {
+				"messages": [
+					{
+						"id": "",
+						"type": "sent | received",
+						"content": "",
+						"attachments": [],
+						"timestamp": ""
+					}
+				],
+				"context": "",
+				"summary": "",
+				"lastMessage": ""
+			}
+		}
+	},
+
+	"erp": {
+		"organizationModel": {
+			"id": "",
+			"parentModelId": "",
+			"name": "",
+			"description": "",
+			"frontstore": {
+				"template": "empathy | winter | ...",
+				"sections": []
+			},
+			"createdAt": "",
+			"updatedAt": ""
+		},
+
+		"moduleDefinitions": {
+			"id": "customers",
+			"label": "Customers",
+			"description": "People or accounts you sell to or serve.",
+			"icon": "",
+			"order": 0
+		},
+
+		"organization": {
+			"id": "",
+			"modelId": "",
+			"name": "",
+			"description": "",
+			"moduleOverrides": {
+				"customers": {
+					"label": "",
+					"description": "",
+					"icon": "",
+					"order": 0,
+					"isVisible": true
+				}
+			},
+			"roleOverrides": {
+				"admin": {
+					"label": "",
+					"description": "",
+					"modules": [
+						["customers", "conversations"],
+						["orders", "payments", "timeline"]
+					]
+				}
+			},
+			"frontstoreOverride": {
+				"template": "empathy | winter | ...",
+				"sections": []
+			},
+			"brandIdentity": {
+				"logoUrl": "",
+				"backgroundImageUrl": "",
+				"primaryColor": "",
+				"secondaryColor": "",
+				"faviconUrl": "",
+				"fontFamily": "",
+				"socialLinks": {
+					"facebook": "",
+					"twitter": "",
+					"linkedin": "",
+					"instagram": "",
+					"youtube": "",
+					"tiktok": "",
+					"pinterest": "",
+					"reddit": ""
+				}
+			},
+			"configurations": {
+				"openAIKey": "",
+				"whatsappAccessToken": "",
+				"whatsappPhoneNumberId": "",
+				"whatsappVerifyToken": "",
+				"defaultCurrency": "USD"
+			},
+			"createdAt": "",
+			"updatedAt": ""
+		},
+
+		"roleDefinitions": {
+			"id": "admin",
+			"label": "Admin",
+			"description": "Full access to every module and setting.",
+			"modules": [
+				["customers", "conversations"],
+				["orders", "payments", "timeline"]
+			],
+			"order": 0
+		},
+
+		"users": {
+			"id": "",
+			"personId": "",
+			"email": "",
+			"passwordHash": "",
+			"roleId": "admin",
+			"isActive": true,
+			"createdAt": "",
+			"updatedAt": ""
+		},
+
+		"profiles": {
+			"id": "",
+			"name": "",
+			"isDefault": true,
+			"status": "active | inactive",
+			"moduleOverrides": {
+				"customers": {
+					"label": "",
+					"description": "",
+					"icon": "",
+					"order": 0,
+					"isVisible": true
+				}
+			},
+			"metadata": {},
+			"createdAt": "",
+			"updatedAt": ""
+		},
+
+		"userProfileAccess": {
+			"id": "",
+			"userId": "",
+			"profileId": "",
+			"roleId": "admin",
+			"createdAt": ""
+		},
+
+		"companies": {
+			"id": "",
+			"name": "",
+			"contact": "",
+			"status": "active | inactive",
+			"notes": "",
+			"metadata": {},
+			"attachments": [],
+			"createdAt": "",
+			"updatedAt": ""
+		},
+
+		"people": {
+			"id": "",
+			"name": "",
+			"companyId": "",
+			"email": "",
+			"phone": "",
+			"position": "",
+			"salary": 0,
+			"hireDate": "",
+			"status": "active | inactive | suspended",
+			"notificationChannel": "email | sms | whatsapp | push",
+			"notes": "",
+			"metadata": {},
+			"attachments": [],
+			"createdAt": "",
+			"updatedAt": ""
+		},
+
+		"locations": {
+			"id": "",
+			"name": "",
+			"type": "warehouse | office | store | customerSite | supplierSite | other",
+			"address": "",
+			"description": "",
+			"status": "active | inactive",
+			"metadata": {},
+			"createdAt": "",
+			"updatedAt": ""
+		},
+
+		"categories": {
+			"id": "",
+			"name": "electronics, laptop, knowledge, service, fixed asset, ...",
+			"parentId": "",
+			"description": "",
+			"classification": "confidential | restricted | public",
+			"metadata": {},
+			"createdAt": "",
+			"updatedAt": ""
+		},
+
+		"assets": {
+			"id": "",
+			"profileId": "",
+			"name": "",
+			"categoryIds": [],
+			"serialNumber": "",
+			"purchaseDate": "",
+			"expirationDate": "",
+			"purchaseCost": 0,
+			"currentValue": 0,
+			"locationId": "",
+			"assignedPersonId": "",
+			"condition": "excellent | good | fair | poor | damaged",
+			"status": "available | assigned | maintenance | retired",
+			"metadata": {},
+			"attachments": [],
+			"createdAt": "",
+			"updatedAt": "",
+
+			"events": [
+				{
+					"type": "maintenance | repair | inspection | assignment | incident | relocation",
+					"description": "",
+					"performedBy": "",
+					"createdAt": ""
+				}
+			]
+		},
+
+		"knowledge": {
+			"id": "",
+			"title": "",
+			"type": "document | publication | sop | training | certificate | other",
+			"description": "",
+			"fileUrl": "",
+			"categoryIds": [],
+			"classification": "confidential | restricted | public",
+			"tags": [],
+			"metadata": {},
+			"attachments": [],
+			"createdBy": "",
+			"createdAt": "",
+			"updatedAt": ""
+		},
+
+		"workflowTemplates": {
+			"id": "",
+			"name": "",
+			"description": "",
+			"status": "active | inactive",
+			"metadata": {},
+			"createdAt": "",
+			"updatedAt": "",
+
+			"steps": [
+				{
+					"id": "",
+					"name": "",
+					"description": "",
+					"stepType": "manual | approval | automation | customerAction",
+					"assignedRole": "",
+					"action": "",
+					"notificationTemplate": "",
+					"notifyAssignee": true,
+					"metadata": {},
+
+					"transitions": [
+						{
+							"condition": "",
+							"nextStepId": ""
+						}
+					]
+				}
+			]
+		},
+
+		"jobs": {
+			"id": "",
+			"profileId": "",
+			"workflowId": "",
+			"parentJobId": "",
+			"workflowStepId": "",
+			"assignedPersonId": "",
+			"supervisorPersonId": "",
+			"relatedEntity": "",
+			"relatedId": "",
+			"priority": "low | medium | high | urgent",
+			"dueDate": "",
+			"status": "pending | inProgress | completed | cancelled | blocked",
+			"context": {},
+			"notes": "",
+			"attachments": [],
+			"createdAt": "",
+			"updatedAt": ""
+		},
+
+		"timeline": {
+			"id": "",
+			"profileId": "",
+			"type": "income | expense | goal | milestone | reminder | event",
+			"title": "",
+			"description": "",
+			"category": "",
+			"expectedAmount": 0,
+			"probability": 0,
+			"expectedDate": "",
+			"relatedType": "",
+			"relatedId": "",
+			"actualAmount": 0,
+			"actualDate": "",
+			"status": "expected | confirmed | cancelled | realized",
+			"notes": "",
+			"createdAt": "",
+			"updatedAt": ""
+		}
+	},
+
+	"commerce": {
+		"suppliers": {
+			"id": "",
+			"companyName": "",
+			"contactName": "",
+			"email": "",
+			"phone": "",
+			"address": "",
+			"notes": "",
+			"metadata": {},
+			"attachments": [],
+			"createdAt": "",
+			"updatedAt": ""
+		},
+
+		"products": {
+			"id": "",
+			"name": "",
+			"type": "product | service | subscription",
+			"sku": "",
+			"categoryIds": [],
+			"description": "",
+			"imageUrl": "",
+			"sellingPrice": 0,
+			"costPrice": 0,
+			"unit": "piece | kg | g | liter | ml | meter | cm | box | dozen | hour | day | month",
+			"status": "active | inactive",
+			"metadata": {},
+			"attachments": [],
+			"createdAt": "",
+			"updatedAt": ""
+		},
+
+		"inventory": {
+			"id": "",
+			"profileId": "",
+			"productId": "",
+			"locationId": "",
+			"quantityOnHand": 0,
+			"reservedQuantity": 0,
+			"reorderLevel": 0,
+			"expirationDate": "",
+			"lastUpdated": ""
+		},
+
+		"inventoryMovements": {
+			"id": "",
+			"profileId": "",
+			"productId": "",
+			"locationId": "",
+			"quantity": 0,
+			"movementType": "purchase | sale | return | transfer | adjustment | damaged | expired | consumed",
+			"orderId": "",
+			"createdAt": ""
+		},
+
+		"orders": {
+			"id": "",
+			"profileId": "",
+			"type": "sale | purchase | return | transfer",
+			"customerId": "",
+			"supplierId": "",
+			"workflowId": "",
+			"orderDate": "",
+			"scheduledDate": "",
+			"subTotal": 0,
+			"taxAmount": 0,
+			"discountAmount": 0,
+			"totalAmount": 0,
+			"currency": "",
+			"status": "draft | pending | confirmed | processing | completed | cancelled",
+			"paymentStatus": "unpaid | partial | paid | refunded",
+			"notes": "",
+			"attachments": [],
+			"createdBy": "",
+			"createdAt": "",
+			"updatedAt": "",
+
+			"items": [
+				{
+					"productId": "",
+					"quantity": 0,
+					"unitPrice": 0,
+					"subtotal": 0,
+					"currency": ""
+				}
+			],
+
+			"feedback": {
+				"rating": 0,
+				"comment": "",
+				"createdAt": ""
+			}
+		},
+
+		"payments": {
+			"id": "",
+			"profileId": "",
+			"type": "incoming | outgoing",
+			"category": "sale | purchase | salary | tax | rent | utility | insurance | subscription | other",
+			"amount": 0,
+			"currency": "",
+			"paymentDate": "",
+			"fiscalPeriod": "",
+			"method": "cash | bank | card | mobileMoney | cheque | other",
+			"relatedType": "",
+			"relatedId": "",
+			"reference": "",
+			"notes": "",
+			"attachments": [],
+			"createdAt": ""
+		},
+
+		"recurringTransactions": {
+			"id": "",
+			"profileId": "",
+			"type": "incoming | outgoing",
+			"customerId": "",
+			"supplierId": "",
+			"productId": "",
+			"description": "",
+			"expectedAmount": 0,
+			"frequency": "daily | weekly | monthly | quarterly | yearly | custom",
+			"startDate": "",
+			"endDate": "",
+			"nextDueDate": "",
+			"status": "active | paused | completed | cancelled",
+			"metadata": {},
+			"createdAt": "",
+			"updatedAt": ""
+		}
+	}
+}

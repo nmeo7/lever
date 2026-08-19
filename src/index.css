@@ -1,0 +1,77 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Default theme (empathy) — overridden at runtime by applyTheme() */
+:root {
+	--color-primary: #7c3aed;
+	--color-primary-hover: #6d28d9;
+	--color-secondary: #a78bfa;
+	--color-surface: #ffffff;
+	--color-background: #faf5ff;
+	--color-text: #1e1b4b;
+	--color-muted: #8b5cf6;
+	--color-border: #ede9fe;
+	--radius: 0.625rem;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	font-family: var(--font-family);
+	background-color: var(--color-background);
+	color: var(--color-text);
+	-webkit-font-smoothing: antialiased;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+	width: 6px;
+	height: 6px;
+}
+::-webkit-scrollbar-track {
+	background: transparent;
+}
+::-webkit-scrollbar-thumb {
+	background: var(--color-border);
+	border-radius: 99px;
+}
+::-webkit-scrollbar-thumb:hover {
+	background: var(--color-muted);
+}
+
+/* Neumorphism (soft UI): raised/pressed surfaces via dual light/dark shadows.
+   Uses a dedicated white --neu-bg (not --color-background) with fixed
+   high-contrast shadow colors — a color-mix off the bg was too close to it
+   to read, so the shadows are set independently for a visible pop. */
+:root {
+	--neu-bg: #ffffff;
+	--neu-distance: 5px;
+	--neu-blur: 7px;
+	--neu-light: #fbf3f3;
+	--neu-dark: #c5c5c5;
+}
+
+.neu-raised {
+	box-shadow:
+		var(--neu-distance) var(--neu-distance) var(--neu-blur) var(--neu-dark),
+		calc(var(--neu-distance) * -1) calc(var(--neu-distance) * -1)
+			var(--neu-blur) var(--neu-light);
+}
+
+.neu-pressed {
+	box-shadow:
+		inset var(--neu-distance) var(--neu-distance) var(--neu-blur)
+			var(--neu-dark),
+		inset calc(var(--neu-distance) * -1) calc(var(--neu-distance) * -1)
+			var(--neu-blur) var(--neu-light);
+}
+
+.neu-flat {
+	box-shadow:
+		var(--neu-distance) var(--neu-distance) var(--neu-blur) var(--neu-dark),
+		calc(var(--neu-distance) * -1) calc(var(--neu-distance) * -1)
+			var(--neu-blur) var(--neu-light);
+}
