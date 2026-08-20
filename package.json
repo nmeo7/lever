@@ -16,7 +16,8 @@
 		"seed:hardware": "node scripts/seed/hardware.js",
 		"seed:platform": "node scripts/seed/platform.js",
 		"seed:personal": "node scripts/seed/personal.js",
-		"seed:all": "npm run seed:shared && npm run seed:gym && npm run seed:artists-hub && npm run seed:insurance && npm run seed:electronics && npm run seed:hardware && npm run seed:platform && npm run seed:personal"
+		"seed:africa-new-life": "node scripts/seed/africa-new-life.js",
+		"seed:all": "npm run seed:shared && npm run seed:gym && npm run seed:artists-hub && npm run seed:insurance && npm run seed:electronics && npm run seed:hardware && npm run seed:platform && npm run seed:personal && npm run seed:africa-new-life"
 	},
 	"dependencies": {
 		"@tanstack/react-query": "^5.40.0",
@@ -29,6 +30,7 @@
 		"react": "^18.3.0",
 		"react-dom": "^18.3.0",
 		"react-router-dom": "^6.23.1",
+		"recharts": "^3.10.1",
 		"tailwind-merge": "^2.3.0",
 		"zustand": "^4.5.2"
 	},

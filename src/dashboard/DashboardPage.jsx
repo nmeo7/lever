@@ -20,6 +20,7 @@ import {
 import { db } from '@/firebase'
 import { useAuthStore } from '@/auth/store'
 import HeaderControls, { useUserOrg } from '@/util/components/HeaderControls'
+import { useModuleLabels, resolveModuleLabel } from '@/util/moduleLabels'
 
 const now = new Date()
 const CURRENT_MONTH = now.toISOString().slice(0, 7)
@@ -179,12 +180,15 @@ const ALL_ROUTES = [
 	},
 ]
 
-const GlobalSearch = ({ visibleModuleIds }) => {
+const GlobalSearch = ({ visibleModuleIds, customersLabel }) => {
 	const [query, setQuery] = useState('')
 	const navigate = useNavigate()
 	const trimmed = query.trim().toLowerCase()
+	const routes = ALL_ROUTES.map(route =>
+		route.moduleId === 'customers' ? { ...route, label: customersLabel } : route,
+	)
 	const results = trimmed
-		? ALL_ROUTES.filter(
+		? routes.filter(
 				({ label, keywords, moduleId }) =>
 					visibleModuleIds.has(moduleId) &&
 					(label.toLowerCase().includes(trimmed) || keywords.includes(trimmed)),
@@ -233,6 +237,8 @@ const DashboardPage = () => {
 	const activeCompanyId = useAuthStore(s => s.activeCompanyId)
 	const { data: org } = useUserOrg(activeCompanyId)
 	const { data: visibleModuleIds = new Set() } = useVisibleModules(user?.roleId, org)
+	const { data: labels } = useModuleLabels(org)
+	const customersLabel = resolveModuleLabel(labels, 'customers', 'Customers')
 	const navigate = useNavigate()
 
 	return (
@@ -262,7 +268,7 @@ const DashboardPage = () => {
 					Wednesday, and customer Alice hasn't received a reply for 18 hours.{' '}
 					<span className='italic underline cursor-pointer'>See more</span>
 				</p>
-				<GlobalSearch visibleModuleIds={visibleModuleIds} />
+				<GlobalSearch visibleModuleIds={visibleModuleIds} customersLabel={customersLabel} />
 			</section>
 
 			{/* Stat cards + nav */}
@@ -280,7 +286,7 @@ const DashboardPage = () => {
 					)}
 					<div className='flex flex-col gap-1 mt-2'>
 						{[
-							{ icon: Users, label: 'Customers', to: '/app/customers', moduleId: 'customers' },
+							{ icon: Users, label: customersLabel, to: '/app/customers', moduleId: 'customers' },
 							{ icon: UserRound, label: 'People', to: '/app/people', moduleId: 'people' },
 							{ icon: Monitor, label: 'Assets', to: '/app/assets', moduleId: 'assets' },
 							...(user?.isPlatformAdmin || (user?.groupId && user?.roleId === 'admin')
