@@ -1,9 +1,8 @@
-import { seedOrg } from './_client.js'
+import { seedCompany } from './_client.js'
 
 const SLUG = 'electronics'
 
-const org = {
-	slug: SLUG,
+const company = {
 	name: 'ByteMart Electronics',
 	contact: { whatsapp: '15550004004' },
 	brandIdentity: { template: 'winter' },
@@ -44,9 +43,25 @@ const products = [
 	{ name: '10000mAh Power Bank', price: 20, category: 'Accessories', type: 'physical', description: 'Dual-port portable charger.', imageUrl: 'https://images.unsplash.com/photo-1609592806598-04b3f7b0d4c0?w=400&h=400&fit=crop' },
 ]
 
-await seedOrg({
+const customers = [
+	{ name: 'Patrick Habimana', company: '', email: 'patrick.habimana@example.com', phone: '+250780000201', address: 'Kigali Heights', source: 'walk-in', status: 'active', estimatedValue: 650, summary: 'Bought a Nova X12, asked about laptop trade-ins.', preferences: {}, tags: ['repeat'], metadata: {}, attachments: [] },
+]
+
+const companyScoped = {
+	'erp-payments': [
+		{ type: 'incoming', category: 'sale', amount: 399, currency: 'USD', paymentDate: new Date().toISOString(), fiscalPeriod: new Date().toISOString().slice(0, 7), method: 'card', notes: 'Nova X12 sale', createdAt: new Date().toISOString() },
+	],
+	'erp-assets': [
+		{ name: 'Store POS Terminal', categoryIds: [], serialNumber: 'POS-441', purchaseDate: '2023-05-01', expirationDate: '', purchaseCost: 300, currentValue: 220, locationId: '', assignedPersonId: '', condition: 'good', status: 'available', metadata: {}, attachments: [], events: [] },
+	],
+}
+
+await seedCompany({
 	slug: SLUG,
-	org,
+	company,
+	typeId: 'shop',
 	products,
-	user: { email: 'owner@electronics.com', password: 'password123', role: 'owner' },
+	customers,
+	companyScoped,
+	user: { email: 'owner@electronics.com', password: 'password123', roleId: 'admin' },
 })

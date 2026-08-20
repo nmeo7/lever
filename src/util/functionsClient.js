@@ -7,15 +7,21 @@ const FUNCTIONS_BASE_URL =
 		: `https://us-central1-${import.meta.env.VITE_FIREBASE_PROJECT_ID}.cloudfunctions.net`)
 
 export const callAuthedFunction = async (functionName, { method = 'GET', path = '', body } = {}) => {
-	const token = useAuthStore.getState().token
+	const { token, activeCompanyId } = useAuthStore.getState()
 
-	const response = await fetch(`${FUNCTIONS_BASE_URL}/${functionName}${path}`, {
+	const url = new URL(`${FUNCTIONS_BASE_URL}/${functionName}${path}`)
+	if (method === 'GET' && activeCompanyId) url.searchParams.set('companyId', activeCompanyId)
+
+	const resolvedBody =
+		method === 'GET' ? undefined : { companyId: activeCompanyId, ...body }
+
+	const response = await fetch(url, {
 		method,
 		headers: {
 			'Content-Type': 'application/json',
 			...(token ? { Authorization: `Bearer ${token}` } : {}),
 		},
-		...(body ? { body: JSON.stringify(body) } : {}),
+		...(resolvedBody ? { body: JSON.stringify(resolvedBody) } : {}),
 	})
 
 	const data = await response.json()

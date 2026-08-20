@@ -1,4 +1,4 @@
-const openaiProvider = require('./openaiProvider')
+const openaiProvider = require('./openai-provider')
 
 const PROVIDERS = { openai: openaiProvider }
 const DEFAULT_PROVIDER = 'openai'

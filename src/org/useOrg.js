@@ -22,7 +22,7 @@ export const useOrg = slug => {
 		queryKey: ['org', resolvedSlug],
 		queryFn: async () => {
 			const snap = await getDocs(
-				query(collection(db, 'erp-organization'), where('slug', '==', resolvedSlug), limit(1)),
+				query(collection(db, 'erp-companies'), where('slug', '==', resolvedSlug), limit(1)),
 			)
 			const org = snap.empty ? null : { id: snap.docs[0].id, ...snap.docs[0].data() }
 			if (org?.brandIdentity?.template) {

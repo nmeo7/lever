@@ -1,12 +1,12 @@
 const { db } = require('../util/data')
 const { PLAN_TOOLS } = require('./tools')
-const { createOrder } = require('../orders/service')
-const { recordOrderPayment } = require('../payments/service')
+const { createOrder } = require('../orders/orders-service')
+const { recordOrderPayment } = require('../payments/payments-service')
 
 const lookupCustomer = async ({ input, ctx }) => {
   const snap = await db
     .collection('erp-customers')
-    .where('orgId', '==', ctx.businessId)
+    .where('companyId', '==', ctx.businessId)
     .where('phone', '==', input.phone)
     .limit(1)
     .get()
@@ -26,7 +26,7 @@ const lookupCustomer = async ({ input, ctx }) => {
 const checkInventory = async ({ input, ctx }) => {
   const productSnap = await db
     .collection('erp-products')
-    .where('orgId', '==', ctx.businessId)
+    .where('companyId', '==', ctx.businessId)
     .where('name', '==', input.productName)
     .limit(1)
     .get()
@@ -36,7 +36,7 @@ const checkInventory = async ({ input, ctx }) => {
   const productId = productSnap.docs[0].id
   const inventorySnap = await db
     .collection('erp-inventory')
-    .where('orgId', '==', ctx.businessId)
+    .where('companyId', '==', ctx.businessId)
     .where('productId', '==', productId)
     .get()
 
@@ -47,7 +47,7 @@ const checkInventory = async ({ input, ctx }) => {
 
 const scheduleAppointment = async ({ input, ctx }) => {
   const jobRef = await db.collection('erp-jobs').add({
-    orgId: ctx.businessId,
+    companyId: ctx.businessId,
     relatedEntity: 'customer',
     relatedId: input.customerId,
     dueDate: input.scheduledDate,

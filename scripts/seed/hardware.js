@@ -1,9 +1,8 @@
-import { seedOrg } from './_client.js'
+import { seedCompany } from './_client.js'
 
 const SLUG = 'hardware'
 
-const org = {
-	slug: SLUG,
+const company = {
 	name: 'BuildRight Hardware',
 	contact: { whatsapp: '15550005005' },
 	brandIdentity: { template: 'empathy' },
@@ -45,9 +44,25 @@ const products = [
 	{ name: 'Pruning Shears', price: 11, category: 'Garden', type: 'physical', description: 'Bypass pruners for stems and small branches.', imageUrl: 'https://images.unsplash.com/photo-1585513553738-84f8c0e5d1e2?w=400&h=400&fit=crop' },
 ]
 
-await seedOrg({
+const customers = [
+	{ name: 'Claude Nkurunziza', company: 'Nkurunziza Construction', email: 'claude.nk@example.com', phone: '+250780000301', address: 'Nyabugogo, Kigali', source: 'referral', status: 'active', estimatedValue: 300, summary: 'Regular contractor, buys tools and paint in bulk.', preferences: {}, tags: ['contractor', 'wholesale'], metadata: {}, attachments: [] },
+]
+
+const companyScoped = {
+	'erp-payments': [
+		{ type: 'incoming', category: 'sale', amount: 42, currency: 'USD', paymentDate: new Date().toISOString(), fiscalPeriod: new Date().toISOString().slice(0, 7), method: 'cash', notes: 'Tool set sale', createdAt: new Date().toISOString() },
+	],
+	'erp-assets': [
+		{ name: 'Delivery Truck', categoryIds: [], serialNumber: 'TRK-118', purchaseDate: '2020-11-20', expirationDate: '', purchaseCost: 12000, currentValue: 7500, locationId: '', assignedPersonId: '', condition: 'fair', status: 'available', metadata: {}, attachments: [], events: [] },
+	],
+}
+
+await seedCompany({
 	slug: SLUG,
-	org,
+	company,
+	typeId: 'shop',
 	products,
-	user: { email: 'owner@hardware.com', password: 'password123', role: 'owner' },
+	customers,
+	companyScoped,
+	user: { email: 'owner@hardware.com', password: 'password123', roleId: 'admin' },
 })

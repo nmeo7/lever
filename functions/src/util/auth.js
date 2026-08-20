@@ -39,4 +39,17 @@ const requireAuthFromRequest = (req) => {
   return requireAuth(token)
 }
 
-module.exports = { hashPassword, signToken, verifyToken, requireAuth, requireAuthFromRequest }
+const requireCompanyAccess = (user, companyId) => {
+  if (!companyId) throw new HttpsError('invalid-argument', 'companyId is required')
+  if (user.companyIds?.includes(companyId)) return companyId
+  throw new HttpsError('permission-denied', 'No access to this company')
+}
+
+module.exports = {
+  hashPassword,
+  signToken,
+  verifyToken,
+  requireAuth,
+  requireAuthFromRequest,
+  requireCompanyAccess,
+}

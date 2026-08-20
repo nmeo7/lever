@@ -1,10 +1,10 @@
 const { onRequest } = require('firebase-functions/v2/https')
 const { db } = require('../util/data')
-const { getOrgConfig } = require('../util/getOrgConfig')
+const { getOrgConfig } = require('../util/get-org-config')
 const ai = require('../ai')
-const { buildSystemPrompt } = require('../businessApi/systemPrompt')
-const { getToolsForPlan } = require('../businessApi/tools')
-const { dispatchTool } = require('../businessApi/toolHandlers')
+const { buildSystemPrompt } = require('../business-api/system-prompt')
+const { getToolsForPlan } = require('../business-api/tools')
+const { dispatchTool } = require('../business-api/tool-handlers')
 
 const GRAPH_API_BASE = 'https://graph.facebook.com/v19.0'
 const BUSINESS_ID = 'default'

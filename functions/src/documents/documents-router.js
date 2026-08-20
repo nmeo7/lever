@@ -2,8 +2,8 @@ const express = require('express')
 const cors = require('cors')
 const { onRequest } = require('firebase-functions/v2/https')
 const { requireAuthFromRequest } = require('../util/auth')
-const { asyncRoute } = require('../util/asyncRoute')
-const { listDocuments, createDocument, updateDocument, deleteDocument, searchDocuments } = require('./service')
+const { asyncRoute } = require('../util/async-route')
+const { listDocuments, createDocument, updateDocument, deleteDocument, searchDocuments } = require('./documents-service')
 
 const router = express.Router()
 

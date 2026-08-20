@@ -47,10 +47,10 @@
 		}
 	},
 
-	"erp": {
-		"organizationModel": {
+	"administration": {
+		"businessType": {
 			"id": "",
-			"parentModelId": "",
+			"parentTypeId": "",
 			"name": "",
 			"description": "",
 			"frontstore": {
@@ -69,11 +69,22 @@
 			"order": 0
 		},
 
-		"organization": {
+		"group": {
 			"id": "",
-			"modelId": "",
 			"name": "",
 			"description": "",
+			"createdAt": "",
+			"updatedAt": ""
+		},
+
+		"company": {
+			"id": "",
+			"groupId": "",
+			"typeId": "",
+			"name": "",
+			"description": "",
+			"isDefault": true,
+			"status": "active | inactive",
 			"moduleOverrides": {
 				"customers": {
 					"label": "",
@@ -87,10 +98,10 @@
 				"admin": {
 					"label": "",
 					"description": "",
-					"modules": [
-						["customers", "conversations"],
-						["orders", "payments", "timeline"]
-					]
+					"modules": {
+						"1": ["customers", "conversations"],
+						"2": ["orders", "payments", "timeline"]
+					}
 				}
 			},
 			"frontstoreOverride": {
@@ -122,6 +133,7 @@
 				"whatsappVerifyToken": "",
 				"defaultCurrency": "USD"
 			},
+			"metadata": {},
 			"createdAt": "",
 			"updatedAt": ""
 		},
@@ -130,67 +142,18 @@
 			"id": "admin",
 			"label": "Admin",
 			"description": "Full access to every module and setting.",
-			"modules": [
-				["customers", "conversations"],
-				["orders", "payments", "timeline"]
-			],
-			"order": 0
-		},
-
-		"users": {
-			"id": "",
-			"personId": "",
-			"email": "",
-			"passwordHash": "",
-			"roleId": "admin",
-			"isActive": true,
-			"createdAt": "",
-			"updatedAt": ""
-		},
-
-		"profiles": {
-			"id": "",
-			"name": "",
-			"isDefault": true,
-			"status": "active | inactive",
-			"moduleOverrides": {
-				"customers": {
-					"label": "",
-					"description": "",
-					"icon": "",
-					"order": 0,
-					"isVisible": true
-				}
+			"modules": {
+				"1": ["customers", "conversations"],
+				"2": ["orders", "payments", "timeline"]
 			},
-			"metadata": {},
-			"createdAt": "",
-			"updatedAt": ""
-		},
-
-		"userProfileAccess": {
-			"id": "",
-			"userId": "",
-			"profileId": "",
-			"roleId": "admin",
-			"createdAt": ""
-		},
-
-		"companies": {
-			"id": "",
-			"name": "",
-			"contact": "",
-			"status": "active | inactive",
-			"notes": "",
-			"metadata": {},
-			"attachments": [],
-			"createdAt": "",
-			"updatedAt": ""
+			"order": 0
 		},
 
 		"people": {
 			"id": "",
 			"name": "",
-			"companyId": "",
+			"companyIds": [],
+			"groupId": "",
 			"email": "",
 			"phone": "",
 			"position": "",
@@ -201,6 +164,10 @@
 			"notes": "",
 			"metadata": {},
 			"attachments": [],
+			"passwordHash": "",
+			"roleId": "",
+			"isActive": true,
+			"isPlatformAdmin": false,
 			"createdAt": "",
 			"updatedAt": ""
 		},
@@ -230,7 +197,8 @@
 
 		"assets": {
 			"id": "",
-			"profileId": "",
+			"companyId": "",
+			"groupId": "",
 			"name": "",
 			"categoryIds": [],
 			"serialNumber": "",
@@ -306,7 +274,8 @@
 
 		"jobs": {
 			"id": "",
-			"profileId": "",
+			"companyId": "",
+			"groupId": "",
 			"workflowId": "",
 			"parentJobId": "",
 			"workflowStepId": "",
@@ -326,7 +295,8 @@
 
 		"timeline": {
 			"id": "",
-			"profileId": "",
+			"companyId": "",
+			"groupId": "",
 			"type": "income | expense | goal | milestone | reminder | event",
 			"title": "",
 			"description": "",
@@ -345,7 +315,7 @@
 		}
 	},
 
-	"commerce": {
+	"operations": {
 		"suppliers": {
 			"id": "",
 			"companyName": "",
@@ -362,6 +332,8 @@
 
 		"products": {
 			"id": "",
+			"companyId": "",
+			"groupId": "",
 			"name": "",
 			"type": "product | service | subscription",
 			"sku": "",
@@ -380,7 +352,8 @@
 
 		"inventory": {
 			"id": "",
-			"profileId": "",
+			"companyId": "",
+			"groupId": "",
 			"productId": "",
 			"locationId": "",
 			"quantityOnHand": 0,
@@ -392,7 +365,8 @@
 
 		"inventoryMovements": {
 			"id": "",
-			"profileId": "",
+			"companyId": "",
+			"groupId": "",
 			"productId": "",
 			"locationId": "",
 			"quantity": 0,
@@ -403,7 +377,8 @@
 
 		"orders": {
 			"id": "",
-			"profileId": "",
+			"companyId": "",
+			"groupId": "",
 			"type": "sale | purchase | return | transfer",
 			"customerId": "",
 			"supplierId": "",
@@ -442,7 +417,8 @@
 
 		"payments": {
 			"id": "",
-			"profileId": "",
+			"companyId": "",
+			"groupId": "",
 			"type": "incoming | outgoing",
 			"category": "sale | purchase | salary | tax | rent | utility | insurance | subscription | other",
 			"amount": 0,
@@ -460,7 +436,8 @@
 
 		"recurringTransactions": {
 			"id": "",
-			"profileId": "",
+			"companyId": "",
+			"groupId": "",
 			"type": "incoming | outgoing",
 			"customerId": "",
 			"supplierId": "",

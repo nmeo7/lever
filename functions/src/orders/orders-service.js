@@ -1,14 +1,14 @@
 const { HttpsError } = require('firebase-functions/v2/https')
 const { FieldValue } = require('firebase-admin/firestore')
-const { db, listDocs } = require('../util/data')
+const { db, listDocs, resolveGroupId, createDocInTx } = require('../util/data')
 
 const COLLECTION = 'erp-orders'
 const PRODUCTS_COLLECTION = 'erp-products'
 const INVENTORY_COLLECTION = 'erp-inventory'
 
-const listOrders = (orgId) => listDocs(COLLECTION, 'orderDate', orgId)
+const listOrders = (companyId) => listDocs(COLLECTION, 'orderDate', companyId)
 
-const createOrder = async (orgId, { customerId, items, notes, currency = 'USD' }) => {
+const createOrder = async (companyId, { customerId, items, notes, currency = 'USD' }) => {
   if (!items?.length) throw new HttpsError('invalid-argument', 'items required')
 
   const productIds = items.map((i) => i.productId)
@@ -18,7 +18,7 @@ const createOrder = async (orgId, { customerId, items, notes, currency = 'USD' }
 
   const enrichedItems = items.map((item, idx) => {
     const product = productSnaps[idx].data()
-    if (!product || product.orgId !== orgId) {
+    if (!product || product.companyId !== companyId) {
       throw new HttpsError('not-found', `Product ${item.productId} not found`)
     }
     const unitPrice = product.sellingPrice
@@ -28,13 +28,14 @@ const createOrder = async (orgId, { customerId, items, notes, currency = 'USD' }
   const subTotal = enrichedItems.reduce((s, i) => s + i.subtotal, 0)
   const totalAmount = subTotal
 
+  const groupId = await resolveGroupId(companyId)
   const orderRef = db.collection(COLLECTION).doc()
 
   await db.runTransaction(async (tx) => {
     for (const item of enrichedItems) {
       const invQuery = await db
         .collection(INVENTORY_COLLECTION)
-        .where('orgId', '==', orgId)
+        .where('companyId', '==', companyId)
         .where('productId', '==', item.productId)
         .get()
 
@@ -51,8 +52,9 @@ const createOrder = async (orgId, { customerId, items, notes, currency = 'USD' }
       }
     }
 
-    tx.set(orderRef, {
-      orgId,
+    createDocInTx(tx, orderRef, {
+      companyId,
+      groupId,
       type: 'sale',
       customerId: customerId ?? null,
       items: enrichedItems,
@@ -68,8 +70,6 @@ const createOrder = async (orgId, { customerId, items, notes, currency = 'USD' }
       createdBy: null,
       orderDate: new Date().toISOString(),
       scheduledDate: null,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
     })
   })
 

@@ -6,7 +6,7 @@ export const RequireAuth = ({ children }) => {
   const user = useAuthStore((s) => s.user)
   const location = useLocation()
 
-  if (!token || !user?.orgId) {
+  if (!token || !user?.companyIds?.length) {
     return <Navigate to="/login" state={{ from: location }} replace />
   }
 

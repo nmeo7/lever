@@ -1,9 +1,8 @@
-import { seedOrg } from './_client.js'
+import { seedCompany } from './_client.js'
 
 const SLUG = 'gym'
 
-const org = {
-	slug: SLUG,
+const company = {
 	name: 'Ironclad Fitness',
 	contact: { whatsapp: '15550001001' },
 	brandIdentity: { template: 'winter' },
@@ -44,9 +43,32 @@ const products = [
 	{ name: '5-Session Package', price: 110, category: 'Personal Training', type: 'service', description: 'Five personal training sessions, save 12%.', imageUrl: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=400&fit=crop' },
 ]
 
-await seedOrg({
+const customers = [
+	{ name: 'Alice Uwase', company: '', email: 'alice.uwase@example.com', phone: '+250780000001', address: 'Kacyiru, Kigali', source: 'walk-in', status: 'active', estimatedValue: 420, summary: 'Annual member, attends HIIT classes weekly.', preferences: {}, tags: ['member'], metadata: {}, attachments: [] },
+	{ name: 'Eric Mugisha', company: '', email: 'eric.mugisha@example.com', phone: '+250780000002', address: 'Remera, Kigali', source: 'referral', status: 'active', estimatedValue: 45, summary: 'Monthly member, interested in personal training.', preferences: {}, tags: ['member', 'lead-pt'], metadata: {}, attachments: [] },
+]
+
+const conversations = [
+	{ customerIndex: 0, messages: [{ id: '1', type: 'received', content: 'Do you have a free trial day?', attachments: [], timestamp: new Date().toISOString() }, { id: '2', type: 'sent', content: 'Yes! Come by anytime, first day is on us.', attachments: [], timestamp: new Date().toISOString() }], context: '', summary: 'Asked about free trial.', lastMessage: 'Yes! Come by anytime, first day is on us.' },
+]
+
+const companyScoped = {
+	'erp-payments': [
+		{ type: 'incoming', category: 'sale', amount: 45, currency: 'USD', paymentDate: new Date().toISOString(), fiscalPeriod: new Date().toISOString().slice(0, 7), method: 'card', notes: 'Monthly membership', createdAt: new Date().toISOString() },
+		{ type: 'outgoing', category: 'rent', amount: 800, currency: 'USD', paymentDate: new Date().toISOString(), fiscalPeriod: new Date().toISOString().slice(0, 7), method: 'bank', notes: 'Facility rent', createdAt: new Date().toISOString() },
+	],
+	'erp-assets': [
+		{ name: 'Treadmill (x4)', categoryIds: [], serialNumber: 'TM-2201', purchaseDate: '2023-01-15', expirationDate: '', purchaseCost: 4800, currentValue: 3600, locationId: '', assignedPersonId: '', condition: 'good', status: 'available', metadata: {}, attachments: [], events: [] },
+	],
+}
+
+await seedCompany({
 	slug: SLUG,
-	org,
+	company,
+	typeId: 'gym',
 	products,
-	user: { email: 'owner@gym.com', password: 'password123', role: 'owner' },
+	customers,
+	conversations,
+	companyScoped,
+	user: { email: 'owner@gym.com', password: 'password123', roleId: 'admin' },
 })

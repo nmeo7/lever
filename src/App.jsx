@@ -1,6 +1,6 @@
 import { Routes, Route } from 'react-router-dom'
 import { RequireAuth } from '@/auth/RequireAuth'
-import { RequireAdmin } from '@/auth/RequireAdmin'
+import { RequireControlPanelAccess } from '@/auth/RequireControlPanelAccess'
 
 import LoginPage from '@/auth/LoginPage'
 import LandingPage from '@/marketing/LandingPage'
@@ -21,7 +21,7 @@ import JobsPage from '@/workflows/JobsPage'
 import MilestonesPage from '@/workflows/MilestonesPage'
 import SettingsPage from '@/org-settings/SettingsPage'
 import ReportsPage from '@/reports/ReportsPage'
-import TenantsPage from '@/tenants/TenantsPage'
+import ControlPanelPage from '@/control-panel/ControlPanelPage'
 
 import StorefrontPage from '@/sales-portal/StorefrontPage'
 import ProductDetailPage from '@/sales-portal/ProductDetailPage'
@@ -65,11 +65,11 @@ const App = () => {
         <Route path="/app/settings" element={<SettingsPage />} />
         <Route path="/app/reports" element={<ReportsPage />} />
         <Route
-          path="/app/tenants"
+          path="/app/control-panel"
           element={
-            <RequireAdmin>
-              <TenantsPage />
-            </RequireAdmin>
+            <RequireControlPanelAccess>
+              <ControlPanelPage />
+            </RequireControlPanelAccess>
           }
         />
       </Route>

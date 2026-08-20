@@ -1,18 +1,18 @@
 const { authLogin } = require('./auth/login')
-const { generateMemory } = require('./people/generateMemory')
-const { triggerWorkflowStep } = require('./workflows/triggerWorkflowStep')
-const { whatsappWebhook } = require('./chat/whatsappProvider')
-const { businessApi } = require('./businessApi/router')
-const { chat } = require('./chat/router')
-const { products } = require('./products/router')
-const { productsOnWriteEmbedding } = require('./products/onWriteEmbedding')
-const { payments } = require('./payments/router')
-const { paymentsOnWriteEmbedding } = require('./payments/onWriteEmbedding')
-const { orders } = require('./orders/router')
-const { inventory } = require('./inventory/router')
-const { documents } = require('./documents/router')
-const { documentsOnWriteEmbedding } = require('./documents/onWriteEmbedding')
-const { tenants } = require('./tenants/router')
+const { generateMemory } = require('./people/generate-memory')
+const { triggerWorkflowStep } = require('./workflows/trigger-workflow-step')
+const { whatsappWebhook } = require('./chat/whatsapp-provider')
+const { businessApi } = require('./business-api/business-api-router')
+const { chat } = require('./chat/chat-router')
+const { products } = require('./products/products-router')
+const { productsOnWriteEmbedding } = require('./products/products-on-write-embedding')
+const { payments } = require('./payments/payments-router')
+const { paymentsOnWriteEmbedding } = require('./payments/payments-on-write-embedding')
+const { orders } = require('./orders/orders-router')
+const { inventory } = require('./inventory/inventory-router')
+const { documents } = require('./documents/documents-router')
+const { documentsOnWriteEmbedding } = require('./documents/documents-on-write-embedding')
+const { controlPanel } = require('./control-panel/control-panel-router')
 
 module.exports = {
   authLogin,
@@ -29,5 +29,5 @@ module.exports = {
   inventory,
   documents,
   documentsOnWriteEmbedding,
-  tenants,
+  controlPanel,
 }

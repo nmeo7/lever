@@ -1,27 +1,32 @@
 const express = require('express')
 const cors = require('cors')
 const { onRequest } = require('firebase-functions/v2/https')
-const { requireAuthFromRequest } = require('../util/auth')
-const { asyncRoute } = require('../util/asyncRoute')
-const { listProducts, createProduct, searchProducts } = require('./service')
+const { requireAuthFromRequest, requireCompanyAccess } = require('../util/auth')
+const { asyncRoute } = require('../util/async-route')
+const { listProducts, createProduct, searchProducts } = require('./products-service')
 
 const router = express.Router()
 
 router.get('/', asyncRoute(async (req, res) => {
   const user = await requireAuthFromRequest(req)
-  const products = await listProducts(user.orgId)
+  const companyId = requireCompanyAccess(user, req.query.companyId)
+  const products = await listProducts(companyId)
   res.json({ products })
 }))
 
 router.post('/search', asyncRoute(async (req, res) => {
   const user = await requireAuthFromRequest(req)
-  const products = await searchProducts(user.orgId, req.body ?? {})
+  const { companyId, ...body } = req.body ?? {}
+  const verifiedCompanyId = requireCompanyAccess(user, companyId)
+  const products = await searchProducts(verifiedCompanyId, body)
   res.json({ products })
 }))
 
 router.post('/', asyncRoute(async (req, res) => {
   const user = await requireAuthFromRequest(req)
-  const result = await createProduct(user.orgId, req.body ?? {})
+  const { companyId, ...body } = req.body ?? {}
+  const verifiedCompanyId = requireCompanyAccess(user, companyId)
+  const result = await createProduct(verifiedCompanyId, body)
   res.status(201).json(result)
 }))
 

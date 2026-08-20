@@ -1,9 +1,8 @@
-import { seedOrg } from './_client.js'
+import { seedCompany } from './_client.js'
 
 const SLUG = 'insurance'
 
-const org = {
-	slug: SLUG,
+const company = {
 	name: 'Umutekano Insurance',
 	contact: { whatsapp: '15550003003' },
 	brandIdentity: { template: 'winter' },
@@ -42,9 +41,25 @@ const products = [
 	{ name: 'Business Property Plan', price: 80, category: 'Business', type: 'membership', term: 'ongoing', billingPeriod: 'monthly', conditional: true, description: 'Covers commercial property and equipment.', imageUrl: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=400&h=400&fit=crop' },
 ]
 
-await seedOrg({
+const customers = [
+	{ name: 'Diane Mukamana', company: '', email: 'diane.mukamana@example.com', phone: '+250780000401', address: 'Kigali City Centre', source: 'walk-in', status: 'active', estimatedValue: 40, summary: 'Health Individual Plan holder, monthly premium.', preferences: {}, tags: ['policyholder'], metadata: {}, attachments: [] },
+]
+
+const companyScoped = {
+	'erp-payments': [
+		{ type: 'incoming', category: 'subscription', amount: 40, currency: 'USD', paymentDate: new Date().toISOString(), fiscalPeriod: new Date().toISOString().slice(0, 7), method: 'bank', notes: 'Health Individual Plan premium', createdAt: new Date().toISOString() },
+	],
+	'erp-assets': [
+		{ name: 'Office Workstations (x6)', categoryIds: [], serialNumber: 'WS-901', purchaseDate: '2022-02-10', expirationDate: '', purchaseCost: 4200, currentValue: 3000, locationId: '', assignedPersonId: '', condition: 'good', status: 'available', metadata: {}, attachments: [], events: [] },
+	],
+}
+
+await seedCompany({
 	slug: SLUG,
-	org,
+	company,
+	typeId: 'generic',
 	products,
-	user: { email: 'owner@insurance.com', password: 'password123', role: 'owner' },
+	customers,
+	companyScoped,
+	user: { email: 'owner@insurance.com', password: 'password123', roleId: 'admin' },
 })

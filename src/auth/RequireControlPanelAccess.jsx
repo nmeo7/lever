@@ -1,10 +1,11 @@
 import { Navigate } from 'react-router-dom'
 import { useAuthStore } from './store'
 
-export const RequireAdmin = ({ children }) => {
+export const RequireControlPanelAccess = ({ children }) => {
   const user = useAuthStore((s) => s.user)
+  const hasAccess = user?.isPlatformAdmin || (user?.groupId && user?.roleId === 'admin')
 
-  if (user?.roleId !== 'admin') {
+  if (!hasAccess) {
     return <Navigate to="/app" replace />
   }
 

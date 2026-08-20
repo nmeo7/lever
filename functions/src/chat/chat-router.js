@@ -1,7 +1,7 @@
 const express = require('express')
 const cors = require('cors')
 const { onRequest } = require('firebase-functions/v2/https')
-const { generateChatReply } = require('./service')
+const { generateChatReply } = require('./chat-service')
 
 const router = express.Router()
 

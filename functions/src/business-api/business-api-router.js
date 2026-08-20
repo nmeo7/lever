@@ -1,9 +1,9 @@
 const express = require('express')
 const cors = require('cors')
 const { onRequest } = require('firebase-functions/v2/https')
-const { buildSystemPrompt } = require('./systemPrompt')
+const { buildSystemPrompt } = require('./system-prompt')
 const { getToolsForPlan } = require('./tools')
-const { dispatchTool } = require('./toolHandlers')
+const { dispatchTool } = require('./tool-handlers')
 const { getBusinessConfig } = require('./storage')
 
 const router = express.Router({ mergeParams: true })

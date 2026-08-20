@@ -1,29 +1,30 @@
 const { HttpsError } = require('firebase-functions/v2/https')
 const { FieldValue } = require('firebase-admin/firestore')
-const { db, listDocs } = require('../util/data')
+const { db, listDocs, resolveGroupId, createDocInTx } = require('../util/data')
 
 const COLLECTION = 'erp-inventory'
 const MOVEMENTS_COLLECTION = 'erp-inventoryMovements'
 const PRODUCTS_COLLECTION = 'erp-products'
 
-const listInventory = (orgId) => listDocs(COLLECTION, 'lastUpdated', orgId)
+const listInventory = (companyId) => listDocs(COLLECTION, 'lastUpdated', companyId)
 
-const listInventoryMovements = (orgId) => listDocs(MOVEMENTS_COLLECTION, 'createdAt', orgId)
+const listInventoryMovements = (companyId) => listDocs(MOVEMENTS_COLLECTION, 'createdAt', companyId)
 
-const adjustInventory = async (orgId, { productId, locationId, quantity, reorderLevel, expirationDate, notes }) => {
+const adjustInventory = async (companyId, { productId, locationId, quantity, reorderLevel, expirationDate, notes }) => {
   if (!productId) throw new HttpsError('invalid-argument', 'productId is required')
   if (!quantity || quantity === 0) throw new HttpsError('invalid-argument', 'quantity must be a non-zero number')
 
   const productSnap = await db.collection(PRODUCTS_COLLECTION).doc(productId).get()
-  if (!productSnap.exists || productSnap.data().orgId !== orgId) {
+  if (!productSnap.exists || productSnap.data().companyId !== companyId) {
     throw new HttpsError('not-found', `Product ${productId} not found`)
   }
 
   const now = new Date().toISOString()
+  const groupId = await resolveGroupId(companyId)
 
   const invQuery = await db
     .collection(COLLECTION)
-    .where('orgId', '==', orgId)
+    .where('companyId', '==', companyId)
     .where('productId', '==', productId)
     .where('locationId', '==', locationId ?? '')
     .limit(1)
@@ -36,8 +37,9 @@ const adjustInventory = async (orgId, { productId, locationId, quantity, reorder
 
     if (!invSnap.exists) {
       if (quantity < 0) throw new HttpsError('failed-precondition', 'Cannot reduce inventory that does not exist')
-      tx.set(invRef, {
-        orgId,
+      createDocInTx(tx, invRef, {
+        companyId,
+        groupId,
         productId,
         locationId: locationId ?? '',
         quantityOnHand: quantity,
@@ -59,15 +61,15 @@ const adjustInventory = async (orgId, { productId, locationId, quantity, reorder
     }
 
     const movRef = db.collection(MOVEMENTS_COLLECTION).doc()
-    tx.set(movRef, {
-      orgId,
+    createDocInTx(tx, movRef, {
+      companyId,
+      groupId,
       productId,
       locationId: locationId ?? '',
       quantity,
       movementType: quantity > 0 ? 'purchase' : 'adjustment',
       orderId: '',
       notes: notes ?? '',
-      createdAt: now,
     })
   })
 

@@ -1,6 +1,6 @@
 const { HttpsError } = require('firebase-functions/v2/https')
 const { FieldValue } = require('firebase-admin/firestore')
-const { db, listDocs, createDoc, searchDocs } = require('../util/data')
+const { db, listDocs, createDoc, searchDocs, resolveGroupId, createDocInTx, updateDocInTx } = require('../util/data')
 
 const COLLECTION = 'erp-payments'
 const ORDERS_COLLECTION = 'erp-orders'
@@ -10,9 +10,9 @@ const PAYMENT_TYPES = ['incoming', 'outgoing']
 const PAYMENT_CATEGORIES = ['sale', 'salary', 'tax', 'payable', 'receivable', 'refund', 'subscription', 'other']
 const PAYMENT_METHODS = ['cash', 'bank', 'card', 'mobileMoney', 'cheque', 'other']
 
-const listPayments = (orgId) => listDocs(COLLECTION, 'paymentDate', orgId)
+const listPayments = (companyId) => listDocs(COLLECTION, 'paymentDate', companyId)
 
-const createPayment = async (orgId, { type, category, amount, currency = 'USD', paymentDate, method, notes }) => {
+const createPayment = async (companyId, { type, category, amount, currency = 'USD', paymentDate, method, notes }) => {
   if (!PAYMENT_TYPES.includes(type)) throw new HttpsError('invalid-argument', `type must be one of ${PAYMENT_TYPES.join(', ')}`)
   if (!PAYMENT_CATEGORIES.includes(category)) {
     throw new HttpsError('invalid-argument', `category must be one of ${PAYMENT_CATEGORIES.join(', ')}`)
@@ -24,9 +24,11 @@ const createPayment = async (orgId, { type, category, amount, currency = 'USD', 
 
   const now = new Date().toISOString()
   const resolvedDate = paymentDate ?? now
+  const groupId = await resolveGroupId(companyId)
 
   return createDoc(COLLECTION, {
-    orgId,
+    companyId,
+    groupId,
     type,
     category,
     amount,
@@ -35,13 +37,12 @@ const createPayment = async (orgId, { type, category, amount, currency = 'USD', 
     fiscalPeriod: resolvedDate.slice(0, 7),
     method,
     notes: notes ?? '',
-    createdAt: now,
   })
 }
 
-const searchPayments = (orgId, { query, limit }) => searchDocs(COLLECTION, { query, limit, orgId })
+const searchPayments = (companyId, { query, limit }) => searchDocs(COLLECTION, { query, limit, companyId })
 
-const recordOrderPayment = async (orgId, { orderId, amount, method, reference, notes, currency = 'USD' }) => {
+const recordOrderPayment = async (companyId, { orderId, amount, method, reference, notes, currency = 'USD' }) => {
   if (!orderId || !amount || !method) {
     throw new HttpsError('invalid-argument', 'orderId, amount, and method required')
   }
@@ -50,14 +51,14 @@ const recordOrderPayment = async (orgId, { orderId, amount, method, reference, n
 
   await db.runTransaction(async (tx) => {
     const orderSnap = await tx.get(orderRef)
-    if (!orderSnap.exists || orderSnap.data().orgId !== orgId) {
+    if (!orderSnap.exists || orderSnap.data().companyId !== companyId) {
       throw new HttpsError('not-found', 'Order not found')
     }
 
     const order = orderSnap.data()
     const paymentsSnap = await db
       .collection(COLLECTION)
-      .where('orgId', '==', orgId)
+      .where('companyId', '==', companyId)
       .where('relatedId', '==', orderId)
       .get()
     const paidSoFar = paymentsSnap.docs.reduce((s, d) => s + d.data().amount, 0)
@@ -67,8 +68,9 @@ const recordOrderPayment = async (orgId, { orderId, amount, method, reference, n
       newTotal >= order.totalAmount ? 'paid' : newTotal > 0 ? 'partial' : 'unpaid'
 
     const paymentRef = db.collection(COLLECTION).doc()
-    tx.set(paymentRef, {
-      orgId,
+    createDocInTx(tx, paymentRef, {
+      companyId,
+      groupId: order.groupId ?? null,
       type: 'incoming',
       category: 'sale',
       amount,
@@ -81,20 +83,18 @@ const recordOrderPayment = async (orgId, { orderId, amount, method, reference, n
       reference: reference ?? '',
       notes: notes ?? '',
       attachments: [],
-      createdAt: new Date().toISOString(),
     })
 
-    tx.update(orderRef, {
+    updateDocInTx(tx, orderRef, {
       paymentStatus,
       status: paymentStatus === 'paid' ? 'completed' : order.status,
-      updatedAt: new Date().toISOString(),
     })
 
     if (paymentStatus === 'paid') {
       for (const item of order.items) {
         const invQuery = await db
           .collection(INVENTORY_COLLECTION)
-          .where('orgId', '==', orgId)
+          .where('companyId', '==', companyId)
           .where('productId', '==', item.productId)
           .get()
         for (const invDoc of invQuery.docs) {
@@ -104,14 +104,14 @@ const recordOrderPayment = async (orgId, { orderId, amount, method, reference, n
             lastUpdated: new Date().toISOString(),
           })
           const movRef = db.collection(INVENTORY_MOVEMENTS_COLLECTION).doc()
-          tx.set(movRef, {
-            orgId,
+          createDocInTx(tx, movRef, {
+            companyId,
+            groupId: order.groupId ?? null,
             productId: item.productId,
             locationId: invDoc.data().locationId,
             quantity: -item.quantity,
             movementType: 'sale',
             orderId,
-            createdAt: new Date().toISOString(),
           })
         }
       }

@@ -49,7 +49,7 @@ const CartPage = () => {
 	const { mutate: checkout, isPending, error } = useMutation({
 		mutationFn: () =>
 			placeStorefrontOrder({
-				orgId: org.id,
+				companyId: org.id,
 				items: items.map(({ productId, quantity }) => ({ productId, quantity })),
 			}),
 		onSuccess: ({ orderId }) => {

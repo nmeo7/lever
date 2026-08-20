@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
-import { getDocs, collection, query, where } from 'firebase/firestore'
+import { getDoc, getDocs, doc, collection, query, where } from 'firebase/firestore'
 import {
 	Users,
 	MessageSquare,
@@ -73,6 +73,23 @@ const usePendingJobs = () =>
 		},
 	})
 
+const flattenModules = modules =>
+	new Set(Object.values(modules ?? {}).flat())
+
+const useVisibleModules = (roleId, org) =>
+	useQuery({
+		queryKey: ['visible-modules', roleId, org?.roleOverrides?.[roleId]],
+		queryFn: async () => {
+			const override = org?.roleOverrides?.[roleId]?.modules
+			if (override) return flattenModules(override)
+
+			const snap = await getDoc(doc(db, 'erp-roleDefinitions', roleId))
+			return flattenModules(snap.exists() ? snap.data().modules : null)
+		},
+		enabled: !!roleId,
+		staleTime: Infinity,
+	})
+
 const EntityCard = ({ icon: Icon, label, stat, loading, to, sub }) => {
 	const navigate = useNavigate()
 	return (
@@ -106,62 +123,71 @@ const NavRow = ({ icon: Icon, label, to }) => {
 }
 
 const ALL_ROUTES = [
-	{ label: 'Customers', to: '/app/customers', keywords: 'crm people contacts' },
+	{ label: 'Customers', to: '/app/customers', keywords: 'crm people contacts', moduleId: 'customers' },
 	{
 		label: 'Conversations',
 		to: '/app/conversations',
 		keywords: 'chat messages crm',
+		moduleId: 'conversations',
 	},
-	{ label: 'Orders', to: '/app/orders', keywords: 'commerce sales' },
+	{ label: 'Orders', to: '/app/orders', keywords: 'commerce sales', moduleId: 'orders' },
 	{
 		label: 'Payments',
 		to: '/app/payments',
 		keywords: 'cashflow finance money commerce',
+		moduleId: 'payments',
 	},
 	{
 		label: 'Products',
 		to: '/app/products',
 		keywords: 'commerce catalog items',
+		moduleId: 'products',
 	},
 	{
 		label: 'Inventory',
 		to: '/app/inventory',
 		keywords: 'stock warehouse commerce',
+		moduleId: 'inventory',
 	},
-	{ label: 'People', to: '/app/people', keywords: 'hr staff employees org' },
-	{ label: 'Assets', to: '/app/assets', keywords: 'equipment org' },
+	{ label: 'People', to: '/app/people', keywords: 'hr staff employees org', moduleId: 'people' },
+	{ label: 'Assets', to: '/app/assets', keywords: 'equipment org', moduleId: 'assets' },
 	{
 		label: 'Documents',
 		to: '/app/documents',
 		keywords: 'contracts templates rules playbooks org',
+		moduleId: 'documents',
 	},
 	{
 		label: 'Operations',
 		to: '/app/operations',
 		keywords: 'automation process org',
+		moduleId: 'operations',
 	},
 	{
 		label: 'Milestones',
 		to: '/app/milestones',
 		keywords: 'schedule calendar plans decisions org',
+		moduleId: 'milestones',
 	},
-	{ label: 'Jobs', to: '/app/jobs', keywords: 'tasks work pending' },
-	{ label: 'Settings', to: '/app/settings', keywords: 'config org' },
+	{ label: 'Jobs', to: '/app/jobs', keywords: 'tasks work pending', moduleId: 'jobs' },
+	{ label: 'Settings', to: '/app/settings', keywords: 'config org', moduleId: 'settings' },
 	{
 		label: 'Reports',
 		to: '/app/reports',
 		keywords: 'analytics revenue finance charts',
+		moduleId: 'reports',
 	},
 ]
 
-const GlobalSearch = () => {
+const GlobalSearch = ({ visibleModuleIds }) => {
 	const [query, setQuery] = useState('')
 	const navigate = useNavigate()
 	const trimmed = query.trim().toLowerCase()
 	const results = trimmed
 		? ALL_ROUTES.filter(
-				({ label, keywords }) =>
-					label.toLowerCase().includes(trimmed) || keywords.includes(trimmed),
+				({ label, keywords, moduleId }) =>
+					visibleModuleIds.has(moduleId) &&
+					(label.toLowerCase().includes(trimmed) || keywords.includes(trimmed)),
 			)
 		: []
 
@@ -204,7 +230,9 @@ const DashboardPage = () => {
 	const { cashflow } = useStats()
 	const { data: pendingJobs, isLoading: loadingJobs } = usePendingJobs()
 	const user = useAuthStore(s => s.user)
-	const { data: org } = useUserOrg(user?.orgId)
+	const activeCompanyId = useAuthStore(s => s.activeCompanyId)
+	const { data: org } = useUserOrg(activeCompanyId)
+	const { data: visibleModuleIds = new Set() } = useVisibleModules(user?.roleId, org)
 	const navigate = useNavigate()
 
 	return (
@@ -234,78 +262,90 @@ const DashboardPage = () => {
 					Wednesday, and customer Alice hasn't received a reply for 18 hours.{' '}
 					<span className='italic underline cursor-pointer'>See more</span>
 				</p>
-				<GlobalSearch />
+				<GlobalSearch visibleModuleIds={visibleModuleIds} />
 			</section>
 
 			{/* Stat cards + nav */}
 			<div className='grid grid-cols-1 sm:grid-cols-3 gap-4'>
 				{/* Work */}
 				<div>
-					<EntityCard
-						icon={MessageSquare}
-						label="Today's Conversations"
-						stat='12'
-						loading={false}
-						to='/app/conversations'
-					/>
+					{visibleModuleIds.has('conversations') && (
+						<EntityCard
+							icon={MessageSquare}
+							label="Today's Conversations"
+							stat='12'
+							loading={false}
+							to='/app/conversations'
+						/>
+					)}
 					<div className='flex flex-col gap-1 mt-2'>
 						{[
-							{ icon: Users, label: 'Customers', to: '/app/customers' },
-							{ icon: UserRound, label: 'People', to: '/app/people' },
-							{ icon: Monitor, label: 'Assets', to: '/app/assets' },
-							...(user?.role === 'admin'
-								? [{ icon: Building2, label: 'Tenants', to: '/app/tenants' }]
+							{ icon: Users, label: 'Customers', to: '/app/customers', moduleId: 'customers' },
+							{ icon: UserRound, label: 'People', to: '/app/people', moduleId: 'people' },
+							{ icon: Monitor, label: 'Assets', to: '/app/assets', moduleId: 'assets' },
+							...(user?.isPlatformAdmin || (user?.groupId && user?.roleId === 'admin')
+								? [{ icon: Building2, label: 'Control Panel', to: '/app/control-panel', moduleId: null }]
 								: []),
-						].map(({ icon, label, to }) => (
-							<NavRow key={to} icon={icon} label={label} to={to} />
-						))}
+						]
+							.filter(({ moduleId }) => moduleId === null || visibleModuleIds.has(moduleId))
+							.map(({ icon, label, to }) => (
+								<NavRow key={to} icon={icon} label={label} to={to} />
+							))}
 					</div>
 				</div>
 
 				{/* Resources */}
 				<div>
-					<EntityCard
-						icon={Package}
-						label="Today's Orders"
-						stat='5'
-						loading={false}
-						to='/app/orders'
-					/>
+					{visibleModuleIds.has('orders') && (
+						<EntityCard
+							icon={Package}
+							label="Today's Orders"
+							stat='5'
+							loading={false}
+							to='/app/orders'
+						/>
+					)}
 					<div className='flex flex-col gap-1 mt-2'>
 						{[
-							{ icon: Archive, label: 'Inventory', to: '/app/inventory' },
-							{ icon: Tag, label: 'Products', to: '/app/products' },
-						].map(({ icon, label, to }) => (
-							<NavRow key={to} icon={icon} label={label} to={to} />
-						))}
+							{ icon: Archive, label: 'Inventory', to: '/app/inventory', moduleId: 'inventory' },
+							{ icon: Tag, label: 'Products', to: '/app/products', moduleId: 'products' },
+						]
+							.filter(({ moduleId }) => visibleModuleIds.has(moduleId))
+							.map(({ icon, label, to }) => (
+								<NavRow key={to} icon={icon} label={label} to={to} />
+							))}
 					</div>
 				</div>
 
 				{/* Insights */}
 				<div>
-					<EntityCard
-						icon={CreditCard}
-						label='Cashflow MTD'
-						stat={
-							cashflow.data ? `+${formatCurrency(cashflow.data.current)}` : '—'
-						}
-						loading={cashflow.isLoading}
-						to='/app/payments'
-						sub={
-							cashflow.data?.pct != null
-								? `${cashflow.data.pct >= 0 ? '↑' : '↓'} ${Math.abs(cashflow.data.pct)}% vs last month`
-								: undefined
-						}
-					/>
+					{visibleModuleIds.has('payments') && (
+						<EntityCard
+							icon={CreditCard}
+							label='Cashflow MTD'
+							stat={
+								cashflow.data ? `+${formatCurrency(cashflow.data.current)}` : '—'
+							}
+							loading={cashflow.isLoading}
+							to='/app/payments'
+							sub={
+								cashflow.data?.pct != null
+									? `${cashflow.data.pct >= 0 ? '↑' : '↓'} ${Math.abs(cashflow.data.pct)}% vs last month`
+									: undefined
+							}
+						/>
+					)}
 					<div className='flex flex-col gap-1 mt-2'>
 						{[
-							{ icon: BarChart3, label: 'Reports', to: '/app/reports' },
-							{ icon: Calendar, label: 'Milestones', to: '/app/milestones' },
-							{ icon: FileText, label: 'Documents', to: '/app/documents' },
-							{ icon: Shuffle, label: 'Operations', to: '/app/operations' },
-						].map(({ icon, label, to }) => (
-							<NavRow key={to} icon={icon} label={label} to={to} />
-						))}
+							{ icon: BarChart3, label: 'Reports', to: '/app/reports', moduleId: 'reports' },
+							{ icon: Calendar, label: 'Milestones', to: '/app/milestones', moduleId: 'milestones' },
+							{ icon: FileText, label: 'Documents', to: '/app/documents', moduleId: 'documents' },
+							{ icon: Shuffle, label: 'Operations', to: '/app/operations', moduleId: 'operations' },
+						]
+							.filter(({ moduleId }) => visibleModuleIds.has(moduleId))
+							.map(({ icon, label, to }) => (
+								<NavRow key={to} icon={icon} label={label} to={to} />
+							))}
 					</div>
 				</div>
 			</div>

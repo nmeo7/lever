@@ -6,14 +6,30 @@ import { db } from '@/firebase'
 import { useLogout } from '@/auth/useAuth'
 import { useAuthStore } from '@/auth/store'
 
-export const useUserOrg = orgId =>
+export const useUserOrg = companyId =>
   useQuery({
-    queryKey: ['user-org', orgId],
+    queryKey: ['user-company', companyId],
     queryFn: async () => {
-      const snap = await getDoc(doc(db, 'erp-organization', orgId))
+      const snap = await getDoc(doc(db, 'erp-companies', companyId))
       return snap.exists() ? { id: snap.id, ...snap.data() } : null
     },
-    enabled: !!orgId,
+    enabled: !!companyId,
+    staleTime: Infinity,
+  })
+
+const useAccessibleCompanies = user =>
+  useQuery({
+    queryKey: ['accessible-companies', user?.companyIds],
+    queryFn: async () => {
+      const companies = await Promise.all(
+        user.companyIds.map(async (companyId) => {
+          const snap = await getDoc(doc(db, 'erp-companies', companyId))
+          return snap.exists() ? { id: snap.id, ...snap.data() } : null
+        }),
+      )
+      return companies.filter(Boolean)
+    },
+    enabled: !!user?.companyIds?.length,
     staleTime: Infinity,
   })
 
@@ -116,6 +132,9 @@ const UserMenu = () => {
   const navigate = useNavigate()
   const logout = useLogout()
   const user = useAuthStore((s) => s.user)
+  const activeCompanyId = useAuthStore((s) => s.activeCompanyId)
+  const setActiveCompany = useAuthStore((s) => s.setActiveCompany)
+  const { data: companies = [] } = useAccessibleCompanies(user)
 
   useEffect(() => {
     const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false) }
@@ -126,6 +145,11 @@ const UserMenu = () => {
   const handleLogout = () => {
     logout()
     navigate('/login')
+  }
+
+  const handleSelectCompany = (companyId) => {
+    setActiveCompany(companyId)
+    setOpen(false)
   }
 
   const initials = user?.email?.slice(0, 2).toUpperCase() ?? '??'
@@ -140,10 +164,32 @@ const UserMenu = () => {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full mt-2 w-48 rounded-2xl overflow-hidden z-50 flex flex-col bg-white border border-black/10">
+        <div className="absolute right-0 top-full mt-2 w-56 rounded-2xl overflow-hidden z-50 flex flex-col bg-white border border-black/10">
           <div className="px-4 py-3 border-b border-black/10">
             <p className="text-xs text-black/50 truncate">{user?.email}</p>
           </div>
+
+          {companies.length > 0 && (
+            <div className="border-b border-black/10">
+              <p className="px-4 pt-2.5 pb-1.5 text-[10px] font-semibold uppercase tracking-widest text-black/40">
+                Companies
+              </p>
+              <div className="flex flex-col max-h-48 overflow-y-auto">
+                {companies.map((company) => (
+                  <button
+                    key={company.id}
+                    onClick={() => handleSelectCompany(company.id)}
+                    className={`px-4 py-2 text-sm text-left truncate transition-opacity hover:opacity-100 ${
+                      company.id === activeCompanyId ? 'font-semibold opacity-100' : 'opacity-70'
+                    }`}
+                  >
+                    {company.id === activeCompanyId ? '✓ ' : ''}{company.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
           <button
             onClick={() => { navigate('/app/settings'); setOpen(false) }}
             className="px-4 py-2.5 text-sm text-left transition-opacity opacity-70 hover:opacity-100"

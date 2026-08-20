@@ -9,8 +9,8 @@ export const createOrder = async (order) => {
 	return callAuthedFunction('orders', { method: 'POST', body: order })
 }
 
-export const placeStorefrontOrder = async ({ orgId, ...order }) => {
-	return callAuthedFunction('orders', { method: 'POST', body: { orgId, ...order } })
+export const placeStorefrontOrder = async ({ companyId, ...order }) => {
+	return callAuthedFunction('orders', { method: 'POST', body: { companyId, ...order } })
 }
 
 export const recordOrderPayment = async (payment) => {

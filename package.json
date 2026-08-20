@@ -8,6 +8,7 @@
 		"build": "vite build",
 		"preview": "vite preview",
 		"deploy:frontend": "npm run build && npx firebase-tools deploy --only hosting",
+		"seed:shared": "node scripts/seed/shared.js",
 		"seed:gym": "node scripts/seed/gym.js",
 		"seed:artists-hub": "node scripts/seed/artists-hub.js",
 		"seed:insurance": "node scripts/seed/insurance.js",
@@ -15,7 +16,7 @@
 		"seed:hardware": "node scripts/seed/hardware.js",
 		"seed:platform": "node scripts/seed/platform.js",
 		"seed:personal": "node scripts/seed/personal.js",
-		"seed:all": "npm run seed:gym && npm run seed:artists-hub && npm run seed:insurance && npm run seed:electronics && npm run seed:hardware && npm run seed:platform && npm run seed:personal"
+		"seed:all": "npm run seed:shared && npm run seed:gym && npm run seed:artists-hub && npm run seed:insurance && npm run seed:electronics && npm run seed:hardware && npm run seed:platform && npm run seed:personal"
 	},
 	"dependencies": {
 		"@tanstack/react-query": "^5.40.0",

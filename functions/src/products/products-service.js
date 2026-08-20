@@ -1,12 +1,12 @@
 const { HttpsError } = require('firebase-functions/v2/https')
-const { listDocs, createDoc, searchDocs } = require('../util/data')
+const { listDocs, createDoc, searchDocs, resolveGroupId } = require('../util/data')
 
 const COLLECTION = 'erp-products'
 const PRODUCT_TYPES = ['physical', 'service', 'subscription', 'access']
 
-const listProducts = (orgId) => listDocs(COLLECTION, 'createdAt', orgId)
+const listProducts = (companyId) => listDocs(COLLECTION, 'createdAt', companyId)
 
-const createProduct = async (orgId, { name, imageUrl, productType, description, sellingPrice, category, tags }) => {
+const createProduct = async (companyId, { name, imageUrl, productType, description, sellingPrice, category, tags }) => {
   if (!name) throw new HttpsError('invalid-argument', 'name is required')
   if (!PRODUCT_TYPES.includes(productType)) {
     throw new HttpsError('invalid-argument', `productType must be one of ${PRODUCT_TYPES.join(', ')}`)
@@ -15,10 +15,11 @@ const createProduct = async (orgId, { name, imageUrl, productType, description, 
     throw new HttpsError('invalid-argument', 'tags must be an array of strings')
   }
 
-  const now = new Date().toISOString()
+  const groupId = await resolveGroupId(companyId)
 
   return createDoc(COLLECTION, {
-    orgId,
+    companyId,
+    groupId,
     name,
     imageUrl: imageUrl ?? '',
     productType,
@@ -28,11 +29,9 @@ const createProduct = async (orgId, { name, imageUrl, productType, description, 
     tags: tags ?? [],
     status: 'active',
     published: true,
-    createdAt: now,
-    updatedAt: now,
   })
 }
 
-const searchProducts = (orgId, { query, limit }) => searchDocs(COLLECTION, { query, limit, orgId })
+const searchProducts = (companyId, { query, limit }) => searchDocs(COLLECTION, { query, limit, companyId })
 
 module.exports = { listProducts, createProduct, searchProducts, PRODUCT_TYPES }

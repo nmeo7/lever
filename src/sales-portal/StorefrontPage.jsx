@@ -6,20 +6,20 @@ import { getDocs, collection, query, where } from 'firebase/firestore'
 import { db } from '@/firebase'
 import { useOrg } from '@/org/useOrg'
 
-const usePublishedProducts = orgId =>
+const usePublishedProducts = companyId =>
 	useQuery({
-		queryKey: ['storefront-products', orgId],
+		queryKey: ['storefront-products', companyId],
 		queryFn: async () => {
 			const snap = await getDocs(
 				query(
 					collection(db, 'erp-products'),
-					where('orgId', '==', orgId),
+					where('companyId', '==', companyId),
 					where('published', '==', true),
 				),
 			)
 			return snap.docs.map(d => ({ id: d.id, ...d.data() }))
 		},
-		enabled: !!orgId,
+		enabled: !!companyId,
 	})
 
 const formatCurrency = amount =>

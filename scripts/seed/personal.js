@@ -1,9 +1,8 @@
-import { seedOrg } from './_client.js'
+import { seedCompany } from './_client.js'
 
 const SLUG = 'personal'
 
-const org = {
-	slug: SLUG,
+const company = {
 	name: 'My Life',
 	contact: { whatsapp: '15550006006' },
 	brandIdentity: { template: 'empathy' },
@@ -17,9 +16,10 @@ const org = {
 
 const products = []
 
-await seedOrg({
+await seedCompany({
 	slug: SLUG,
-	org,
+	company,
+	typeId: 'generic',
 	products,
-	user: { email: 'owner@personal.com', password: 'password123', role: 'owner' },
+	user: { email: 'owner@personal.com', password: 'password123', roleId: 'admin' },
 })
