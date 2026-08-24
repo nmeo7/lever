@@ -1,40 +1,29 @@
 const express = require('express')
 const cors = require('cors')
 const { onRequest } = require('firebase-functions/v2/https')
-const { requireAuthFromRequest, requireCompanyAccess } = require('../util/auth')
-const { asyncRoute } = require('../util/async-route')
+const { asyncRoute, requireAuth, requireCompanyAccessFrom } = require('../util/async-route')
 const { listPayments, createPayment, searchPayments, recordOrderPayment } = require('./payments-service')
 
 const router = express.Router()
+router.use(requireAuth)
 
-router.get('/', asyncRoute(async (req, res) => {
-  const user = await requireAuthFromRequest(req)
-  const companyId = requireCompanyAccess(user, req.query.companyId)
-  const payments = await listPayments(companyId)
+router.get('/', requireCompanyAccessFrom('query'), asyncRoute(async (req, res) => {
+  const payments = await listPayments(req.companyId)
   res.json({ payments })
 }))
 
-router.post('/search', asyncRoute(async (req, res) => {
-  const user = await requireAuthFromRequest(req)
-  const { companyId, ...body } = req.body ?? {}
-  const verifiedCompanyId = requireCompanyAccess(user, companyId)
-  const payments = await searchPayments(verifiedCompanyId, body)
+router.post('/search', requireCompanyAccessFrom('body'), asyncRoute(async (req, res) => {
+  const payments = await searchPayments(req.companyId, req.body)
   res.json({ payments })
 }))
 
-router.post('/', asyncRoute(async (req, res) => {
-  const user = await requireAuthFromRequest(req)
-  const { companyId, ...body } = req.body ?? {}
-  const verifiedCompanyId = requireCompanyAccess(user, companyId)
-  const result = await createPayment(verifiedCompanyId, body)
+router.post('/', requireCompanyAccessFrom('body'), asyncRoute(async (req, res) => {
+  const result = await createPayment(req.companyId, req.body)
   res.status(201).json(result)
 }))
 
-router.post('/receive', asyncRoute(async (req, res) => {
-  const user = await requireAuthFromRequest(req)
-  const { companyId, ...body } = req.body ?? {}
-  const verifiedCompanyId = requireCompanyAccess(user, companyId)
-  const result = await recordOrderPayment(verifiedCompanyId, body)
+router.post('/receive', requireCompanyAccessFrom('body'), asyncRoute(async (req, res) => {
+  const result = await recordOrderPayment(req.companyId, req.body)
   res.status(201).json(result)
 }))
 

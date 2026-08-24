@@ -1,5 +1,6 @@
 const admin = require('firebase-admin')
 const { FieldValue } = require('firebase-admin/firestore')
+const { HttpsError } = require('firebase-functions/v2/https')
 const { onDocumentWritten } = require('firebase-functions/v2/firestore')
 const { getOrgConfig } = require('./get-org-config')
 const { generateEmbedding } = require('../ai')
@@ -79,6 +80,24 @@ const getDoc = async (collectionName, id) => {
   return snap.exists ? { id: snap.id, ...stripInternalFields(snap.data()) } : null
 }
 
+const batchUpsert = async (companyId, rows, createFn) => {
+  if (!Array.isArray(rows) || !rows.length) throw new HttpsError('invalid-argument', 'rows must be a non-empty array')
+
+  const errors = []
+  let count = 0
+
+  for (const [index, row] of rows.entries()) {
+    try {
+      await createFn(companyId, row)
+      count += 1
+    } catch (error) {
+      errors.push({ row: index, message: error.message ?? 'Unknown error' })
+    }
+  }
+
+  return { count, errors }
+}
+
 const searchDocs = async (collectionName, { query, limit = 10, companyId }) => {
   if (!query?.trim()) return []
 
@@ -128,6 +147,7 @@ module.exports = {
   updateDocInTx,
   deleteDoc,
   getDoc,
+  batchUpsert,
   searchDocs,
   embedForSearch,
   onWriteEmbeddingTrigger,

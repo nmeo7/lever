@@ -72,6 +72,7 @@ No mixing.
 
 - Duplicate first. Extract after real reuse.
 - If you start an abstraction, commit to it or delete it. Half-used layers are worse than none.
+- If the same check or setup line appears at the top of every handler in a router (auth, scoping, validation), it's not incidental duplication — extract it as middleware (`router.use(...)` or per-route middleware) instead of repeating the call in each handler. Keep it inline only when a single call site does it, or when each usage genuinely differs.
 
 ---
 

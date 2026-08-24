@@ -1,31 +1,24 @@
 const express = require('express')
 const cors = require('cors')
 const { onRequest } = require('firebase-functions/v2/https')
-const { requireAuthFromRequest, requireCompanyAccess } = require('../util/auth')
-const { asyncRoute } = require('../util/async-route')
+const { asyncRoute, requireAuth, requireCompanyAccessFrom } = require('../util/async-route')
 const { listInventory, listInventoryMovements, adjustInventory } = require('./inventory-service')
 
 const router = express.Router()
+router.use(requireAuth)
 
-router.get('/', asyncRoute(async (req, res) => {
-  const user = await requireAuthFromRequest(req)
-  const companyId = requireCompanyAccess(user, req.query.companyId)
-  const inventory = await listInventory(companyId)
+router.get('/', requireCompanyAccessFrom('query'), asyncRoute(async (req, res) => {
+  const inventory = await listInventory(req.companyId)
   res.json({ inventory })
 }))
 
-router.get('/movements', asyncRoute(async (req, res) => {
-  const user = await requireAuthFromRequest(req)
-  const companyId = requireCompanyAccess(user, req.query.companyId)
-  const movements = await listInventoryMovements(companyId)
+router.get('/movements', requireCompanyAccessFrom('query'), asyncRoute(async (req, res) => {
+  const movements = await listInventoryMovements(req.companyId)
   res.json({ movements })
 }))
 
-router.post('/', asyncRoute(async (req, res) => {
-  const user = await requireAuthFromRequest(req)
-  const { companyId, ...body } = req.body ?? {}
-  const verifiedCompanyId = requireCompanyAccess(user, companyId)
-  const result = await adjustInventory(verifiedCompanyId, body)
+router.post('/', requireCompanyAccessFrom('body'), asyncRoute(async (req, res) => {
+  const result = await adjustInventory(req.companyId, req.body)
   res.status(201).json(result)
 }))
 

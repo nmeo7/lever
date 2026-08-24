@@ -1,32 +1,24 @@
 const express = require('express')
 const cors = require('cors')
 const { onRequest } = require('firebase-functions/v2/https')
-const { requireAuthFromRequest, requireCompanyAccess } = require('../util/auth')
-const { asyncRoute } = require('../util/async-route')
+const { asyncRoute, requireAuth, requireCompanyAccessFrom } = require('../util/async-route')
 const { listPlans, createPlan, batchUpsertPlans } = require('./plans-service')
 
 const router = express.Router()
+router.use(requireAuth)
 
-router.get('/', asyncRoute(async (req, res) => {
-  const user = await requireAuthFromRequest(req)
-  const companyId = requireCompanyAccess(user, req.query.companyId)
-  const plans = await listPlans(companyId)
+router.get('/', requireCompanyAccessFrom('query'), asyncRoute(async (req, res) => {
+  const plans = await listPlans(req.companyId)
   res.json({ plans })
 }))
 
-router.post('/', asyncRoute(async (req, res) => {
-  const user = await requireAuthFromRequest(req)
-  const { companyId, ...body } = req.body ?? {}
-  const verifiedCompanyId = requireCompanyAccess(user, companyId)
-  const result = await createPlan(verifiedCompanyId, body)
+router.post('/', requireCompanyAccessFrom('body'), asyncRoute(async (req, res) => {
+  const result = await createPlan(req.companyId, req.body)
   res.status(201).json(result)
 }))
 
-router.post('/batch', asyncRoute(async (req, res) => {
-  const user = await requireAuthFromRequest(req)
-  const { companyId, rows } = req.body ?? {}
-  const verifiedCompanyId = requireCompanyAccess(user, companyId)
-  const result = await batchUpsertPlans(verifiedCompanyId, rows)
+router.post('/batch', requireCompanyAccessFrom('body'), asyncRoute(async (req, res) => {
+  const result = await batchUpsertPlans(req.companyId, req.body.rows)
   res.status(201).json(result)
 }))
 

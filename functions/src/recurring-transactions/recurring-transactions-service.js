@@ -1,5 +1,5 @@
 const { HttpsError } = require('firebase-functions/v2/https')
-const { listDocs, createDoc, resolveGroupId } = require('../util/data')
+const { listDocs, createDoc, resolveGroupId, batchUpsert } = require('../util/data')
 
 const COLLECTION = 'erp-recurring-transactions'
 const RECURRING_TRANSACTION_TYPES = ['incoming', 'outgoing']
@@ -50,23 +50,7 @@ const createRecurringTransaction = async (companyId, fields) => {
   })
 }
 
-const batchUpsertRecurringTransactions = async (companyId, rows) => {
-  if (!Array.isArray(rows) || !rows.length) throw new HttpsError('invalid-argument', 'rows must be a non-empty array')
-
-  const errors = []
-  let count = 0
-
-  for (const [index, row] of rows.entries()) {
-    try {
-      await createRecurringTransaction(companyId, row)
-      count += 1
-    } catch (error) {
-      errors.push({ row: index, message: error.message ?? 'Unknown error' })
-    }
-  }
-
-  return { count, errors }
-}
+const batchUpsertRecurringTransactions = (companyId, rows) => batchUpsert(companyId, rows, createRecurringTransaction)
 
 module.exports = {
   listRecurringTransactions,

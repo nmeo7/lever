@@ -1,5 +1,5 @@
 const { HttpsError } = require('firebase-functions/v2/https')
-const { listDocs, createDoc, resolveGroupId } = require('../util/data')
+const { listDocs, createDoc, resolveGroupId, batchUpsert } = require('../util/data')
 
 const COLLECTION = 'erp-locations'
 const LOCATION_TYPES = ['warehouse', 'office', 'store', 'customerSite', 'supplierSite', 'other']
@@ -34,22 +34,6 @@ const createLocation = async (companyId, fields) => {
   })
 }
 
-const batchUpsertLocations = async (companyId, rows) => {
-  if (!Array.isArray(rows) || !rows.length) throw new HttpsError('invalid-argument', 'rows must be a non-empty array')
-
-  const errors = []
-  let count = 0
-
-  for (const [index, row] of rows.entries()) {
-    try {
-      await createLocation(companyId, row)
-      count += 1
-    } catch (error) {
-      errors.push({ row: index, message: error.message ?? 'Unknown error' })
-    }
-  }
-
-  return { count, errors }
-}
+const batchUpsertLocations = (companyId, rows) => batchUpsert(companyId, rows, createLocation)
 
 module.exports = { listLocations, createLocation, batchUpsertLocations, LOCATION_TYPES, LOCATION_STATUSES }

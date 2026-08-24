@@ -1,5 +1,5 @@
 const { HttpsError } = require('firebase-functions/v2/https')
-const { listDocs, createDoc, resolveGroupId } = require('../util/data')
+const { listDocs, createDoc, resolveGroupId, batchUpsert } = require('../util/data')
 
 const COLLECTION = 'erp-plans'
 const PLAN_TYPES = ['income', 'expense', 'goal', 'milestone', 'reminder', 'event']
@@ -55,22 +55,6 @@ const createPlan = async (companyId, fields) => {
   })
 }
 
-const batchUpsertPlans = async (companyId, rows) => {
-  if (!Array.isArray(rows) || !rows.length) throw new HttpsError('invalid-argument', 'rows must be a non-empty array')
-
-  const errors = []
-  let count = 0
-
-  for (const [index, row] of rows.entries()) {
-    try {
-      await createPlan(companyId, row)
-      count += 1
-    } catch (error) {
-      errors.push({ row: index, message: error.message ?? 'Unknown error' })
-    }
-  }
-
-  return { count, errors }
-}
+const batchUpsertPlans = (companyId, rows) => batchUpsert(companyId, rows, createPlan)
 
 module.exports = { listPlans, createPlan, batchUpsertPlans, PLAN_TYPES, PLAN_STATUSES, PLAN_PRIORITIES, PLAN_REPEATS }
