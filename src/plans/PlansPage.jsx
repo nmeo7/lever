@@ -11,10 +11,11 @@ import {
 	PLAN_TYPES,
 	PLAN_STATUSES,
 	PLAN_PRIORITIES,
+	PLAN_REPEATS,
 	DEFAULT_CURRENCY,
 } from './plansApi'
 
-const COLUMNS = ['type', 'category', 'title', 'goal', 'description', 'value', 'expectedDate', 'status', 'priority']
+const COLUMNS = ['type', 'category', 'title', 'goal', 'description', 'value', 'expectedDate', 'status', 'priority', 'repeat']
 
 const formatCurrency = (amount, currency) =>
 	new Intl.NumberFormat('en-US', { style: 'currency', currency: currency || DEFAULT_CURRENCY }).format(amount ?? 0)
@@ -58,6 +59,13 @@ const PlanCard = ({ plan }) => (
 					className='text-[10px] font-semibold uppercase tracking-wide w-fit px-2 py-0.5 rounded-full'
 					style={{ background: 'var(--color-background)', color: priorityColors[plan.priority] ?? 'var(--color-muted)' }}>
 					{plan.priority}
+				</span>
+			)}
+			{plan.repeat && plan.repeat !== 'none' && (
+				<span
+					className='text-[10px] font-semibold uppercase tracking-wide w-fit px-2 py-0.5 rounded-full'
+					style={{ background: 'var(--color-background)', color: 'var(--color-muted)' }}>
+					Repeats {plan.repeat}
 				</span>
 			)}
 		</div>
@@ -123,6 +131,10 @@ const AddPlanModal = ({ open, onClose }) => {
 
 				<Form.Item name='priority' label='Priority' initialValue='medium' rules={[{ required: true }]}>
 					<Select options={PLAN_PRIORITIES} />
+				</Form.Item>
+
+				<Form.Item name='repeat' label='Repeat' initialValue='none' rules={[{ required: true }]}>
+					<Select options={PLAN_REPEATS} />
 				</Form.Item>
 
 				<Form.Item name='description' label='Description'>

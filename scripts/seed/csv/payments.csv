@@ -1,0 +1,12 @@
+companyId,groupId,type,category,amount,currency,paymentDate,fiscalPeriod,method,notes,createdAt
+africa-new-life-church,africa-new-life,incoming,donation,156000,FRW,2026-08-24T00:00:00.000Z,2026-08,bank,Theology certificate tuition,2026-08-24T00:00:00.000Z
+africa-new-life-school,africa-new-life,incoming,sponsorship,51000,FRW,2026-08-24T00:00:00.000Z,2026-08,card,Monthly child sponsorship,2026-08-24T00:00:00.000Z
+africa-new-life-hospital,africa-new-life,incoming,service,10400,FRW,2026-08-24T00:00:00.000Z,2026-08,cash,Prenatal checkup fee,2026-08-24T00:00:00.000Z
+artists-hub-kimihurura,artists-hub,incoming,sale,19500,FRW,2026-08-24T00:00:00.000Z,2026-08,mobileMoney,Cultural Night ticket,2026-08-24T00:00:00.000Z
+artists-hub-kimihurura,artists-hub,outgoing,rent,650000,FRW,2026-08-24T00:00:00.000Z,2026-08,bank,Studio rent,2026-08-24T00:00:00.000Z
+artists-hub-nyamirambo,artists-hub,incoming,sale,117000,FRW,2026-08-24T00:00:00.000Z,2026-08,cash,Homestay booking deposit,2026-08-24T00:00:00.000Z
+electronics,,incoming,sale,519000,FRW,2026-08-24T00:00:00.000Z,2026-08,card,Nova X12 sale,2026-08-24T00:00:00.000Z
+hardware,,incoming,sale,55000,FRW,2026-08-24T00:00:00.000Z,2026-08,cash,Tool set sale,2026-08-24T00:00:00.000Z
+insurance,,incoming,subscription,52000,FRW,2026-08-24T00:00:00.000Z,2026-08,bank,Health Individual Plan premium,2026-08-24T00:00:00.000Z
+gym,,incoming,sale,58000,FRW,2026-08-24T00:00:00.000Z,2026-08,card,Monthly membership,2026-08-24T00:00:00.000Z
+gym,,outgoing,rent,1040000,FRW,2026-08-24T00:00:00.000Z,2026-08,bank,Facility rent,2026-08-24T00:00:00.000Z

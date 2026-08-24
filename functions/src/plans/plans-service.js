@@ -5,10 +5,11 @@ const COLLECTION = 'erp-plans'
 const PLAN_TYPES = ['income', 'expense', 'goal', 'milestone', 'reminder', 'event']
 const PLAN_STATUSES = ['expected', 'confirmed', 'cancelled', 'realized']
 const PLAN_PRIORITIES = ['low', 'medium', 'high', 'critical']
+const PLAN_REPEATS = ['none', 'daily', 'weekly', 'monthly', 'quarterly', 'yearly']
 
 const listPlans = (companyId) => listDocs(COLLECTION, 'createdAt', companyId)
 
-const validatePlanFields = ({ type, title, status, priority }) => {
+const validatePlanFields = ({ type, title, status, priority, repeat }) => {
   if (!PLAN_TYPES.includes(type)) {
     throw new HttpsError('invalid-argument', `type must be one of ${PLAN_TYPES.join(', ')}`)
   }
@@ -19,13 +20,16 @@ const validatePlanFields = ({ type, title, status, priority }) => {
   if (priority !== undefined && !PLAN_PRIORITIES.includes(priority)) {
     throw new HttpsError('invalid-argument', `priority must be one of ${PLAN_PRIORITIES.join(', ')}`)
   }
+  if (repeat !== undefined && !PLAN_REPEATS.includes(repeat)) {
+    throw new HttpsError('invalid-argument', `repeat must be one of ${PLAN_REPEATS.join(', ')}`)
+  }
 }
 
 const createPlan = async (companyId, fields) => {
   validatePlanFields(fields)
   const {
     type, title, description, category, goal, value, currency, probability,
-    expectedDate, actualAmount, actualDate, status, priority, notes,
+    expectedDate, actualAmount, actualDate, status, priority, repeat, notes,
   } = fields
 
   const groupId = await resolveGroupId(companyId)
@@ -46,6 +50,7 @@ const createPlan = async (companyId, fields) => {
     actualDate: actualDate ?? '',
     status: status ?? 'expected',
     priority: priority ?? 'medium',
+    repeat: repeat ?? 'none',
     notes: notes ?? '',
   })
 }
@@ -68,4 +73,4 @@ const batchUpsertPlans = async (companyId, rows) => {
   return { count, errors }
 }
 
-module.exports = { listPlans, createPlan, batchUpsertPlans, PLAN_TYPES, PLAN_STATUSES, PLAN_PRIORITIES }
+module.exports = { listPlans, createPlan, batchUpsertPlans, PLAN_TYPES, PLAN_STATUSES, PLAN_PRIORITIES, PLAN_REPEATS }

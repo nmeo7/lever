@@ -1,0 +1,10 @@
+companyId,groupId,name,categoryIds,serialNumber,purchaseDate,expirationDate,purchaseCost,currentValue,locationId,assignedPersonId,condition,status,metadata,attachments,events
+africa-new-life-church,africa-new-life,Sanctuary Sound System,[],CH-1001,2020-02-15,,3900000,2340000,,,good,available,{},[],[]
+africa-new-life-school,africa-new-life,Classroom Desks (Set of 30),[],SC-2001,2021-08-01,,1950000,1430000,,,good,available,{},[],[]
+africa-new-life-hospital,africa-new-life,Ultrasound Machine,[],HO-3001,2019-11-20,,15600000,9750000,,,good,available,{},[],[]
+artists-hub-kimihurura,artists-hub,Ingoma Drum Set (Performance),[],IG-3301,2022-06-01,,780000,585000,,,good,available,{},[],[]
+artists-hub-nyamirambo,artists-hub,Tour Van,[],VAN-002,2021-03-10,,10400000,6760000,,,fair,available,{},[],[]
+electronics,,Store POS Terminal,[],POS-441,2023-05-01,,390000,286000,,,good,available,{},[],[]
+hardware,,Delivery Truck,[],TRK-118,2020-11-20,,15600000,9750000,,,fair,available,{},[],[]
+insurance,,Office Workstations (x6),[],WS-901,2022-02-10,,5460000,3900000,,,good,available,{},[],[]
+gym,,Treadmill (x4),[],TM-2201,2023-01-15,,6240000,4680000,,,good,available,{},[],[]

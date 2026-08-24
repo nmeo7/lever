@@ -1,0 +1,11 @@
+companyId,groupId,name,company,email,phone,address,source,status,estimatedValue,summary,preferences,tags,metadata,attachments
+africa-new-life-church,africa-new-life,Alice Uwimana,,alice.uwimana@example.com,+250780000201,"Kigali, Rwanda",walk-in,active,0,"Regular Sunday service attendee, interested in theology certificate.",{},"[""congregant""]",{},[]
+africa-new-life-school,africa-new-life,Emmanuel Habimana,,emmanuel.habimana@example.com,+250780000202,"Kigali, Rwanda",referral,active,51000,"Sponsored student, doing well in the tutoring program.",{},"[""student""]",{},[]
+africa-new-life-hospital,africa-new-life,Grace Mukamana,,grace.mukamana@example.com,+250780000203,"Kigali, Rwanda",walk-in,lead,10400,Booked a prenatal checkup for next week.,{},"[""patient"",""maternal-care""]",{},[]
+artists-hub-kimihurura,artists-hub,Jean Baptiste Nsanzimana,,jb.nsanzimana@example.com,+250780000101,"Kimihurura, Kigali",walk-in,active,19500,"Attended Cultural Night, interested in dance courses.",{},"[""event-goer""]",{},[]
+artists-hub-nyamirambo,artists-hub,Aline Umutoni,,aline.umutoni@example.com,+250780000102,"Nyamirambo, Kigali",referral,lead,117000,Asked about the Village Homestay Experience.,{},"[""tourism""]",{},[]
+electronics,,Patrick Habimana,,patrick.habimana@example.com,+250780000201,Kigali Heights,walk-in,active,845000,"Bought a Nova X12, asked about laptop trade-ins.",{},"[""repeat""]",{},[]
+hardware,,Claude Nkurunziza,Nkurunziza Construction,claude.nk@example.com,+250780000301,"Nyabugogo, Kigali",referral,active,390000,"Regular contractor, buys tools and paint in bulk.",{},"[""contractor"",""wholesale""]",{},[]
+insurance,,Diane Mukamana,,diane.mukamana@example.com,+250780000401,Kigali City Centre,walk-in,active,52000,"Health Individual Plan holder, monthly premium.",{},"[""policyholder""]",{},[]
+gym,,Alice Uwase,,alice.uwase@example.com,+250780000001,"Kacyiru, Kigali",walk-in,active,546000,"Annual member, attends HIIT classes weekly.",{},"[""member""]",{},[]
+gym,,Eric Mugisha,,eric.mugisha@example.com,+250780000002,"Remera, Kigali",referral,active,58000,"Monthly member, interested in personal training.",{},"[""member"",""lead-pt""]",{},[]

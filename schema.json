@@ -313,6 +313,7 @@
 			"actualDate": "",
 			"status": "expected | confirmed | cancelled | realized",
 			"priority": "low | medium | high | critical",
+			"repeat": "none | daily | weekly | monthly | quarterly | yearly",
 			"notes": "",
 			"createdAt": "",
 			"updatedAt": ""

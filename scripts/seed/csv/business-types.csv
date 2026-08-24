@@ -1,0 +1,5 @@
+typeId,name,description,frontdesk
+gym,Gym / Fitness Studio,"Memberships, classes, and personal training.","{""template"":""winter"",""sections"":[""hero"",""categories"",""products""]}"
+shop,Retail Shop,"Physical products across categories, with inventory tracking.","{""template"":""winter"",""sections"":[""hero"",""categories"",""products""]}"
+school,School / Training Center,"Courses, cohorts, and enrollments.","{""template"":""empathy"",""sections"":[""hero"",""categories"",""products""]}"
+generic,Generic Business,A general-purpose model for any business without a dedicated template.,"{""template"":""empathy"",""sections"":[""hero"",""categories"",""products""]}"

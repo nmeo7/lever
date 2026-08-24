@@ -1,0 +1,15 @@
+id,label,description,icon,order
+customers,Customers,People or accounts you sell to or serve.,users,0
+conversations,Conversations,Chat history with customers.,message-square,1
+products,Products,Items and services you sell.,package,2
+orders,Orders,Sales and purchase orders.,shopping-cart,3
+payments,Payments,"Cashflow, incoming and outgoing.",credit-card,4
+inventory,Inventory,Stock levels across locations.,boxes,5
+resources,Resources,Equipment and property you own.,monitor,6
+people,People,Staff and employees.,user-round,7
+jobs,Jobs,Tasks and workflow steps.,briefcase,8
+plans,Plans,Forecasted and realized income/expenses.,trending-up,9
+knowledge,Knowledge,"Contracts, templates, rules, and playbooks.",file-text,10
+operations,Operations,Automation and process workflows.,shuffle,11
+settings,Settings,Company configuration.,tag,13
+reports,Reports,"Analytics, revenue, and finance charts.",bar-chart-3,14

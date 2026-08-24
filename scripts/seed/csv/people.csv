@@ -1,0 +1,12 @@
+companyIds,groupId,name,email,password,roleId,isPlatformAdmin
+"[""africa-new-life-church""]",africa-new-life,Pastor Samuel Mugisha,samuel@africa-new-life.com,password123,employee,
+"[""africa-new-life-school""]",africa-new-life,Beatrice Ingabire,beatrice@africa-new-life.com,password123,employee,
+"[""africa-new-life-hospital""]",africa-new-life,Dr. Claude Niyonzima,claude@africa-new-life.com,password123,employee,
+"[""africa-new-life-church"",""africa-new-life-school"",""africa-new-life-hospital""]",africa-new-life,Diane Mutesi,owner@africa-new-life.com,password123,admin,
+"[""artists-hub-kimihurura"",""artists-hub-nyamirambo""]",artists-hub,,owner@artists-hub.com,password123,admin,
+"[""electronics""]",,,owner@electronics.com,password123,admin,
+"[""hardware""]",,,owner@hardware.com,password123,admin,
+"[""insurance""]",,,owner@insurance.com,password123,admin,
+"[""platform""]",,,admin@lev.rw,password123,admin,true
+"[""personal""]",,,owner@personal.com,password123,admin,
+"[""gym""]",,,owner@gym.com,password123,admin,
