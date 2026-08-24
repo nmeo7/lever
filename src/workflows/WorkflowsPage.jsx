@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   ReactFlow, Background, Controls,
   addEdge, useNodesState, useEdgesState,
@@ -81,6 +82,12 @@ const nodeTypes = {
   decision: DecisionNode,
 }
 
+const stepTypeLabelKeys = {
+  manual:         'workflows.legend.manual',
+  automation:     'workflows.legend.automation',
+  customerAction: 'workflows.legend.customer',
+}
+
 const stepTypeLabel = {
   manual:         'Manual',
   automation:     'Automation',
@@ -92,7 +99,7 @@ const stepTypeLabel = {
 const ARROW = { type: MarkerType.ArrowClosed, color: '#6b7280', width: 16, height: 16 }
 const EDGE_STYLE = { stroke: '#9ca3af', strokeWidth: 1.5 }
 
-const buildNodesAndEdges = (workflow) => {
+const buildNodesAndEdges = (workflow, t) => {
   const nodes = []
   const edges = []
 
@@ -114,7 +121,7 @@ const buildNodesAndEdges = (workflow) => {
       data: {
         label: step.name,
         stepType: step.stepType,
-        stepTypeLabel: stepTypeLabel[step.stepType] ?? step.stepType,
+        stepTypeLabel: t(stepTypeLabelKeys[step.stepType] ?? step.stepType, stepTypeLabel[step.stepType] ?? step.stepType),
         assignedRole: step.assignedRole,
       },
     })
@@ -198,12 +205,24 @@ const dummyWorkflows = [
       { id: 's4', name: 'Orientation Meeting', stepType: 'manual',         assignedRole: 'manager', transitions: [] },
     ],
   },
+  {
+    id: 'wf-3',
+    name: 'Logistics',
+    status: 'active',
+    steps: [
+      { id: 's1', name: 'Prepare Shipment', stepType: 'manual',     assignedRole: 'employee', transitions: [{ condition: '', nextStepId: 's2' }] },
+      { id: 's2', name: 'Dispatch Carrier', stepType: 'automation', action: 'dispatchCarrier', transitions: [{ condition: '', nextStepId: 's3' }] },
+      { id: 's3', name: 'In Transit',       stepType: 'manual',     assignedRole: 'employee', transitions: [{ condition: '', nextStepId: 's4' }] },
+      { id: 's4', name: 'Delivered',        stepType: 'customerAction', assignedRole: '',     transitions: [] },
+    ],
+  },
 ]
 
 // ─── Flow component ───────────────────────────────────────────────────────────
 
 const WorkflowFlow = ({ workflow }) => {
-  const { nodes: initialNodes, edges: initialEdges } = buildNodesAndEdges(workflow)
+  const { t } = useTranslation()
+  const { nodes: initialNodes, edges: initialEdges } = buildNodesAndEdges(workflow, t)
   const [nodes, , onNodesChange] = useNodesState(initialNodes)
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges)
   const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), [setEdges])
@@ -231,21 +250,22 @@ const WorkflowFlow = ({ workflow }) => {
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 const OperationsPage = () => {
+  const { t } = useTranslation()
   const [selected, setSelected] = useState(dummyWorkflows[0].id)
   const workflow = dummyWorkflows.find((w) => w.id === selected)
 
   return (
-    <PageShell title="Operations">
+    <PageShell title={t('workflows.title', 'Operations')}>
       <div className="flex gap-2 mb-4">
         {dummyWorkflows.map((wf) => (
           <button
             key={wf.id}
             onClick={() => setSelected(wf.id)}
-            className="px-4 py-1.5 rounded-lg text-sm font-medium transition-all"
+            className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all ${selected === wf.id ? '' : 'border'}`}
             style={{
               background: selected === wf.id ? 'var(--color-primary)' : 'var(--color-surface)',
+              borderColor: 'var(--color-border)',
               color: selected === wf.id ? '#fff' : 'var(--color-text)',
-              border: '1px solid var(--color-border)',
             }}
           >
             {wf.name}
@@ -255,10 +275,10 @@ const OperationsPage = () => {
 
       <div className="flex gap-4 mb-4">
         {[
-          { label: 'Manual',      bg: '#ffffff', border: '#d1d5db' },
-          { label: 'Approval',    bg: '#fffbeb', border: '#fcd34d' },
-          { label: 'Automation',  bg: '#eff6ff', border: '#93c5fd' },
-          { label: 'Customer',    bg: '#f0fdf4', border: '#86efac' },
+          { label: t('workflows.legend.manual', 'Manual'),     bg: '#ffffff', border: '#d1d5db' },
+          { label: t('workflows.legend.approval', 'Approval'),    bg: '#fffbeb', border: '#fcd34d' },
+          { label: t('workflows.legend.automation', 'Automation'),  bg: '#eff6ff', border: '#93c5fd' },
+          { label: t('workflows.legend.customer', 'Customer'),    bg: '#f0fdf4', border: '#86efac' },
         ].map(({ label, bg, border }) => (
           <div key={label} className="flex items-center gap-1.5">
             <div className="w-3 h-3 rounded" style={{ background: bg, border: `1.5px solid ${border}` }} />
@@ -268,8 +288,8 @@ const OperationsPage = () => {
       </div>
 
       <div
-        className="rounded-2xl overflow-hidden"
-        style={{ border: '1px solid var(--color-border)', background: '#f9fafb' }}
+        className="neu-raised rounded-2xl overflow-hidden"
+        style={{ background: '#f9fafb' }}
       >
         <WorkflowFlow key={workflow.id} workflow={workflow} />
       </div>

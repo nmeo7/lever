@@ -1,14 +1,16 @@
 import { useState, useRef, useEffect } from 'react'
 import { QRCode } from 'antd'
-import { useNavigate, useParams, Link } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 import { getDocs, collection, query, where } from 'firebase/firestore'
 import { db } from '@/firebase'
-import { useOrg } from '@/org/useOrg'
+import { CartTray } from '@/util/layouts/PortalLayout'
+import StaffLoginFooter from './StaffLoginFooter'
 
 const usePublishedProducts = companyId =>
 	useQuery({
-		queryKey: ['storefront-products', companyId],
+		queryKey: ['frontdesk-products', companyId],
 		queryFn: async () => {
 			const snap = await getDocs(
 				query(
@@ -23,7 +25,7 @@ const usePublishedProducts = companyId =>
 	})
 
 const formatCurrency = amount =>
-	new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(
+	new Intl.NumberFormat('en-US', { style: 'currency', currency: 'FRW' }).format(
 		amount ?? 0,
 	)
 
@@ -58,6 +60,7 @@ const ProductCard = ({ product }) => {
 }
 
 const HeroSearch = ({ products, whatsappUrl }) => {
+	const { t } = useTranslation()
 	const [input, setInput] = useState('')
 	const navigate = useNavigate()
 	const { orgSlug } = useParams()
@@ -106,7 +109,7 @@ const HeroSearch = ({ products, whatsappUrl }) => {
 						type='text'
 						value={input}
 						onChange={e => setInput(e.target.value)}
-						placeholder='What can we help you find today?'
+						placeholder={t('salesPortal.heroSearchPlaceholder', 'What can we help you find today?')}
 						className='flex-1 text-sm bg-transparent outline-none placeholder-white/70'
 						style={{ color: '#ffffff' }}
 					/>
@@ -115,7 +118,7 @@ const HeroSearch = ({ products, whatsappUrl }) => {
 							href={whatsappUrl}
 							target='_blank'
 							rel='noopener noreferrer'
-							title='Chat on WhatsApp'
+							title={t('salesPortal.chatOnWhatsapp', 'Chat on WhatsApp')}
 							className='flex-shrink-0 transition-opacity opacity-60 hover:opacity-100'
 							style={{ color: '#25D366' }}>
 							<svg
@@ -141,15 +144,15 @@ const HeroSearch = ({ products, whatsappUrl }) => {
 						<div
 							className='px-5 py-4 text-sm flex items-center justify-between gap-4'
 							style={{ color: 'var(--color-muted)' }}>
-							<span>No products found for "{input}"</span>
+							<span>{t('salesPortal.noProductsFoundFor', 'No products found for "{{query}}"', { query: input })}</span>
 							{whatsappUrl && (
 								<a
-									href={`https://wa.me/${whatsappUrl.split('wa.me/')[1]?.split('?')[0]}?text=${encodeURIComponent(`Hi! Do you have "${input}" available?`)}`}
+									href={`https://wa.me/${whatsappUrl.split('wa.me/')[1]?.split('?')[0]}?text=${encodeURIComponent(t('salesPortal.whatsappAvailabilityQuery', 'Hi! Do you have "{{query}}" available?', { query: input }))}`}
 									target='_blank'
 									rel='noopener noreferrer'
 									className='text-xs font-medium flex-shrink-0 transition-opacity hover:opacity-70'
 									style={{ color: '#25D366' }}>
-									Ask on WhatsApp →
+									{t('salesPortal.askOnWhatsapp', 'Ask on WhatsApp →')}
 								</a>
 							)}
 						</div>
@@ -182,6 +185,7 @@ const HeroSearch = ({ products, whatsappUrl }) => {
 }
 
 const MiniSearch = ({ products }) => {
+	const { t } = useTranslation()
 	const [input, setInput] = useState('')
 	const navigate = useNavigate()
 	const { orgSlug } = useParams()
@@ -209,7 +213,7 @@ const MiniSearch = ({ products }) => {
 				value={input}
 				onChange={e => setInput(e.target.value)}
 				onKeyDown={handleKeyDown}
-				placeholder='Search products'
+				placeholder={t('salesPortal.searchProductsPlaceholder', 'Search products')}
 				className='w-full text-xs rounded-xl px-3 py-1.5 outline-none placeholder-white/70'
 				style={{ background: 'var(--color-primary)', color: '#ffffff' }}
 			/>
@@ -224,7 +228,7 @@ const MiniSearch = ({ products }) => {
 						<p
 							className='px-4 py-2 text-lg'
 							style={{ color: 'var(--color-muted)' }}>
-							No products found
+							{t('products.emptyState', 'No products found')}
 						</p>
 					) : (
 						results.slice(0, 6).map(p => (
@@ -246,11 +250,9 @@ const MiniSearch = ({ products }) => {
 	)
 }
 
-const FEATURED_LABEL = 'Featured'
-
-const buildSections = (categories, products) => {
+const buildSections = (categories, products, featuredLabel) => {
 	const featuredSection = {
-		label: FEATURED_LABEL,
+		label: featuredLabel,
 		image: categories[0]?.image,
 		products,
 	}
@@ -317,7 +319,9 @@ const CategorySection = ({ section, sectionRef }) => (
 	</div>
 )
 
-const WhatsappQrPanel = ({ whatsappUrl, whatsapp, className = '' }) => (
+const WhatsappQrPanel = ({ whatsappUrl, whatsapp, className = '' }) => {
+	const { t } = useTranslation()
+	return (
 	<a
 		href={whatsappUrl}
 		target='_blank'
@@ -327,7 +331,7 @@ const WhatsappQrPanel = ({ whatsappUrl, whatsapp, className = '' }) => (
 		<p
 			className='text-xs font-semibold uppercase tracking-widest'
 			style={{ color: '#ffffff', opacity: 0.85 }}>
-			Chat with us
+			{t('salesPortal.chatWithUs', 'Chat with us')}
 		</p>
 		<div className='rounded-xl p-3' style={{ background: '#ffffff' }}>
 			<QRCode
@@ -342,7 +346,8 @@ const WhatsappQrPanel = ({ whatsappUrl, whatsapp, className = '' }) => (
 			{whatsapp}
 		</span>
 	</a>
-)
+	)
+}
 
 const StoreInfoList = ({ items }) => (
 	<div className='flex flex-col gap-1.5 items-center'>
@@ -398,9 +403,9 @@ const useActiveSection = (sectionRefs, sectionCount) => {
 	return activeIndex
 }
 
-const StorefrontPage = () => {
+const CatalogTemplate = ({ org, whatsapp, whatsappUrl }) => {
+	const { t } = useTranslation()
 	const { orgSlug } = useParams()
-	const { data: org } = useOrg(orgSlug)
 	const { data: products = [] } = usePublishedProducts(org?.id)
 
 	const frontdesk = org?.frontdesk ?? {}
@@ -409,13 +414,9 @@ const StorefrontPage = () => {
 	const showWhatsapp = frontdesk.whatsapp !== false
 	const featuredHero = frontdesk.hero === 'featuredProduct'
 
-	const SAMPLE_WHATSAPP = '15550000000'
-	const whatsapp = org?.contact?.whatsapp ?? SAMPLE_WHATSAPP
-	const whatsappUrl = `https://wa.me/${whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent("Hi! I'd like to place an order.")}`
-
-	const categories = org?.storefront?.categories ?? []
-	const storeInfo = org?.storefront?.info ?? []
-	const sections = buildSections(categories, products)
+	const categories = org?.frontdesk?.categories ?? []
+	const storeInfo = org?.frontdesk?.info ?? []
+	const sections = buildSections(categories, products, t('salesPortal.featured', 'Featured'))
 	const featuredProduct = products[0]
 
 	const sectionRefs = useRef([])
@@ -441,6 +442,10 @@ const StorefrontPage = () => {
 
 	return (
 		<div className='flex flex-col gap-24'>
+			<div className='flex justify-end'>
+				<CartTray orgSlug={orgSlug} />
+			</div>
+
 			{/* Hero */}
 			<section className='text-center flex flex-col items-center gap-4 pt-24 pb-4'>
 				{featuredHero && featuredProduct ? (
@@ -449,10 +454,10 @@ const StorefrontPage = () => {
 							<ProductCard product={featuredProduct} />
 						</div>
 					</div>
-				) : org?.storefront?.heroImage ? (
+				) : org?.frontdesk?.heroImage ? (
 					<img
-						src={org.storefront.heroImage}
-						alt={org?.name ?? 'Our store'}
+						src={org.frontdesk.heroImage}
+						alt={org?.name ?? t('salesPortal.ourStore', 'Our store')}
 						className='w-full max-w-2xl rounded-3xl object-cover'
 						style={{ maxHeight: '360px' }}
 					/>
@@ -460,14 +465,14 @@ const StorefrontPage = () => {
 					<h1
 						className='text-5xl font-bold leading-tight'
 						style={{ color: 'var(--color-text)' }}>
-						{org?.storefront?.headline ??
-							`Welcome to ${org?.name ?? 'our store'}`}
+						{org?.frontdesk?.headline ??
+							t('salesPortal.welcomeToStore', 'Welcome to {{storeName}}', { storeName: org?.name ?? t('salesPortal.ourStoreLowercase', 'our store') })}
 					</h1>
 				)}
 				<p
 					className='text-lg max-w-xl mb-8'
 					style={{ color: 'var(--color-muted)' }}>
-					{org?.storefront?.subheadline ??
+					{org?.frontdesk?.subheadline ??
 						'Hano tubafitiye amata na fanta bikonje!'}
 				</p>
 				{showSearch && (
@@ -496,7 +501,7 @@ const StorefrontPage = () => {
 									<p
 										className='text-sm font-bold flex-shrink-0'
 										style={{ color: 'var(--color-text)' }}>
-										{org?.name ?? 'Our store'}
+										{org?.name ?? t('salesPortal.ourStore', 'Our store')}
 									</p>
 									<MiniSearch products={products} />
 								</div>
@@ -544,18 +549,9 @@ const StorefrontPage = () => {
 				</section>
 			)}
 
-			{/* Login */}
-			<div className='flex flex-col items-center gap-4 py-12'>
-				<hr className='w-full' style={{ borderColor: 'var(--color-border)' }} />
-				<Link
-					to='/login'
-					className='text-xs transition-opacity opacity-40 hover:opacity-70'
-					style={{ color: 'var(--color-text)' }}>
-					Staff login
-				</Link>
-			</div>
+			<StaffLoginFooter />
 		</div>
 	)
 }
 
-export default StorefrontPage
+export default CatalogTemplate

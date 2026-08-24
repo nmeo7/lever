@@ -21,6 +21,7 @@ import { db } from '@/firebase'
 import { useAuthStore } from '@/auth/store'
 import HeaderControls, { useUserOrg } from '@/util/components/HeaderControls'
 import { useModuleLabels, resolveModuleLabel } from '@/util/moduleLabels'
+import { useT } from '@/i18n/useTranslateWithOverrides'
 
 const now = new Date()
 const CURRENT_MONTH = now.toISOString().slice(0, 7)
@@ -31,7 +32,7 @@ const PREV_MONTH = new Date(now.getFullYear(), now.getMonth() - 1, 1)
 const formatCurrency = amount =>
 	new Intl.NumberFormat('en-US', {
 		style: 'currency',
-		currency: 'USD',
+		currency: 'FRW',
 		maximumFractionDigits: 0,
 	}).format(amount)
 
@@ -96,15 +97,16 @@ const EntityCard = ({ icon: Icon, label, stat, loading, to, sub }) => {
 	return (
 		<button
 			onClick={() => navigate(to)}
-			className='w-full rounded-2xl p-5 text-left flex flex-col gap-3 transition-all hover:scale-[1.02] active:scale-[0.98] hover:-translate-y-0.5 bg-white border border-black/10'>
+			className='neu-raised-hover group w-full rounded-2xl p-5 text-left flex flex-col gap-3 border transition-all hover:scale-[1.02] active:scale-[0.98] hover:-translate-y-0.5'
+			style={{ background: 'var(--neu-bg)', borderColor: 'var(--color-border)' }}>
 			<span className='w-10 h-10 rounded-xl flex items-center justify-center bg-black/5'>
 				<Icon size={20} strokeWidth={1.75} className='text-black' />
 			</span>
 			<div>
-				<p className='text-xs mb-0.5 text-black/50'>{label}</p>
+				<p className='text-xs mb-0.5 text-black/50 group-hover:font-bold'>{label}</p>
 				<p className='text-2xl font-bold text-black'>{loading ? '…' : stat}</p>
 				{!loading && sub && (
-					<p className='text-xs mt-0.5 font-medium text-black/50'>{sub}</p>
+					<p className='text-xs mt-0.5 font-medium text-black/50 group-hover:font-bold'>{sub}</p>
 				)}
 			</div>
 		</button>
@@ -114,65 +116,77 @@ const EntityCard = ({ icon: Icon, label, stat, loading, to, sub }) => {
 const NavRow = ({ icon: Icon, label, to }) => {
 	const navigate = useNavigate()
 	return (
-		<button
-			onClick={() => navigate(to)}
-			className='flex items-center gap-2 py-1.5 text-sm text-left transition-opacity opacity-70 hover:opacity-100 text-black'>
-			<Icon size={16} strokeWidth={1.75} />
-			{label}
-		</button>
+		<div className='py-1.5'>
+			<button
+				onClick={() => navigate(to)}
+				className='inline-flex items-center gap-2 text-sm text-left opacity-70 hover:opacity-100 text-black group'>
+				<Icon size={16} strokeWidth={1.75} />
+				<span className='transition-all group-hover:underline group-hover:font-bold group-hover:pl-1.5'>
+					{label}
+				</span>
+			</button>
+		</div>
 	)
 }
 
 const ALL_ROUTES = [
-	{ label: 'Customers', to: '/app/customers', keywords: 'crm people contacts', moduleId: 'customers' },
+	{ labelKey: 'dashboard.nav.customers', label: 'Customers', to: '/app/customers', keywords: 'crm people contacts', moduleId: 'customers' },
 	{
+		labelKey: 'dashboard.nav.conversations',
 		label: 'Conversations',
 		to: '/app/conversations',
 		keywords: 'chat messages crm',
 		moduleId: 'conversations',
 	},
-	{ label: 'Orders', to: '/app/orders', keywords: 'commerce sales', moduleId: 'orders' },
+	{ labelKey: 'dashboard.nav.orders', label: 'Orders', to: '/app/orders', keywords: 'commerce sales', moduleId: 'orders' },
 	{
+		labelKey: 'dashboard.nav.payments',
 		label: 'Payments',
 		to: '/app/payments',
 		keywords: 'cashflow finance money commerce',
 		moduleId: 'payments',
 	},
 	{
+		labelKey: 'dashboard.nav.products',
 		label: 'Products',
 		to: '/app/products',
 		keywords: 'commerce catalog items',
 		moduleId: 'products',
 	},
 	{
+		labelKey: 'dashboard.nav.inventory',
 		label: 'Inventory',
 		to: '/app/inventory',
 		keywords: 'stock warehouse commerce',
 		moduleId: 'inventory',
 	},
-	{ label: 'People', to: '/app/people', keywords: 'hr staff employees org', moduleId: 'people' },
-	{ label: 'Assets', to: '/app/assets', keywords: 'equipment org', moduleId: 'assets' },
+	{ labelKey: 'dashboard.nav.people', label: 'People', to: '/app/people', keywords: 'hr staff employees org', moduleId: 'people' },
+	{ labelKey: 'dashboard.nav.resources', label: 'Resources', to: '/app/resources', keywords: 'equipment org', moduleId: 'resources' },
 	{
-		label: 'Documents',
-		to: '/app/documents',
+		labelKey: 'dashboard.nav.knowledge',
+		label: 'Knowledge',
+		to: '/app/knowledge',
 		keywords: 'contracts templates rules playbooks org',
-		moduleId: 'documents',
+		moduleId: 'knowledge',
 	},
 	{
+		labelKey: 'dashboard.nav.operations',
 		label: 'Operations',
 		to: '/app/operations',
 		keywords: 'automation process org',
 		moduleId: 'operations',
 	},
 	{
-		label: 'Milestones',
-		to: '/app/milestones',
-		keywords: 'schedule calendar plans decisions org',
-		moduleId: 'milestones',
+		labelKey: 'dashboard.nav.plans',
+		label: 'Plans',
+		to: '/app/plans',
+		keywords: 'schedule calendar goals decisions org',
+		moduleId: 'plans',
 	},
-	{ label: 'Jobs', to: '/app/jobs', keywords: 'tasks work pending', moduleId: 'jobs' },
-	{ label: 'Settings', to: '/app/settings', keywords: 'config org', moduleId: 'settings' },
+	{ labelKey: 'dashboard.nav.jobs', label: 'Jobs', to: '/app/jobs', keywords: 'tasks work pending', moduleId: 'jobs' },
+	{ labelKey: 'dashboard.nav.settings', label: 'Settings', to: '/app/settings', keywords: 'config org', moduleId: 'settings' },
 	{
+		labelKey: 'dashboard.nav.reports',
 		label: 'Reports',
 		to: '/app/reports',
 		keywords: 'analytics revenue finance charts',
@@ -180,12 +194,14 @@ const ALL_ROUTES = [
 	},
 ]
 
-const GlobalSearch = ({ visibleModuleIds, customersLabel }) => {
+const GlobalSearch = ({ visibleModuleIds, customersLabel, t }) => {
 	const [query, setQuery] = useState('')
 	const navigate = useNavigate()
 	const trimmed = query.trim().toLowerCase()
 	const routes = ALL_ROUTES.map(route =>
-		route.moduleId === 'customers' ? { ...route, label: customersLabel } : route,
+		route.moduleId === 'customers'
+			? { ...route, label: customersLabel }
+			: { ...route, label: t(route.labelKey, route.label) },
 	)
 	const results = trimmed
 		? routes.filter(
@@ -205,14 +221,17 @@ const GlobalSearch = ({ visibleModuleIds, customersLabel }) => {
 		<div className='relative w-full max-w-2xl'>
 			<input
 				type='text'
-				placeholder='Ask anything...'
+				placeholder={t('dashboard.searchPlaceholder', 'Ask anything...')}
 				value={query}
 				onChange={e => setQuery(e.target.value)}
 				onKeyDown={handleKeyDown}
-				className='w-full rounded-2xl px-5 py-3.5 text-sm outline-none bg-white border border-black/10 text-black'
+				className='neu-raised w-full rounded-2xl px-5 py-3.5 text-sm outline-none text-black transition-transform hover:scale-[1.01] focus:scale-[1.01]'
+				style={{ background: 'var(--neu-bg)' }}
 			/>
 			{results.length > 0 && (
-				<div className='absolute left-0 right-0 top-full mt-1 rounded-2xl overflow-hidden z-10 flex flex-col bg-white border border-black/10'>
+				<div
+					className='absolute left-0 right-0 top-full mt-1 rounded-2xl overflow-hidden z-10 flex flex-col border'
+					style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
 					{results.map(({ label, to }) => (
 						<button
 							key={to}
@@ -239,6 +258,7 @@ const DashboardPage = () => {
 	const { data: visibleModuleIds = new Set() } = useVisibleModules(user?.roleId, org)
 	const { data: labels } = useModuleLabels(org)
 	const customersLabel = resolveModuleLabel(labels, 'customers', 'Customers')
+	const { t } = useT(org)
 	const navigate = useNavigate()
 
 	return (
@@ -252,7 +272,7 @@ const DashboardPage = () => {
 						{org?.name?.slice(0, 1).toUpperCase() ?? 'E'}
 					</div>
 					<span className='font-semibold text-sm'>
-						{org?.name ?? 'Backoffice'}
+						{org?.name ?? t('dashboard.defaultOrgName', 'Backoffice')}
 					</span>
 				</div>
 				<HeaderControls />
@@ -261,14 +281,16 @@ const DashboardPage = () => {
 			{/* Hero */}
 			<section className='text-center flex flex-col items-center gap-4 py-16'>
 				<h1 className='text-5xl font-bold leading-tight text-black'>
-					Happy Friday, Jane!
+					{t('dashboard.heroGreeting', 'Happy Friday, Jane!')}
 				</h1>
 				<p className='text-lg max-w-xl text-black/50'>
-					ACME has one order waiting, inventory of Item X will run out on
-					Wednesday, and customer Alice hasn't received a reply for 18 hours.{' '}
-					<span className='italic underline cursor-pointer'>See more</span>
+					{t(
+						'dashboard.heroSummary',
+						"ACME has one order waiting, inventory of Item X will run out on Wednesday, and customer Alice hasn't received a reply for 18 hours.",
+					)}{' '}
+					<span className='italic underline cursor-pointer'>{t('dashboard.seeMore', 'See more')}</span>
 				</p>
-				<GlobalSearch visibleModuleIds={visibleModuleIds} customersLabel={customersLabel} />
+				<GlobalSearch visibleModuleIds={visibleModuleIds} customersLabel={customersLabel} t={t} />
 			</section>
 
 			{/* Stat cards + nav */}
@@ -278,7 +300,7 @@ const DashboardPage = () => {
 					{visibleModuleIds.has('conversations') && (
 						<EntityCard
 							icon={MessageSquare}
-							label="Today's Conversations"
+							label={t('dashboard.todaysConversations', "Today's Conversations")}
 							stat='12'
 							loading={false}
 							to='/app/conversations'
@@ -287,10 +309,10 @@ const DashboardPage = () => {
 					<div className='flex flex-col gap-1 mt-2'>
 						{[
 							{ icon: Users, label: customersLabel, to: '/app/customers', moduleId: 'customers' },
-							{ icon: UserRound, label: 'People', to: '/app/people', moduleId: 'people' },
-							{ icon: Monitor, label: 'Assets', to: '/app/assets', moduleId: 'assets' },
+							{ icon: UserRound, label: t('dashboard.nav.people', 'People'), to: '/app/people', moduleId: 'people' },
+							{ icon: Monitor, label: t('dashboard.nav.resources', 'Resources'), to: '/app/resources', moduleId: 'resources' },
 							...(user?.isPlatformAdmin || (user?.groupId && user?.roleId === 'admin')
-								? [{ icon: Building2, label: 'Control Panel', to: '/app/control-panel', moduleId: null }]
+								? [{ icon: Building2, label: t('dashboard.nav.controlPanel', 'Control Panel'), to: '/app/control-panel', moduleId: null }]
 								: []),
 						]
 							.filter(({ moduleId }) => moduleId === null || visibleModuleIds.has(moduleId))
@@ -305,7 +327,7 @@ const DashboardPage = () => {
 					{visibleModuleIds.has('orders') && (
 						<EntityCard
 							icon={Package}
-							label="Today's Orders"
+							label={t('dashboard.todaysOrders', "Today's Orders")}
 							stat='5'
 							loading={false}
 							to='/app/orders'
@@ -313,8 +335,8 @@ const DashboardPage = () => {
 					)}
 					<div className='flex flex-col gap-1 mt-2'>
 						{[
-							{ icon: Archive, label: 'Inventory', to: '/app/inventory', moduleId: 'inventory' },
-							{ icon: Tag, label: 'Products', to: '/app/products', moduleId: 'products' },
+							{ icon: Archive, label: t('dashboard.nav.inventory', 'Inventory'), to: '/app/inventory', moduleId: 'inventory' },
+							{ icon: Tag, label: t('dashboard.nav.products', 'Products'), to: '/app/products', moduleId: 'products' },
 						]
 							.filter(({ moduleId }) => visibleModuleIds.has(moduleId))
 							.map(({ icon, label, to }) => (
@@ -328,7 +350,7 @@ const DashboardPage = () => {
 					{visibleModuleIds.has('payments') && (
 						<EntityCard
 							icon={CreditCard}
-							label='Cashflow MTD'
+							label={t('dashboard.cashflowMtd', 'Cashflow MTD')}
 							stat={
 								cashflow.data ? `+${formatCurrency(cashflow.data.current)}` : '—'
 							}
@@ -336,17 +358,17 @@ const DashboardPage = () => {
 							to='/app/payments'
 							sub={
 								cashflow.data?.pct != null
-									? `${cashflow.data.pct >= 0 ? '↑' : '↓'} ${Math.abs(cashflow.data.pct)}% vs last month`
+									? `${cashflow.data.pct >= 0 ? '↑' : '↓'} ${Math.abs(cashflow.data.pct)}% ${t('dashboard.vsLastMonth', 'vs last month')}`
 									: undefined
 							}
 						/>
 					)}
 					<div className='flex flex-col gap-1 mt-2'>
 						{[
-							{ icon: BarChart3, label: 'Reports', to: '/app/reports', moduleId: 'reports' },
-							{ icon: Calendar, label: 'Milestones', to: '/app/milestones', moduleId: 'milestones' },
-							{ icon: FileText, label: 'Documents', to: '/app/documents', moduleId: 'documents' },
-							{ icon: Shuffle, label: 'Operations', to: '/app/operations', moduleId: 'operations' },
+							{ icon: BarChart3, label: t('dashboard.nav.reports', 'Reports'), to: '/app/reports', moduleId: 'reports' },
+							{ icon: Calendar, label: t('dashboard.nav.plans', 'Plans'), to: '/app/plans', moduleId: 'plans' },
+							{ icon: FileText, label: t('dashboard.nav.knowledge', 'Knowledge'), to: '/app/knowledge', moduleId: 'knowledge' },
+							{ icon: Shuffle, label: t('dashboard.nav.operations', 'Operations'), to: '/app/operations', moduleId: 'operations' },
 						]
 							.filter(({ moduleId }) => visibleModuleIds.has(moduleId))
 							.map(({ icon, label, to }) => (

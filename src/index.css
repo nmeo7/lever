@@ -48,9 +48,9 @@ body {
    to read, so the shadows are set independently for a visible pop. */
 :root {
 	--neu-bg: #ffffff;
-	--neu-distance: 5px;
-	--neu-blur: 7px;
-	--neu-light: #fbf3f3;
+	--neu-distance: 2px;
+	--neu-blur: 5px;
+	--neu-light: #eef8fd;
 	--neu-dark: #c5c5c5;
 }
 
@@ -70,6 +70,17 @@ body {
 }
 
 .neu-flat {
+	box-shadow:
+		var(--neu-distance) var(--neu-distance) var(--neu-blur) var(--neu-dark),
+		calc(var(--neu-distance) * -1) calc(var(--neu-distance) * -1)
+			var(--neu-blur) var(--neu-light);
+}
+
+.neu-raised-hover {
+	transition: box-shadow 0.15s ease;
+}
+
+.neu-raised-hover:hover {
 	box-shadow:
 		var(--neu-distance) var(--neu-distance) var(--neu-blur) var(--neu-dark),
 		calc(var(--neu-distance) * -1) calc(var(--neu-distance) * -1)

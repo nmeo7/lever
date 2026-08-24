@@ -1,10 +1,12 @@
 import { useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import PageShell from '@/util/components/PageShell'
 import ChatThread from './ChatThread'
 import { useChatConversation } from './useChatConversation'
 
 const ChatPage = () => {
+	const { t } = useTranslation()
 	const [searchParams, setSearchParams] = useSearchParams()
 	const { messages, isPending, submitMessage, startWithMessage } = useChatConversation()
 
@@ -18,7 +20,7 @@ const ChatPage = () => {
 	}, [searchParams])
 
 	return (
-		<PageShell title='Chat'>
+		<PageShell title={t('chat.title', 'Chat')}>
 			<div className='h-[calc(100vh-160px)]'>
 				<ChatThread messages={messages} isPending={isPending} onSubmit={submitMessage} />
 			</div>

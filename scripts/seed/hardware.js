@@ -6,7 +6,7 @@ const company = {
 	name: 'BuildRight Hardware',
 	contact: { whatsapp: '15550005005' },
 	brandIdentity: { template: 'empathy' },
-	storefront: {
+	frontdesk: {
 		headline: 'Everything for the job, in one place.',
 		subheadline: 'Tools, paint, plumbing, electrical, and garden supplies for builders and DIYers.',
 		heroImage: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?w=1200&h=500&fit=crop',
@@ -50,9 +50,9 @@ const customers = [
 
 const companyScoped = {
 	'erp-payments': [
-		{ type: 'incoming', category: 'sale', amount: 42, currency: 'USD', paymentDate: new Date().toISOString(), fiscalPeriod: new Date().toISOString().slice(0, 7), method: 'cash', notes: 'Tool set sale', createdAt: new Date().toISOString() },
+		{ type: 'incoming', category: 'sale', amount: 42, currency: 'FRW', paymentDate: new Date().toISOString(), fiscalPeriod: new Date().toISOString().slice(0, 7), method: 'cash', notes: 'Tool set sale', createdAt: new Date().toISOString() },
 	],
-	'erp-assets': [
+	'erp-resources': [
 		{ name: 'Delivery Truck', categoryIds: [], serialNumber: 'TRK-118', purchaseDate: '2020-11-20', expirationDate: '', purchaseCost: 12000, currentValue: 7500, locationId: '', assignedPersonId: '', condition: 'fair', status: 'available', metadata: {}, attachments: [], events: [] },
 	],
 }

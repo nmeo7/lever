@@ -6,7 +6,7 @@ const company = {
 	name: 'My Life',
 	contact: { whatsapp: '15550006006' },
 	brandIdentity: { template: 'empathy' },
-	storefront: {
+	frontdesk: {
 		headline: 'Welcome to My Life',
 		subheadline: 'Personal workspace — no public storefront yet.',
 		categories: [],

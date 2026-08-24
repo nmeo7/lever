@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useLogin } from './useAuth'
 
 const LoginPage = () => {
@@ -8,6 +9,7 @@ const LoginPage = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const login = useLogin()
+  const { t } = useTranslation()
 
   const from = location.state?.from?.pathname ?? '/app'
 
@@ -24,8 +26,8 @@ const LoginPage = () => {
           <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-white text-xl font-bold mb-3" style={{ background: 'var(--color-primary)' }}>
             E
           </div>
-          <h1 className="text-xl font-bold" style={{ color: 'var(--color-text)' }}>Welcome back</h1>
-          <p className="text-sm mt-1" style={{ color: 'var(--color-muted)' }}>Sign in to your workspace</p>
+          <h1 className="text-xl font-bold" style={{ color: 'var(--color-text)' }}>{t('auth.welcomeBack', 'Welcome back')}</h1>
+          <p className="text-sm mt-1" style={{ color: 'var(--color-muted)' }}>{t('auth.signInSubtitle', 'Sign in to your workspace')}</p>
         </div>
 
         <form
@@ -35,12 +37,12 @@ const LoginPage = () => {
         >
           {login.isError && (
             <div className="rounded-lg px-3 py-2 text-sm" style={{ background: '#fef2f2', color: '#dc2626', border: '1px solid #fecaca' }}>
-              {login.error?.message ?? 'Invalid credentials'}
+              {login.error?.message ?? t('auth.invalidCredentials', 'Invalid credentials')}
             </div>
           )}
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-medium" style={{ color: 'var(--color-text)' }}>Email</label>
+            <label className="text-xs font-medium" style={{ color: 'var(--color-text)' }}>{t('auth.email', 'Email')}</label>
             <input
               type="email"
               placeholder="you@example.com"
@@ -59,7 +61,7 @@ const LoginPage = () => {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-medium" style={{ color: 'var(--color-text)' }}>Password</label>
+            <label className="text-xs font-medium" style={{ color: 'var(--color-text)' }}>{t('auth.password', 'Password')}</label>
             <input
               type="password"
               placeholder="••••••••"
@@ -83,7 +85,7 @@ const LoginPage = () => {
             className="w-full py-2.5 rounded-lg text-sm font-semibold text-white transition-opacity mt-1"
             style={{ background: 'var(--color-primary)', opacity: login.isPending ? 0.6 : 1 }}
           >
-            {login.isPending ? 'Signing in…' : 'Sign in'}
+            {login.isPending ? t('auth.signingIn', 'Signing in…') : t('auth.signIn', 'Sign in')}
           </button>
         </form>
       </div>

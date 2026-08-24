@@ -99,7 +99,7 @@ const embedForSearch = async (collectionName, docId, text) => {
 }
 
 const onWriteEmbeddingTrigger = ({ collectionName, idParam, buildEmbeddingText }) =>
-  onDocumentWritten({ document: `${collectionName}/{${idParam}}`, secrets: ['JWT_SECRET'] }, async (event) => {
+  onDocumentWritten({ document: `${collectionName}/{${idParam}}`, secrets: ['JWT_SECRET', 'FIELD_ENCRYPTION_KEY'] }, async (event) => {
     const after = event.data?.after
     if (!after?.exists) return
 

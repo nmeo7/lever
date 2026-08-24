@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 import { getDoc, getDocs, doc, collection, query, where } from 'firebase/firestore'
 import { db } from '@/firebase'
 import { useLogout } from '@/auth/useAuth'
@@ -50,6 +51,7 @@ const usePendingJobs = () =>
   })
 
 const NotificationTray = () => {
+  const { t } = useTranslation()
   const [open, setOpen] = useState(false)
   const ref = useRef(null)
   const navigate = useNavigate()
@@ -79,23 +81,23 @@ const NotificationTray = () => {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full mt-2 w-80 rounded-2xl overflow-hidden z-50 flex flex-col bg-white border border-black/10">
+        <div className="absolute right-0 top-full mt-2 w-80 rounded-2xl overflow-hidden z-50 flex flex-col border" style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
           <div className="px-4 py-3 flex items-center justify-between border-b border-black/10">
             <span className="text-xs font-semibold uppercase tracking-widest text-black/50">
-              Pending Jobs
+              {t('common.pendingJobs', 'Pending Jobs')}
             </span>
             <button
               onClick={() => { navigate('/app/jobs'); setOpen(false) }}
               className="text-xs transition-opacity opacity-60 hover:opacity-100"
             >
-              View all →
+              {t('common.viewAll', 'View all →')}
             </button>
           </div>
 
           {isLoading ? (
-            <p className="px-4 py-3 text-sm text-black/50">Loading…</p>
+            <p className="px-4 py-3 text-sm text-black/50">{t('common.loading', 'Loading…')}</p>
           ) : jobs.length === 0 ? (
-            <p className="px-4 py-3 text-sm text-black/50">No pending jobs</p>
+            <p className="px-4 py-3 text-sm text-black/50">{t('common.noPendingJobs', 'No pending jobs')}</p>
           ) : (
             <div className="flex flex-col max-h-80 overflow-y-auto">
               {jobs.map((job) => (
@@ -104,7 +106,7 @@ const NotificationTray = () => {
                   className="px-4 py-3 flex items-center justify-between gap-3 border-b border-black/10"
                 >
                   <span className="text-sm truncate">
-                    {job.name ?? job.notes ?? 'Untitled job'}
+                    {job.name ?? job.notes ?? t('common.untitledJob', 'Untitled job')}
                   </span>
                   <div className="flex items-center gap-2 flex-shrink-0">
                     {job.priority && (
@@ -127,6 +129,7 @@ const NotificationTray = () => {
 }
 
 const UserMenu = () => {
+  const { t } = useTranslation()
   const [open, setOpen] = useState(false)
   const ref = useRef(null)
   const navigate = useNavigate()
@@ -164,7 +167,7 @@ const UserMenu = () => {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full mt-2 w-56 rounded-2xl overflow-hidden z-50 flex flex-col bg-white border border-black/10">
+        <div className="absolute right-0 top-full mt-2 w-56 rounded-2xl overflow-hidden z-50 flex flex-col border" style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
           <div className="px-4 py-3 border-b border-black/10">
             <p className="text-xs text-black/50 truncate">{user?.email}</p>
           </div>
@@ -172,7 +175,7 @@ const UserMenu = () => {
           {companies.length > 0 && (
             <div className="border-b border-black/10">
               <p className="px-4 pt-2.5 pb-1.5 text-[10px] font-semibold uppercase tracking-widest text-black/40">
-                Companies
+                {t('common.companies', 'Companies')}
               </p>
               <div className="flex flex-col max-h-48 overflow-y-auto">
                 {companies.map((company) => (
@@ -194,13 +197,13 @@ const UserMenu = () => {
             onClick={() => { navigate('/app/settings'); setOpen(false) }}
             className="px-4 py-2.5 text-sm text-left transition-opacity opacity-70 hover:opacity-100"
           >
-            Profile
+            {t('common.profile', 'Profile')}
           </button>
           <button
             onClick={handleLogout}
             className="px-4 py-2.5 text-sm text-left transition-opacity opacity-70 hover:opacity-100 border-t border-black/10"
           >
-            Logout
+            {t('common.logout', 'Logout')}
           </button>
         </div>
       )}

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 import { Modal, Form, Input, InputNumber, Select } from 'antd'
 import { Plus } from 'lucide-react'
 import PageShell from '@/util/components/PageShell'
@@ -9,6 +10,7 @@ import { fetchProducts } from '@/products/productsApi'
 const formatDate = (value) => (value ? new Date(value).toLocaleString() : '—')
 
 const AdjustInventoryModal = ({ open, onClose, products }) => {
+	const { t } = useTranslation()
 	const queryClient = useQueryClient()
 	const [form] = Form.useForm()
 
@@ -30,15 +32,15 @@ const AdjustInventoryModal = ({ open, onClose, products }) => {
 
 	return (
 		<Modal
-			title='Adjust inventory'
+			title={t('inventory.adjustInventory', 'Adjust inventory')}
 			open={open}
 			onCancel={handleClose}
 			onOk={() => form.submit()}
 			confirmLoading={isPending}
-			okText='Save'
+			okText={t('common.save', 'Save')}
 			destroyOnHidden>
 			<Form form={form} layout='vertical' onFinish={mutate} className='pt-2'>
-				<Form.Item name='productId' label='Product' rules={[{ required: true, message: 'Product is required' }]}>
+				<Form.Item name='productId' label={t('inventory.product', 'Product')} rules={[{ required: true, message: t('inventory.productRequired', 'Product is required') }]}>
 					<Select
 						showSearch
 						optionFilterProp='label'
@@ -46,23 +48,23 @@ const AdjustInventoryModal = ({ open, onClose, products }) => {
 					/>
 				</Form.Item>
 
-				<Form.Item name='locationId' label='Location'>
-					<Input placeholder='Optional' />
+				<Form.Item name='locationId' label={t('inventory.location', 'Location')}>
+					<Input placeholder={t('common.optional', 'Optional')} />
 				</Form.Item>
 
 				<Form.Item
 					name='quantity'
-					label='Quantity change'
-					rules={[{ required: true, message: 'Quantity is required' }]}
-					extra='Positive to add stock, negative to remove.'>
+					label={t('inventory.quantityChange', 'Quantity change')}
+					rules={[{ required: true, message: t('inventory.quantityRequired', 'Quantity is required') }]}
+					extra={t('inventory.quantityHint', 'Positive to add stock, negative to remove.')}>
 					<InputNumber step={1} className='w-full' />
 				</Form.Item>
 
-				<Form.Item name='reorderLevel' label='Reorder level'>
+				<Form.Item name='reorderLevel' label={t('inventory.reorderLevel', 'Reorder level')}>
 					<InputNumber min={0} step={1} className='w-full' />
 				</Form.Item>
 
-				<Form.Item name='notes' label='Notes'>
+				<Form.Item name='notes' label={t('common.notes', 'Notes')}>
 					<Input.TextArea rows={2} />
 				</Form.Item>
 
@@ -73,6 +75,7 @@ const AdjustInventoryModal = ({ open, onClose, products }) => {
 }
 
 const InventoryPage = () => {
+	const { t } = useTranslation()
 	const [modalOpen, setModalOpen] = useState(false)
 
 	const { data: inventory, isLoading } = useQuery({
@@ -94,33 +97,40 @@ const InventoryPage = () => {
 
 	return (
 		<PageShell
-			title='Inventory'
+			title={t('inventory.title', 'Inventory')}
 			actions={
 				<button
 					onClick={() => setModalOpen(true)}
 					className='flex items-center gap-1.5 text-sm font-semibold px-3 py-1.5 rounded-xl'
 					style={{ background: 'var(--color-primary)', color: 'var(--color-surface)' }}>
 					<Plus size={14} strokeWidth={1.75} />
-					Adjust stock
+					{t('inventory.adjustStock', 'Adjust stock')}
 				</button>
 			}>
 			<div className='flex flex-col gap-8'>
 				<div className='flex flex-col gap-3'>
-					<h2 className='text-sm font-semibold' style={{ color: 'var(--color-text)' }}>Stock levels</h2>
+					<h2 className='text-sm font-semibold' style={{ color: 'var(--color-text)' }}>{t('inventory.stockLevels', 'Stock levels')}</h2>
 					{isLoading ? (
-						<p className='text-sm' style={{ color: 'var(--color-muted)' }}>Loading…</p>
+						<p className='text-sm' style={{ color: 'var(--color-muted)' }}>{t('common.loading', 'Loading…')}</p>
 					) : !inventory?.length ? (
 						<div
 							className='rounded-2xl flex items-center justify-center h-32 text-sm'
 							style={{ border: '2px dashed var(--color-border)', color: 'var(--color-muted)' }}>
-							No inventory recorded yet
+							{t('inventory.noInventory', 'No inventory recorded yet')}
 						</div>
 					) : (
-						<div className='rounded-xl overflow-hidden' style={{ border: '1px solid var(--color-border)' }}>
+						<div className='neu-raised rounded-xl overflow-hidden' style={{ background: 'var(--neu-bg)' }}>
 							<table className='w-full text-sm'>
 								<thead>
 									<tr style={{ background: 'var(--color-surface)', borderBottom: '1px solid var(--color-border)' }}>
-										{['Product', 'Location', 'On hand', 'Reserved', 'Available', 'Reorder level'].map((col) => (
+										{[
+											t('inventory.columns.product', 'Product'),
+											t('inventory.columns.location', 'Location'),
+											t('inventory.columns.onHand', 'On hand'),
+											t('inventory.columns.reserved', 'Reserved'),
+											t('inventory.columns.available', 'Available'),
+											t('inventory.columns.reorderLevel', 'Reorder level'),
+										].map((col) => (
 											<th key={col} className='text-left px-4 py-3 text-xs font-semibold uppercase tracking-wide' style={{ color: 'var(--color-muted)' }}>
 												{col}
 											</th>
@@ -154,19 +164,24 @@ const InventoryPage = () => {
 				</div>
 
 				<div className='flex flex-col gap-3'>
-					<h2 className='text-sm font-semibold' style={{ color: 'var(--color-text)' }}>Recent movements</h2>
+					<h2 className='text-sm font-semibold' style={{ color: 'var(--color-text)' }}>{t('inventory.recentMovements', 'Recent movements')}</h2>
 					{!movements?.length ? (
 						<div
 							className='rounded-2xl flex items-center justify-center h-32 text-sm'
 							style={{ border: '2px dashed var(--color-border)', color: 'var(--color-muted)' }}>
-							No movements yet
+							{t('inventory.noMovements', 'No movements yet')}
 						</div>
 					) : (
-						<div className='rounded-xl overflow-hidden' style={{ border: '1px solid var(--color-border)' }}>
+						<div className='neu-raised rounded-xl overflow-hidden' style={{ background: 'var(--neu-bg)' }}>
 							<table className='w-full text-sm'>
 								<thead>
 									<tr style={{ background: 'var(--color-surface)', borderBottom: '1px solid var(--color-border)' }}>
-										{['Date', 'Product', 'Type', 'Quantity'].map((col) => (
+										{[
+											t('inventory.columns.date', 'Date'),
+											t('inventory.columns.product', 'Product'),
+											t('inventory.columns.type', 'Type'),
+											t('inventory.columns.quantity', 'Quantity'),
+										].map((col) => (
 											<th key={col} className='text-left px-4 py-3 text-xs font-semibold uppercase tracking-wide' style={{ color: 'var(--color-muted)' }}>
 												{col}
 											</th>

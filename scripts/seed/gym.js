@@ -6,7 +6,7 @@ const company = {
 	name: 'Ironclad Fitness',
 	contact: { whatsapp: '15550001001' },
 	brandIdentity: { template: 'winter' },
-	storefront: {
+	frontdesk: {
 		headline: 'Train hard. Recover smart.',
 		subheadline: 'Memberships, classes, and gear for every stage of your fitness journey.',
 		heroImage: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=1200&h=500&fit=crop',
@@ -54,10 +54,10 @@ const conversations = [
 
 const companyScoped = {
 	'erp-payments': [
-		{ type: 'incoming', category: 'sale', amount: 45, currency: 'USD', paymentDate: new Date().toISOString(), fiscalPeriod: new Date().toISOString().slice(0, 7), method: 'card', notes: 'Monthly membership', createdAt: new Date().toISOString() },
-		{ type: 'outgoing', category: 'rent', amount: 800, currency: 'USD', paymentDate: new Date().toISOString(), fiscalPeriod: new Date().toISOString().slice(0, 7), method: 'bank', notes: 'Facility rent', createdAt: new Date().toISOString() },
+		{ type: 'incoming', category: 'sale', amount: 45, currency: 'FRW', paymentDate: new Date().toISOString(), fiscalPeriod: new Date().toISOString().slice(0, 7), method: 'card', notes: 'Monthly membership', createdAt: new Date().toISOString() },
+		{ type: 'outgoing', category: 'rent', amount: 800, currency: 'FRW', paymentDate: new Date().toISOString(), fiscalPeriod: new Date().toISOString().slice(0, 7), method: 'bank', notes: 'Facility rent', createdAt: new Date().toISOString() },
 	],
-	'erp-assets': [
+	'erp-resources': [
 		{ name: 'Treadmill (x4)', categoryIds: [], serialNumber: 'TM-2201', purchaseDate: '2023-01-15', expirationDate: '', purchaseCost: 4800, currentValue: 3600, locationId: '', assignedPersonId: '', condition: 'good', status: 'available', metadata: {}, attachments: [], events: [] },
 	],
 }

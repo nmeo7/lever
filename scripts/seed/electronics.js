@@ -6,7 +6,7 @@ const company = {
 	name: 'ByteMart Electronics',
 	contact: { whatsapp: '15550004004' },
 	brandIdentity: { template: 'winter' },
-	storefront: {
+	frontdesk: {
 		headline: 'The latest tech, in stock now.',
 		subheadline: 'Phones, laptops, audio, gaming, and accessories — with same-day delivery in Kigali.',
 		heroImage: 'https://images.unsplash.com/photo-1498049794561-7780e7231661?w=1200&h=500&fit=crop',
@@ -49,9 +49,9 @@ const customers = [
 
 const companyScoped = {
 	'erp-payments': [
-		{ type: 'incoming', category: 'sale', amount: 399, currency: 'USD', paymentDate: new Date().toISOString(), fiscalPeriod: new Date().toISOString().slice(0, 7), method: 'card', notes: 'Nova X12 sale', createdAt: new Date().toISOString() },
+		{ type: 'incoming', category: 'sale', amount: 399, currency: 'FRW', paymentDate: new Date().toISOString(), fiscalPeriod: new Date().toISOString().slice(0, 7), method: 'card', notes: 'Nova X12 sale', createdAt: new Date().toISOString() },
 	],
-	'erp-assets': [
+	'erp-resources': [
 		{ name: 'Store POS Terminal', categoryIds: [], serialNumber: 'POS-441', purchaseDate: '2023-05-01', expirationDate: '', purchaseCost: 300, currentValue: 220, locationId: '', assignedPersonId: '', condition: 'good', status: 'available', metadata: {}, attachments: [], events: [] },
 	],
 }

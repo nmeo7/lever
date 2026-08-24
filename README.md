@@ -4,12 +4,12 @@ A lightweight, AI-enabled ERP with a built-in CRM and customer-facing sales port
 
 ## Modules
 
-| Module | What it covers |
-|---|---|
-| **CRM** | Customers, conversation history, AI-generated memories |
-| **Commerce** | Orders, products, inventory, payments, suppliers |
-| **ERP** | People, assets, operations, jobs, financial timeline |
-| **Sales Portal** | Public-facing storefront; browse without login, checkout requires auth |
+| Module           | What it covers                                                        |
+| ---------------- | --------------------------------------------------------------------- |
+| **CRM**          | Customers, conversation history, AI-generated memories                |
+| **Commerce**     | Orders, products, inventory, payments, suppliers                      |
+| **ERP**          | People, assets, operations, jobs, financial timeline                  |
+| **Sales Portal** | Public-facing frontdesk; browse without login, checkout requires auth |
 
 ## Architecture
 
@@ -64,19 +64,27 @@ firebase functions:secrets:set JWT_SECRET
 
 Enter a strong random string when prompted (e.g. output of `openssl rand -base64 32`).
 
+Functions also use `FIELD_ENCRYPTION_KEY` to encrypt sensitive fields (e.g. document content) at rest with AES-256-GCM. Set it the same way, with a 32-byte hex string:
+
+```bash
+firebase functions:secrets:set FIELD_ENCRYPTION_KEY
+```
+
+Enter the output of `openssl rand -hex 32` when prompted.
+
 ### 4. Seed the organization document
 
 Create a document at `organization/default` in Firestore with at minimum:
 
 ```json
 {
-  "name": "Your Org Name",
-  "brandIdentity": {
-    "template": "empathy"
-  },
-  "configurations": {
-    "openAIKey": "sk-..."
-  }
+	"name": "Your Org Name",
+	"brandIdentity": {
+		"template": "empathy"
+	},
+	"configurations": {
+		"openAIKey": "sk-..."
+	}
 }
 ```
 
@@ -88,15 +96,16 @@ Create a document in the `users` collection:
 
 ```json
 {
-  "email": "admin@example.com",
-  "passwordHash": "<sha256 of your password>",
-  "role": "admin",
-  "isActive": true,
-  "personId": ""
+	"email": "admin@example.com",
+	"passwordHash": "<sha256 of your password>",
+	"role": "admin",
+	"isActive": true,
+	"personId": ""
 }
 ```
 
 You can generate a SHA-256 hash with:
+
 ```bash
 echo -n "yourpassword" | shasum -a 256
 ```
@@ -148,9 +157,9 @@ Usage is billed per task completed, not per seat. Organizations pay only for wha
 
 Two templates ship out of the box:
 
-| Template | Palette |
-|---|---|
-| `empathy` | Soft purple, warm backgrounds — good for service/care businesses |
-| `winter` | Sky blue, cool backgrounds — good for tech/professional businesses |
+| Template  | Palette                                                            |
+| --------- | ------------------------------------------------------------------ |
+| `empathy` | Soft purple, warm backgrounds — good for service/care businesses   |
+| `winter`  | Sky blue, cool backgrounds — good for tech/professional businesses |
 
 Set `brandIdentity.template` in the org document to switch. New themes can be added in [src/themes/](src/themes/).

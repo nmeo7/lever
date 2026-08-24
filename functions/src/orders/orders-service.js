@@ -8,7 +8,7 @@ const INVENTORY_COLLECTION = 'erp-inventory'
 
 const listOrders = (companyId) => listDocs(COLLECTION, 'orderDate', companyId)
 
-const createOrder = async (companyId, { customerId, items, notes, currency = 'USD' }) => {
+const createOrder = async (companyId, { customerId, items, notes, currency = 'FRW' }) => {
   if (!items?.length) throw new HttpsError('invalid-argument', 'items required')
 
   const productIds = items.map((i) => i.productId)

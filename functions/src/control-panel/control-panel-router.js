@@ -3,7 +3,7 @@ const cors = require('cors')
 const { onRequest } = require('firebase-functions/v2/https')
 const { requireAuthFromRequest } = require('../util/auth')
 const { asyncRoute } = require('../util/async-route')
-const { listGroups, createGroup, listCompaniesForGroup, createCompany } = require('./control-panel-service')
+const { listGroups, createGroup, listCompaniesForGroup, createCompany, createCompanyPerson, batchUpsert } = require('./control-panel-service')
 
 const router = express.Router()
 
@@ -35,6 +35,18 @@ router.post('/:groupId/companies', asyncRoute(async (req, res) => {
   const user = await requireAuthFromRequest(req)
   const company = await createCompany(user, { ...req.body, groupId: req.params.groupId })
   res.status(201).json(company)
+}))
+
+router.post('/companies/:companySlug/people', asyncRoute(async (req, res) => {
+  const user = await requireAuthFromRequest(req)
+  const person = await createCompanyPerson(user, { ...req.body, companySlug: req.params.companySlug })
+  res.status(201).json(person)
+}))
+
+router.post('/batch', asyncRoute(async (req, res) => {
+  const user = await requireAuthFromRequest(req)
+  const result = await batchUpsert(user, req.body ?? {})
+  res.status(201).json(result)
 }))
 
 const app = express()

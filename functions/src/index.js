@@ -10,9 +10,18 @@ const { payments } = require('./payments/payments-router')
 const { paymentsOnWriteEmbedding } = require('./payments/payments-on-write-embedding')
 const { orders } = require('./orders/orders-router')
 const { inventory } = require('./inventory/inventory-router')
-const { documents } = require('./documents/documents-router')
-const { documentsOnWriteEmbedding } = require('./documents/documents-on-write-embedding')
+const { knowledge } = require('./knowledge/knowledge-router')
+const { knowledgeOnWriteEmbedding } = require('./knowledge/knowledge-on-write-embedding')
 const { controlPanel } = require('./control-panel/control-panel-router')
+const { dataImport } = require('./data-import/data-import-router')
+const { people } = require('./people/people-router')
+const { customers } = require('./customers/customers-router')
+const { suppliers } = require('./suppliers/suppliers-router')
+const { categories } = require('./categories/categories-router')
+const { locations } = require('./locations/locations-router')
+const { resources } = require('./resources/resources-router')
+const { plans } = require('./plans/plans-router')
+const { recurringTransactions } = require('./recurring-transactions/recurring-transactions-router')
 
 module.exports = {
   authLogin,
@@ -27,7 +36,16 @@ module.exports = {
   paymentsOnWriteEmbedding,
   orders,
   inventory,
-  documents,
-  documentsOnWriteEmbedding,
+  knowledge,
+  knowledgeOnWriteEmbedding,
   controlPanel,
+  dataImport,
+  people,
+  customers,
+  suppliers,
+  categories,
+  locations,
+  resources,
+  plans,
+  recurringTransactions,
 }

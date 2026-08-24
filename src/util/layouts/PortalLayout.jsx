@@ -1,13 +1,15 @@
 import { useState, useRef, useEffect } from 'react'
-import { Outlet, useNavigate, useParams, Link } from 'react-router-dom'
+import { Outlet, useNavigate, Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useCartStore } from '@/sales-portal/cartStore'
 
 const formatCurrency = amount =>
-	new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(
+	new Intl.NumberFormat('en-US', { style: 'currency', currency: 'FRW' }).format(
 		amount ?? 0,
 	)
 
-const CartTray = ({ orgSlug }) => {
+export const CartTray = ({ orgSlug }) => {
+	const { t } = useTranslation()
 	const [open, setOpen] = useState(false)
 	const ref = useRef(null)
 	const navigate = useNavigate()
@@ -65,10 +67,10 @@ const CartTray = ({ orgSlug }) => {
 						<span
 							className='text-xs font-semibold uppercase tracking-widest'
 							style={{ color: 'var(--color-muted)' }}>
-							Your cart
+							{t('salesPortal.yourCart', 'Your cart')}
 						</span>
 						<span className='text-xs' style={{ color: 'var(--color-muted)' }}>
-							{count} items
+							{t('salesPortal.itemCount', '{{count}} items', { count })}
 						</span>
 					</div>
 
@@ -114,7 +116,7 @@ const CartTray = ({ orgSlug }) => {
 							}}
 							className='text-sm font-semibold px-4 py-1.5 rounded-xl text-white transition-opacity hover:opacity-90'
 							style={{ background: 'var(--color-primary)' }}>
-							Checkout →
+							{t('salesPortal.checkout', 'Checkout →')}
 						</button>
 					</div>
 				</div>
@@ -124,8 +126,7 @@ const CartTray = ({ orgSlug }) => {
 }
 
 const PortalLayout = () => {
-	const { orgSlug } = useParams()
-
+	const { t } = useTranslation()
 	return (
 		<div
 			className='min-h-screen'
@@ -138,12 +139,11 @@ const PortalLayout = () => {
 				<div className='flex justify-between pt-5'>
 					<Link
 						to='/'
-						title='Home'
+						title={t('common.home', 'Home')}
 						className='text-sm font-bold tracking-tight transition-opacity opacity-80 hover:opacity-100'
 						style={{ color: 'var(--color-text)' }}>
 						Lever
 					</Link>
-					<CartTray orgSlug={orgSlug} />
 				</div>
 			</div>
 

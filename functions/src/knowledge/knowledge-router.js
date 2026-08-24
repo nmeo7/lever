@@ -3,37 +3,37 @@ const cors = require('cors')
 const { onRequest } = require('firebase-functions/v2/https')
 const { requireAuthFromRequest } = require('../util/auth')
 const { asyncRoute } = require('../util/async-route')
-const { listDocuments, createDocument, updateDocument, deleteDocument, searchDocuments } = require('./documents-service')
+const { listKnowledge, createKnowledgeEntry, updateKnowledgeEntry, deleteKnowledgeEntry, searchKnowledge } = require('./knowledge-service')
 
 const router = express.Router()
 
 router.get('/', asyncRoute(async (req, res) => {
   await requireAuthFromRequest(req)
-  const documents = await listDocuments()
-  res.json({ documents })
+  const knowledge = await listKnowledge()
+  res.json({ knowledge })
 }))
 
 router.post('/search', asyncRoute(async (req, res) => {
   await requireAuthFromRequest(req)
-  const documents = await searchDocuments(req.body ?? {})
-  res.json({ documents })
+  const knowledge = await searchKnowledge(req.body ?? {})
+  res.json({ knowledge })
 }))
 
 router.post('/', asyncRoute(async (req, res) => {
   await requireAuthFromRequest(req)
-  const result = await createDocument(req.body ?? {})
+  const result = await createKnowledgeEntry(req.body ?? {})
   res.status(201).json(result)
 }))
 
 router.patch('/:id', asyncRoute(async (req, res) => {
   await requireAuthFromRequest(req)
-  const result = await updateDocument(req.params.id, req.body ?? {})
+  const result = await updateKnowledgeEntry(req.params.id, req.body ?? {})
   res.json(result)
 }))
 
 router.delete('/:id', asyncRoute(async (req, res) => {
   await requireAuthFromRequest(req)
-  const result = await deleteDocument(req.params.id)
+  const result = await deleteKnowledgeEntry(req.params.id)
   res.json(result)
 }))
 
@@ -42,4 +42,4 @@ app.use(cors({ origin: true }))
 app.use(express.json())
 app.use('/', router)
 
-exports.documents = onRequest({ secrets: ['JWT_SECRET'] }, app)
+exports.knowledge = onRequest({ secrets: ['JWT_SECRET', 'FIELD_ENCRYPTION_KEY'] }, app)

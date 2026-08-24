@@ -1,16 +1,17 @@
 import { useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Send } from 'lucide-react'
 
 const ChatBubble = ({ role, content }) => (
 	<div className={`flex ${role === 'user' ? 'justify-end' : 'justify-start'}`}>
 		<div
-			className='max-w-[85%] rounded-2xl px-4 py-2.5 text-sm whitespace-pre-wrap'
+			className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-sm whitespace-pre-wrap ${role === 'user' ? '' : 'border'}`}
 			style={
 				role === 'user'
 					? { background: 'var(--color-primary)', color: 'var(--color-surface)' }
 					: {
 							background: 'var(--color-surface)',
-							border: '1px solid var(--color-border)',
+							borderColor: 'var(--color-border)',
 							color: 'var(--color-text)',
 						}
 			}>
@@ -19,9 +20,12 @@ const ChatBubble = ({ role, content }) => (
 	</div>
 )
 
-const ChatThread = ({ messages, isPending, onSubmit, placeholder = 'Ask anything...', emptyHint = 'Ask anything to get started.' }) => {
+const ChatThread = ({ messages, isPending, onSubmit, placeholder, emptyHint }) => {
+	const { t } = useTranslation()
 	const [input, setInput] = useState('')
 	const bottomRef = useRef(null)
+	const resolvedPlaceholder = placeholder ?? t('chat.placeholder', 'Ask anything...')
+	const resolvedEmptyHint = emptyHint ?? t('chat.emptyHint', 'Ask anything to get started.')
 
 	useEffect(() => {
 		bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -45,7 +49,7 @@ const ChatThread = ({ messages, isPending, onSubmit, placeholder = 'Ask anything
 			<div className='flex-1 min-h-0 overflow-y-auto flex flex-col gap-3 pb-4'>
 				{messages.length === 0 && (
 					<p className='text-sm text-center mt-16' style={{ color: 'var(--color-muted)' }}>
-						{emptyHint}
+						{resolvedEmptyHint}
 					</p>
 				)}
 				{messages.map((message, index) => (
@@ -54,13 +58,13 @@ const ChatThread = ({ messages, isPending, onSubmit, placeholder = 'Ask anything
 				{isPending && (
 					<div className='flex justify-start'>
 						<div
-							className='rounded-2xl px-4 py-2.5 text-sm'
+							className='rounded-2xl px-4 py-2.5 text-sm border'
 							style={{
 								background: 'var(--color-surface)',
-								border: '1px solid var(--color-border)',
+								borderColor: 'var(--color-border)',
 								color: 'var(--color-muted)',
 							}}>
-							Thinking…
+							{t('chat.thinking', 'Thinking…')}
 						</div>
 					</div>
 				)}
@@ -68,14 +72,14 @@ const ChatThread = ({ messages, isPending, onSubmit, placeholder = 'Ask anything
 			</div>
 
 			<div
-				className='flex items-end gap-2 rounded-2xl p-2'
-				style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)' }}>
+				className='neu-raised flex items-end gap-2 rounded-2xl p-2'
+				style={{ background: 'var(--neu-bg)' }}>
 				<textarea
 					value={input}
 					onChange={e => setInput(e.target.value)}
 					onKeyDown={handleKeyDown}
 					rows={1}
-					placeholder={placeholder}
+					placeholder={resolvedPlaceholder}
 					className='flex-1 resize-none outline-none text-sm bg-transparent px-2 py-2'
 					style={{ color: 'var(--color-text)' }}
 				/>

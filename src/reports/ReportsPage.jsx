@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 import { getDocs, collection, query, where } from 'firebase/firestore'
 import {
 	ResponsiveContainer,
@@ -27,7 +28,7 @@ const PALETTE = ['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#06b6d4', '#8b5cf6
 const formatCurrency = amount =>
 	new Intl.NumberFormat('en-US', {
 		style: 'currency',
-		currency: 'USD',
+		currency: 'FRW',
 		maximumFractionDigits: 0,
 	}).format(amount)
 
@@ -119,8 +120,8 @@ const useCustomerCount = () =>
 
 const StatCard = ({ label, value, loading, sub, trend }) => (
 	<div
-		className='rounded-2xl p-5 flex flex-col gap-1'
-		style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)' }}>
+		className='rounded-2xl p-5 flex flex-col gap-1 border'
+		style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
 		<p className='text-xs font-medium uppercase tracking-wide' style={{ color: 'var(--color-muted)' }}>{label}</p>
 		<p className='text-3xl font-bold tabular-nums' style={{ color: 'var(--color-text)' }}>
 			{loading ? '…' : value}
@@ -135,8 +136,8 @@ const StatCard = ({ label, value, loading, sub, trend }) => (
 
 const Section = ({ title, children, className = '' }) => (
 	<div
-		className={`rounded-2xl p-6 flex flex-col gap-4 ${className}`}
-		style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)' }}>
+		className={`neu-raised rounded-2xl p-6 flex flex-col gap-4 ${className}`}
+		style={{ background: 'var(--neu-bg)' }}>
 		<h2 className='text-sm font-semibold uppercase tracking-widest' style={{ color: 'var(--color-muted)' }}>
 			{title}
 		</h2>
@@ -144,16 +145,17 @@ const Section = ({ title, children, className = '' }) => (
 	</div>
 )
 
-const EmptyState = () => (
-	<p className='text-sm py-8 text-center' style={{ color: 'var(--color-muted)' }}>No data yet</p>
-)
+const EmptyState = () => {
+	const { t } = useTranslation()
+	return <p className='text-sm py-8 text-center' style={{ color: 'var(--color-muted)' }}>{t('reports.noData', 'No data yet')}</p>
+}
 
 const RevenueTrendChart = ({ rows }) => (
 	<ResponsiveContainer width='100%' height={220}>
 		<LineChart data={rows} margin={{ top: 8, right: 12, left: -12, bottom: 0 }}>
 			<CartesianGrid strokeDasharray='3 3' stroke='var(--color-border)' vertical={false} />
 			<XAxis dataKey='month' tick={{ fontSize: 11, fill: 'var(--color-muted)' }} axisLine={false} tickLine={false} />
-			<YAxis tick={{ fontSize: 11, fill: 'var(--color-muted)' }} axisLine={false} tickLine={false} tickFormatter={v => `$${v}`} />
+			<YAxis tick={{ fontSize: 11, fill: 'var(--color-muted)' }} axisLine={false} tickLine={false} tickFormatter={v => `FRW ${v}`} />
 			<Tooltip
 				formatter={value => formatCurrency(value)}
 				contentStyle={{ borderRadius: 12, border: '1px solid var(--color-border)', fontSize: 12 }}
@@ -164,6 +166,7 @@ const RevenueTrendChart = ({ rows }) => (
 )
 
 const GaugeChart = ({ value, target, label, color = '#6366f1' }) => {
+	const { t } = useTranslation()
 	const pct = target > 0 ? Math.min(Math.round((value / target) * 100), 100) : 0
 	const data = [{ value: pct, fill: color }]
 	return (
@@ -184,7 +187,9 @@ const GaugeChart = ({ value, target, label, color = '#6366f1' }) => {
 			</div>
 			<div className='mt-16 text-center'>
 				<p className='text-xs font-medium' style={{ color: 'var(--color-text)' }}>{label}</p>
-				<p className='text-[11px]' style={{ color: 'var(--color-muted)' }}>{formatCurrency(value)} of {formatCurrency(target)}</p>
+				<p className='text-[11px]' style={{ color: 'var(--color-muted)' }}>
+					{t('reports.gaugeValueOfTarget', '{{value}} of {{target}}', { value: formatCurrency(value), target: formatCurrency(target) })}
+				</p>
 			</div>
 		</div>
 	)
@@ -237,6 +242,7 @@ const TopProductsBars = ({ rows }) => (
 )
 
 const ReportsPage = () => {
+	const { t } = useTranslation()
 	const navigate = useNavigate()
 	const revenue = useMtdRevenue()
 	const expenses = useMtdExpenses()
@@ -257,41 +263,41 @@ const ReportsPage = () => {
 				onClick={() => navigate('/app')}
 				className='text-xs transition-opacity opacity-50 hover:opacity-100 inline-flex items-center gap-1 self-start'
 				style={{ color: 'var(--color-text)' }}>
-				← Home
+				← {t('common.home', 'Home')}
 			</button>
-			<h1 className='text-lg font-semibold' style={{ color: 'var(--color-text)' }}>Reports</h1>
+			<h1 className='text-lg font-semibold' style={{ color: 'var(--color-text)' }}>{t('reports.title', 'Reports')}</h1>
 
 			{/* Big stat numbers */}
 			<div className='grid grid-cols-1 sm:grid-cols-4 gap-4'>
 				<StatCard
-					label='Revenue MTD'
+					label={t('reports.revenueMtd', 'Revenue MTD')}
 					value={formatCurrency(revenue.data ?? 0)}
 					loading={revenue.isLoading}
-					sub={revenueTrend != null ? `${Math.abs(revenueTrend)}% vs last month` : 'Incoming payments this month'}
+					sub={revenueTrend != null ? t('reports.pctVsLastMonth', '{{pct}}% vs last month', { pct: Math.abs(revenueTrend) }) : t('reports.incomingPaymentsThisMonth', 'Incoming payments this month')}
 					trend={revenueTrend}
 				/>
 				<StatCard
-					label='Expenses MTD'
+					label={t('reports.expensesMtd', 'Expenses MTD')}
 					value={formatCurrency(expenses.data ?? 0)}
 					loading={expenses.isLoading}
-					sub='Outgoing payments this month'
+					sub={t('reports.outgoingPaymentsThisMonth', 'Outgoing payments this month')}
 				/>
 				<StatCard
-					label='Net Profit MTD'
+					label={t('reports.netProfitMtd', 'Net Profit MTD')}
 					value={formatCurrency(profit)}
 					loading={revenue.isLoading || expenses.isLoading}
-					sub='Revenue minus expenses'
+					sub={t('reports.revenueMinusExpenses', 'Revenue minus expenses')}
 				/>
 				<StatCard
-					label='Total Customers'
+					label={t('reports.totalCustomers', 'Total Customers')}
 					value={customerCount.data ?? 0}
 					loading={customerCount.isLoading}
-					sub='All-time records'
+					sub={t('reports.allTimeRecords', 'All-time records')}
 				/>
 			</div>
 
 			{/* Revenue trend — line chart */}
-			<Section title='Revenue trend — last 6 months'>
+			<Section title={t('reports.revenueTrend', 'Revenue trend — last 6 months')}>
 				{revenueByMonth.isLoading ? (
 					<EmptyState />
 				) : !revenueByMonth.data?.length ? (
@@ -303,19 +309,19 @@ const ReportsPage = () => {
 
 			<div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
 				{/* Gauges */}
-				<Section title='Performance vs. peak'>
+				<Section title={t('reports.performanceVsPeak', 'Performance vs. peak')}>
 					{revenue.isLoading || expenses.isLoading ? (
 						<EmptyState />
 					) : (
 						<div className='grid grid-cols-2 gap-2'>
-							<GaugeChart value={revenue.data ?? 0} target={revenueTarget} label='Revenue' color='#6366f1' />
-							<GaugeChart value={expenses.data ?? 0} target={expenseBudget} label='Expenses' color='#f59e0b' />
+							<GaugeChart value={revenue.data ?? 0} target={revenueTarget} label={t('reports.revenue', 'Revenue')} color='#6366f1' />
+							<GaugeChart value={expenses.data ?? 0} target={expenseBudget} label={t('reports.expenses', 'Expenses')} color='#f59e0b' />
 						</div>
 					)}
 				</Section>
 
 				{/* Orders by status — donut */}
-				<Section title='Orders by status'>
+				<Section title={t('reports.ordersByStatus', 'Orders by status')}>
 					{ordersByStatus.isLoading ? (
 						<EmptyState />
 					) : !ordersByStatus.data?.length ? (
@@ -326,7 +332,7 @@ const ReportsPage = () => {
 				</Section>
 
 				{/* Top products */}
-				<Section title='Top products by units sold'>
+				<Section title={t('reports.topProducts', 'Top products by units sold')}>
 					{topProducts.isLoading ? (
 						<EmptyState />
 					) : !topProducts.data?.length ? (

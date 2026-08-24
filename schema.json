@@ -53,7 +53,7 @@
 			"parentTypeId": "",
 			"name": "",
 			"description": "",
-			"frontstore": {
+			"frontdesk": {
 				"template": "empathy | winter | ...",
 				"sections": []
 			},
@@ -100,11 +100,11 @@
 					"description": "",
 					"modules": {
 						"1": ["customers", "conversations"],
-						"2": ["orders", "payments", "timeline"]
+						"2": ["orders", "payments", "plans"]
 					}
 				}
 			},
-			"frontstoreOverride": {
+			"frontdeskOverride": {
 				"template": "empathy | winter | ...",
 				"sections": []
 			},
@@ -131,7 +131,7 @@
 				"whatsappAccessToken": "",
 				"whatsappPhoneNumberId": "",
 				"whatsappVerifyToken": "",
-				"defaultCurrency": "USD"
+				"defaultCurrency": "FRW"
 			},
 			"metadata": {},
 			"createdAt": "",
@@ -144,7 +144,7 @@
 			"description": "Full access to every module and setting.",
 			"modules": {
 				"1": ["customers", "conversations"],
-				"2": ["orders", "payments", "timeline"]
+				"2": ["orders", "payments", "plans"]
 			},
 			"order": 0
 		},
@@ -195,7 +195,7 @@
 			"updatedAt": ""
 		},
 
-		"assets": {
+		"resources": {
 			"id": "",
 			"companyId": "",
 			"groupId": "",
@@ -210,6 +210,7 @@
 			"assignedPersonId": "",
 			"condition": "excellent | good | fair | poor | damaged",
 			"status": "available | assigned | maintenance | retired",
+			"ownership": "owned | rented | leased | borrowed",
 			"metadata": {},
 			"attachments": [],
 			"createdAt": "",
@@ -293,7 +294,7 @@
 			"updatedAt": ""
 		},
 
-		"timeline": {
+		"plans": {
 			"id": "",
 			"companyId": "",
 			"groupId": "",
@@ -301,7 +302,9 @@
 			"title": "",
 			"description": "",
 			"category": "",
-			"expectedAmount": 0,
+			"goal": "",
+			"value": 0,
+			"currency": "FRW",
 			"probability": 0,
 			"expectedDate": "",
 			"relatedType": "",
@@ -309,6 +312,7 @@
 			"actualAmount": 0,
 			"actualDate": "",
 			"status": "expected | confirmed | cancelled | realized",
+			"priority": "low | medium | high | critical",
 			"notes": "",
 			"createdAt": "",
 			"updatedAt": ""

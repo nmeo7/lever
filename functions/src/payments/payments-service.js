@@ -12,7 +12,7 @@ const PAYMENT_METHODS = ['cash', 'bank', 'card', 'mobileMoney', 'cheque', 'other
 
 const listPayments = (companyId) => listDocs(COLLECTION, 'paymentDate', companyId)
 
-const createPayment = async (companyId, { type, category, amount, currency = 'USD', paymentDate, method, notes }) => {
+const createPayment = async (companyId, { type, category, amount, currency = 'FRW', paymentDate, method, notes }) => {
   if (!PAYMENT_TYPES.includes(type)) throw new HttpsError('invalid-argument', `type must be one of ${PAYMENT_TYPES.join(', ')}`)
   if (!PAYMENT_CATEGORIES.includes(category)) {
     throw new HttpsError('invalid-argument', `category must be one of ${PAYMENT_CATEGORIES.join(', ')}`)
@@ -42,7 +42,7 @@ const createPayment = async (companyId, { type, category, amount, currency = 'US
 
 const searchPayments = (companyId, { query, limit }) => searchDocs(COLLECTION, { query, limit, companyId })
 
-const recordOrderPayment = async (companyId, { orderId, amount, method, reference, notes, currency = 'USD' }) => {
+const recordOrderPayment = async (companyId, { orderId, amount, method, reference, notes, currency = 'FRW' }) => {
   if (!orderId || !amount || !method) {
     throw new HttpsError('invalid-argument', 'orderId, amount, and method required')
   }

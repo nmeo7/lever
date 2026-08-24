@@ -1,19 +1,27 @@
-I don't think features should be the way it is. I don't think there should be a module called features.
+Up Next:
 
-Payments should be its own module under root/src, it is too huge to squeeze in one sub-component. In fact, do the same for almost all the other features. Products, people (suppliers, clients, etc.), documents, workflows, etc. All root level.
+- create company, group, users, profiles / portfolio
+- register customers, products, services, knowledge, plans, etc.
+- payments, expenses, taxes - financials?
+- reports
+- marketing / conversations
+- cctv, EBM, embedded & other integrations
+- NFC cards, QR & payments, moneyza, CCTV cameras
+- logistics?
+- kwishyuza, contracts (why not notarize? handling disputes). it's legal now, but that means more money. maybe the music app?
 
-Converstations page and chat should be in the same module.
+excel tabs like UI
+agents: labor, technician, pm, project owner
+complete, issues, executing, pending closout
 
-components and shared are well organized.
+timeline => projects
 
-In backend, instead of having index then router, put them both together. Keep logics in the services.
+assets, ressources
 
-Why is whatsapp webhook outside of messaging? shouldn't it be inside whatsappProvider?
+resource pairing
 
-What's the difference between onCall and router?
+gamify achievements
 
-There also, pull modules out of `commerce`, `crm`, etc.
+2 users, 3 months free
 
-Openai is only called inside the `ai` module - embeddings, completions, etc., whatsapp inside chat - in fact, chat is a root module in its own rights.
-
-Rename the shared modules to util.
+- show how much money you have visually - in notes and in coins, or even in the target you have: inzu, imodoka, etc.

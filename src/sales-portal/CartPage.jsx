@@ -1,19 +1,22 @@
 import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useMutation } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 import { ArrowLeft, Trash2 } from 'lucide-react'
 import { useOrg } from '@/org/useOrg'
-import { placeStorefrontOrder } from '@/orders/ordersApi'
+import { placeFrontdeskOrder } from '@/orders/ordersApi'
 import { useCartStore } from './cartStore'
 
 const formatCurrency = (amount) =>
-	new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount ?? 0)
+	new Intl.NumberFormat('en-US', { style: 'currency', currency: 'FRW' }).format(amount ?? 0)
 
-const CartLine = ({ item, onQuantityChange, onRemove }) => (
+const CartLine = ({ item, onQuantityChange, onRemove }) => {
+	const { t } = useTranslation()
+	return (
 	<div className='flex items-center justify-between gap-3 py-3' style={{ borderBottom: '1px solid var(--color-border)' }}>
 		<div className='flex flex-col gap-0.5'>
 			<p className='text-sm font-semibold' style={{ color: 'var(--color-text)' }}>{item.name}</p>
-			<p className='text-xs' style={{ color: 'var(--color-muted)' }}>{formatCurrency(item.unitPrice)} each</p>
+			<p className='text-xs' style={{ color: 'var(--color-muted)' }}>{t('salesPortal.priceEach', '{{price}} each', { price: formatCurrency(item.unitPrice) })}</p>
 		</div>
 		<div className='flex items-center gap-3'>
 			<input
@@ -32,9 +35,11 @@ const CartLine = ({ item, onQuantityChange, onRemove }) => (
 			</button>
 		</div>
 	</div>
-)
+	)
+}
 
 const CartPage = () => {
+	const { t } = useTranslation()
 	const { orgSlug } = useParams()
 	const navigate = useNavigate()
 	const { data: org } = useOrg(orgSlug)
@@ -48,7 +53,7 @@ const CartPage = () => {
 
 	const { mutate: checkout, isPending, error } = useMutation({
 		mutationFn: () =>
-			placeStorefrontOrder({
+			placeFrontdeskOrder({
 				companyId: org.id,
 				items: items.map(({ productId, quantity }) => ({ productId, quantity })),
 			}),
@@ -61,13 +66,15 @@ const CartPage = () => {
 	if (placedOrderId) {
 		return (
 			<div className='flex flex-col items-center justify-center gap-3 py-24 text-center'>
-				<p className='text-lg font-bold' style={{ color: 'var(--color-text)' }}>Order placed!</p>
-				<p className='text-sm' style={{ color: 'var(--color-muted)' }}>Reference: {placedOrderId.slice(0, 8)}</p>
+				<p className='text-lg font-bold' style={{ color: 'var(--color-text)' }}>{t('salesPortal.orderPlaced', 'Order placed!')}</p>
+				<p className='text-sm' style={{ color: 'var(--color-muted)' }}>
+					{t('salesPortal.reference', 'Reference: {{orderId}}', { orderId: placedOrderId.slice(0, 8) })}
+				</p>
 				<button
 					onClick={() => navigate(`/${orgSlug}`)}
 					className='text-sm font-semibold px-5 py-2.5 rounded-xl transition-opacity hover:opacity-90 mt-2'
 					style={{ background: 'var(--color-primary)', color: '#fff' }}>
-					Continue shopping
+					{t('salesPortal.continueShopping', 'Continue shopping')}
 				</button>
 			</div>
 		)
@@ -80,16 +87,16 @@ const CartPage = () => {
 				className='flex items-center gap-1 text-xs transition-opacity opacity-60 hover:opacity-100 self-start'
 				style={{ color: 'var(--color-text)' }}>
 				<ArrowLeft size={14} strokeWidth={1.75} />
-				Back to store
+				{t('salesPortal.backToStore', 'Back to store')}
 			</button>
 
-			<h1 className='text-xl font-bold' style={{ color: 'var(--color-text)' }}>Your cart</h1>
+			<h1 className='text-xl font-bold' style={{ color: 'var(--color-text)' }}>{t('salesPortal.yourCart', 'Your cart')}</h1>
 
 			{!items.length ? (
 				<div
 					className='rounded-2xl flex items-center justify-center h-40 text-sm'
 					style={{ border: '2px dashed var(--color-border)', color: 'var(--color-muted)' }}>
-					Your cart is empty
+					{t('salesPortal.cartEmpty', 'Your cart is empty')}
 				</div>
 			) : (
 				<>
@@ -105,7 +112,7 @@ const CartPage = () => {
 					</div>
 
 					<div className='flex items-center justify-between pt-2'>
-						<p className='text-sm font-semibold' style={{ color: 'var(--color-text)' }}>Total</p>
+						<p className='text-sm font-semibold' style={{ color: 'var(--color-text)' }}>{t('salesPortal.total', 'Total')}</p>
 						<p className='text-lg font-bold' style={{ color: 'var(--color-primary)' }}>{formatCurrency(total)}</p>
 					</div>
 
@@ -116,7 +123,7 @@ const CartPage = () => {
 						disabled={isPending || !org?.id}
 						className='text-sm font-semibold px-5 py-3 rounded-xl transition-opacity hover:opacity-90 disabled:opacity-50'
 						style={{ background: 'var(--color-primary)', color: '#fff' }}>
-						{isPending ? 'Placing order…' : 'Place order'}
+						{isPending ? t('salesPortal.placingOrder', 'Placing order…') : t('salesPortal.placeOrder', 'Place order')}
 					</button>
 				</>
 			)}

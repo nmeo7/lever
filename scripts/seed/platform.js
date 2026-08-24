@@ -6,7 +6,7 @@ const company = {
 	name: 'Lever',
 	contact: { whatsapp: '15550000000' },
 	brandIdentity: { template: 'empathy' },
-	storefront: {
+	frontdesk: {
 		headline: 'Bring your business online.',
 		subheadline:
 			'One storefront and backoffice for gyms, shops, studios, and more — pick a plan and get onboarded.',
