@@ -18,6 +18,7 @@ const { people } = require('./people/people-router')
 const { customers } = require('./customers/customers-router')
 const { suppliers } = require('./suppliers/suppliers-router')
 const { categories } = require('./categories/categories-router')
+const { taxonomy } = require('./taxonomy/taxonomy-router')
 const { locations } = require('./locations/locations-router')
 const { resources } = require('./resources/resources-router')
 const { plans } = require('./plans/plans-router')
@@ -44,6 +45,7 @@ module.exports = {
   customers,
   suppliers,
   categories,
+  taxonomy,
   locations,
   resources,
   plans,

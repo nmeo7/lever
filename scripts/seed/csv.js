@@ -8,6 +8,7 @@ export const csv = {
 	conversations: readCsv('conversations.csv'),
 	payments: readCsv('payments.csv'),
 	resources: readCsv('resources.csv'),
+	taxonomy: readCsv('taxonomy.csv'),
 	people: readCsv('people.csv'),
 	modules: readCsv('modules.csv'),
 	roles: readCsv('roles.csv'),

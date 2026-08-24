@@ -195,6 +195,18 @@
 			"updatedAt": ""
 		},
 
+		"taxonomy": {
+			"id": "",
+			"kind": "currency | paymentMethod | unit | tag",
+			"label": "",
+			"value": "",
+			"order": 0,
+			"isActive": true,
+			"metadata": {},
+			"createdAt": "",
+			"updatedAt": ""
+		},
+
 		"resources": {
 			"id": "",
 			"companyId": "",

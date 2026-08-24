@@ -1,0 +1,111 @@
+companyId,kind,label,value,order,isActive
+africa-new-life-church,currency,Rwandan Franc,FRW,0,true
+africa-new-life-church,currency,US Dollar,USD,1,true
+africa-new-life-church,paymentMethod,Cash,cash,0,true
+africa-new-life-church,paymentMethod,Bank transfer,bank,1,true
+africa-new-life-church,paymentMethod,Card,card,2,true
+africa-new-life-church,paymentMethod,Mobile money,mobileMoney,3,true
+africa-new-life-church,unit,Piece,piece,0,true
+africa-new-life-church,unit,Kilogram,kg,1,true
+africa-new-life-church,unit,Hour,hour,2,true
+africa-new-life-church,unit,Month,month,3,true
+africa-new-life-school,currency,Rwandan Franc,FRW,0,true
+africa-new-life-school,currency,US Dollar,USD,1,true
+africa-new-life-school,paymentMethod,Cash,cash,0,true
+africa-new-life-school,paymentMethod,Bank transfer,bank,1,true
+africa-new-life-school,paymentMethod,Card,card,2,true
+africa-new-life-school,paymentMethod,Mobile money,mobileMoney,3,true
+africa-new-life-school,unit,Piece,piece,0,true
+africa-new-life-school,unit,Kilogram,kg,1,true
+africa-new-life-school,unit,Hour,hour,2,true
+africa-new-life-school,unit,Month,month,3,true
+africa-new-life-hospital,currency,Rwandan Franc,FRW,0,true
+africa-new-life-hospital,currency,US Dollar,USD,1,true
+africa-new-life-hospital,paymentMethod,Cash,cash,0,true
+africa-new-life-hospital,paymentMethod,Bank transfer,bank,1,true
+africa-new-life-hospital,paymentMethod,Card,card,2,true
+africa-new-life-hospital,paymentMethod,Mobile money,mobileMoney,3,true
+africa-new-life-hospital,unit,Piece,piece,0,true
+africa-new-life-hospital,unit,Kilogram,kg,1,true
+africa-new-life-hospital,unit,Hour,hour,2,true
+africa-new-life-hospital,unit,Month,month,3,true
+artists-hub-kimihurura,currency,Rwandan Franc,FRW,0,true
+artists-hub-kimihurura,currency,US Dollar,USD,1,true
+artists-hub-kimihurura,paymentMethod,Cash,cash,0,true
+artists-hub-kimihurura,paymentMethod,Bank transfer,bank,1,true
+artists-hub-kimihurura,paymentMethod,Card,card,2,true
+artists-hub-kimihurura,paymentMethod,Mobile money,mobileMoney,3,true
+artists-hub-kimihurura,unit,Piece,piece,0,true
+artists-hub-kimihurura,unit,Kilogram,kg,1,true
+artists-hub-kimihurura,unit,Hour,hour,2,true
+artists-hub-kimihurura,unit,Month,month,3,true
+artists-hub-nyamirambo,currency,Rwandan Franc,FRW,0,true
+artists-hub-nyamirambo,currency,US Dollar,USD,1,true
+artists-hub-nyamirambo,paymentMethod,Cash,cash,0,true
+artists-hub-nyamirambo,paymentMethod,Bank transfer,bank,1,true
+artists-hub-nyamirambo,paymentMethod,Card,card,2,true
+artists-hub-nyamirambo,paymentMethod,Mobile money,mobileMoney,3,true
+artists-hub-nyamirambo,unit,Piece,piece,0,true
+artists-hub-nyamirambo,unit,Kilogram,kg,1,true
+artists-hub-nyamirambo,unit,Hour,hour,2,true
+artists-hub-nyamirambo,unit,Month,month,3,true
+electronics,currency,Rwandan Franc,FRW,0,true
+electronics,currency,US Dollar,USD,1,true
+electronics,paymentMethod,Cash,cash,0,true
+electronics,paymentMethod,Bank transfer,bank,1,true
+electronics,paymentMethod,Card,card,2,true
+electronics,paymentMethod,Mobile money,mobileMoney,3,true
+electronics,unit,Piece,piece,0,true
+electronics,unit,Kilogram,kg,1,true
+electronics,unit,Hour,hour,2,true
+electronics,unit,Month,month,3,true
+hardware,currency,Rwandan Franc,FRW,0,true
+hardware,currency,US Dollar,USD,1,true
+hardware,paymentMethod,Cash,cash,0,true
+hardware,paymentMethod,Bank transfer,bank,1,true
+hardware,paymentMethod,Card,card,2,true
+hardware,paymentMethod,Mobile money,mobileMoney,3,true
+hardware,unit,Piece,piece,0,true
+hardware,unit,Kilogram,kg,1,true
+hardware,unit,Hour,hour,2,true
+hardware,unit,Month,month,3,true
+insurance,currency,Rwandan Franc,FRW,0,true
+insurance,currency,US Dollar,USD,1,true
+insurance,paymentMethod,Cash,cash,0,true
+insurance,paymentMethod,Bank transfer,bank,1,true
+insurance,paymentMethod,Card,card,2,true
+insurance,paymentMethod,Mobile money,mobileMoney,3,true
+insurance,unit,Piece,piece,0,true
+insurance,unit,Kilogram,kg,1,true
+insurance,unit,Hour,hour,2,true
+insurance,unit,Month,month,3,true
+platform,currency,Rwandan Franc,FRW,0,true
+platform,currency,US Dollar,USD,1,true
+platform,paymentMethod,Cash,cash,0,true
+platform,paymentMethod,Bank transfer,bank,1,true
+platform,paymentMethod,Card,card,2,true
+platform,paymentMethod,Mobile money,mobileMoney,3,true
+platform,unit,Piece,piece,0,true
+platform,unit,Kilogram,kg,1,true
+platform,unit,Hour,hour,2,true
+platform,unit,Month,month,3,true
+personal,currency,Rwandan Franc,FRW,0,true
+personal,currency,US Dollar,USD,1,true
+personal,paymentMethod,Cash,cash,0,true
+personal,paymentMethod,Bank transfer,bank,1,true
+personal,paymentMethod,Card,card,2,true
+personal,paymentMethod,Mobile money,mobileMoney,3,true
+personal,unit,Piece,piece,0,true
+personal,unit,Kilogram,kg,1,true
+personal,unit,Hour,hour,2,true
+personal,unit,Month,month,3,true
+gym,currency,Rwandan Franc,FRW,0,true
+gym,currency,US Dollar,USD,1,true
+gym,paymentMethod,Cash,cash,0,true
+gym,paymentMethod,Bank transfer,bank,1,true
+gym,paymentMethod,Card,card,2,true
+gym,paymentMethod,Mobile money,mobileMoney,3,true
+gym,unit,Piece,piece,0,true
+gym,unit,Kilogram,kg,1,true
+gym,unit,Hour,hour,2,true
+gym,unit,Month,month,3,true

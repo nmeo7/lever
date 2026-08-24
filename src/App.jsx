@@ -25,6 +25,7 @@ import ReportsPage from '@/reports/ReportsPage'
 import ControlPanelPage from '@/control-panel/ControlPanelPage'
 import SuppliersPage from '@/suppliers/SuppliersPage'
 import CategoriesPage from '@/categories/CategoriesPage'
+import TaxonomyPage from '@/taxonomy/TaxonomyPage'
 import LocationsPage from '@/locations/LocationsPage'
 import RecurringTransactionsPage from '@/recurring-transactions/RecurringTransactionsPage'
 
@@ -71,6 +72,7 @@ const App = () => {
         <Route path="/app/reports" element={<ReportsPage />} />
         <Route path="/app/suppliers" element={<SuppliersPage />} />
         <Route path="/app/categories" element={<CategoriesPage />} />
+        <Route path="/app/taxonomy" element={<TaxonomyPage />} />
         <Route path="/app/locations" element={<LocationsPage />} />
         <Route path="/app/recurring-transactions" element={<RecurringTransactionsPage />} />
         <Route
