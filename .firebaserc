@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "sandbox-4d8e0"
+    "default": "sandbox-4d8e0",
+    "prod": "lever-dd60f"
   }
 }

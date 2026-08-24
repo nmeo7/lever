@@ -9,6 +9,8 @@
 		"build": "vite build",
 		"preview": "vite preview",
 		"deploy:frontend": "npm run build && npx firebase-tools deploy --only hosting",
+		"deploy:frontend:prod": "npm run build && npx firebase-tools deploy --only hosting --project lever-dd60f",
+		"deploy:functions:prod": "npx firebase-tools deploy --only functions --project lever-dd60f",
 		"seed:shared": "node scripts/seed/shared.js",
 		"seed:gym": "node scripts/seed/gym.js",
 		"seed:artists-hub": "node scripts/seed/artists-hub.js",

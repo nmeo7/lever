@@ -1,10 +1,12 @@
 import { useAuthStore } from '@/auth/store'
 
+const FUNCTIONS_REGION = import.meta.env.VITE_FUNCTIONS_REGION ?? 'us-central1'
+
 const FUNCTIONS_BASE_URL =
 	import.meta.env.VITE_FUNCTIONS_BASE_URL ??
 	(import.meta.env.VITE_USE_EMULATORS === 'true'
-		? `http://127.0.0.1:5001/${import.meta.env.VITE_FIREBASE_PROJECT_ID}/us-central1`
-		: `https://us-central1-${import.meta.env.VITE_FIREBASE_PROJECT_ID}.cloudfunctions.net`)
+		? `http://127.0.0.1:5001/${import.meta.env.VITE_FIREBASE_PROJECT_ID}/${FUNCTIONS_REGION}`
+		: `https://${FUNCTIONS_REGION}-${import.meta.env.VITE_FIREBASE_PROJECT_ID}.cloudfunctions.net`)
 
 export const callAuthedFunction = async (functionName, { method = 'GET', path = '', body } = {}) => {
 	const { token, activeCompanyId } = useAuthStore.getState()

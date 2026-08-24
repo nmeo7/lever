@@ -3,6 +3,8 @@ functions/node_modules/
 dist/
 .env.local
 .env*.local
+.env.production
 *.log
 .firebase/
-service-account.json
+service-account-*.json
+secrets
