@@ -1,18 +1,18 @@
 const express = require('express')
 const cors = require('cors')
 const { onRequest } = require('firebase-functions/v2/https')
-const { asyncRoute, requireAuth, requireCompanyAccessFrom } = require('../util/async-route')
+const { asyncRoute, requireAuth, requireCompanyAccessFromQuery, requireCompanyAccessFromBody } = require('../util/async-route')
 const { listOrders, createOrder } = require('./orders-service')
 
 const router = express.Router()
 router.use(requireAuth)
 
-router.get('/', requireCompanyAccessFrom('query'), asyncRoute(async (req, res) => {
+router.get('/', requireCompanyAccessFromQuery, asyncRoute(async (req, res) => {
   const orders = await listOrders(req.companyId)
   res.json({ orders })
 }))
 
-router.post('/', requireCompanyAccessFrom('body'), asyncRoute(async (req, res) => {
+router.post('/', requireCompanyAccessFromBody, asyncRoute(async (req, res) => {
   const result = await createOrder(req.companyId, req.body)
   res.status(201).json(result)
 }))

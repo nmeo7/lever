@@ -1,7 +1,7 @@
 const express = require('express')
 const cors = require('cors')
 const { onRequest } = require('firebase-functions/v2/https')
-const { asyncRoute, requireAuth, requireCompanyAccessFrom } = require('../util/async-route')
+const { asyncRoute, requireAuth, requireCompanyAccessFromQuery, requireCompanyAccessFromBody } = require('../util/async-route')
 const { listCustomers, createCustomer, batchUpsertCustomers } = require('./customers-service')
 
 const router = express.Router()
@@ -9,7 +9,7 @@ router.use(requireAuth)
 
 router.get(
 	'/',
-	requireCompanyAccessFrom('query'),
+	requireCompanyAccessFromQuery,
 	asyncRoute(async (req, res) => {
 		const customers = await listCustomers(req.companyId)
 		res.json({ customers })
@@ -18,7 +18,7 @@ router.get(
 
 router.post(
 	'/',
-	requireCompanyAccessFrom('body'),
+	requireCompanyAccessFromBody,
 	asyncRoute(async (req, res) => {
 		const result = await createCustomer(req.companyId, req.body)
 		res.status(201).json(result)
@@ -27,7 +27,7 @@ router.post(
 
 router.post(
 	'/batch',
-	requireCompanyAccessFrom('body'),
+	requireCompanyAccessFromBody,
 	asyncRoute(async (req, res) => {
 		const result = await batchUpsertCustomers(req.companyId, req.body.rows)
 		res.status(201).json(result)

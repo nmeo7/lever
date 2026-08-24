@@ -34,15 +34,23 @@ const requireAuth = async (req, res, next) => {
   }
 }
 
-const requireCompanyAccessFrom = (source) => (req, res, next) => {
+const requireCompanyAccessFromQuery = (req, res, next) => {
   try {
-    const rawCompanyId = source === 'query' ? req.query.companyId : req.body?.companyId
-    req.companyId = requireCompanyAccess(req.user, rawCompanyId)
-    if (source === 'body') delete req.body.companyId
+    req.companyId = requireCompanyAccess(req.user, req.query.companyId)
     next()
   } catch (err) {
     respondToError(res, req.path, err)
   }
 }
 
-module.exports = { asyncRoute, requireAuth, requireCompanyAccessFrom }
+const requireCompanyAccessFromBody = (req, res, next) => {
+  try {
+    req.companyId = requireCompanyAccess(req.user, req.body?.companyId)
+    delete req.body.companyId
+    next()
+  } catch (err) {
+    respondToError(res, req.path, err)
+  }
+}
+
+module.exports = { asyncRoute, requireAuth, requireCompanyAccessFromQuery, requireCompanyAccessFromBody }
