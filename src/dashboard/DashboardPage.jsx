@@ -43,23 +43,26 @@ const priorityClasses = {
 	low: 'text-gray-400',
 }
 
-const useStats = () => {
+const netAmount = d => (d.type === 'incoming' ? d.amount ?? 0 : -(d.amount ?? 0))
+
+const useStats = (companyId) => {
 	const cashflow = useQuery({
-		queryKey: ['revenue-mtd'],
+		queryKey: ['cashflow-mtd', companyId],
 		queryFn: async () => {
 			const snap = await getDocs(
-				query(collection(db, 'erp-payments'), where('type', '==', 'incoming')),
+				query(collection(db, 'erp-payments'), where('companyId', '==', companyId)),
 			)
 			const docs = snap.docs.map(d => d.data())
 			const current = docs
 				.filter(d => d.fiscalPeriod?.startsWith(CURRENT_MONTH))
-				.reduce((sum, d) => sum + (d.amount ?? 0), 0)
+				.reduce((sum, d) => sum + netAmount(d), 0)
 			const prev = docs
 				.filter(d => d.fiscalPeriod?.startsWith(PREV_MONTH))
-				.reduce((sum, d) => sum + (d.amount ?? 0), 0)
-			const pct = prev > 0 ? Math.round(((current - prev) / prev) * 100) : null
+				.reduce((sum, d) => sum + netAmount(d), 0)
+			const pct = prev !== 0 ? Math.round(((current - prev) / Math.abs(prev)) * 100) : null
 			return { current, pct }
 		},
+		enabled: !!companyId,
 	})
 	return { cashflow }
 }
@@ -250,10 +253,10 @@ const GlobalSearch = ({ visibleModuleIds, customersLabel, t }) => {
 }
 
 const DashboardPage = () => {
-	const { cashflow } = useStats()
+	const activeCompanyId = useAuthStore(s => s.activeCompanyId)
+	const { cashflow } = useStats(activeCompanyId)
 	const { data: pendingJobs, isLoading: loadingJobs } = usePendingJobs()
 	const user = useAuthStore(s => s.user)
-	const activeCompanyId = useAuthStore(s => s.activeCompanyId)
 	const { data: org } = useUserOrg(activeCompanyId)
 	const { data: visibleModuleIds = new Set() } = useVisibleModules(user?.roleId, org)
 	const { data: labels } = useModuleLabels(org)
@@ -294,9 +297,9 @@ const DashboardPage = () => {
 			</section>
 
 			{/* Stat cards + nav */}
-			<div className='grid grid-cols-1 sm:grid-cols-3 gap-4'>
+			<div className='flex overflow-x-auto snap-x snap-mandatory gap-4 -mx-6 px-6 sm:mx-0 sm:px-0 sm:grid sm:grid-cols-3 sm:overflow-visible'>
 				{/* Work */}
-				<div>
+				<div className='shrink-0 w-[85%] snap-start sm:w-auto sm:shrink'>
 					{visibleModuleIds.has('conversations') && (
 						<EntityCard
 							icon={MessageSquare}
@@ -323,7 +326,7 @@ const DashboardPage = () => {
 				</div>
 
 				{/* Resources */}
-				<div>
+				<div className='shrink-0 w-[85%] snap-start sm:w-auto sm:shrink'>
 					{visibleModuleIds.has('orders') && (
 						<EntityCard
 							icon={Package}
@@ -346,13 +349,15 @@ const DashboardPage = () => {
 				</div>
 
 				{/* Insights */}
-				<div>
+				<div className='shrink-0 w-[85%] snap-start sm:w-auto sm:shrink'>
 					{visibleModuleIds.has('payments') && (
 						<EntityCard
 							icon={CreditCard}
 							label={t('dashboard.cashflowMtd', 'Cashflow MTD')}
 							stat={
-								cashflow.data ? `+${formatCurrency(cashflow.data.current)}` : '—'
+								cashflow.data
+									? `${cashflow.data.current >= 0 ? '+' : '-'}${formatCurrency(Math.abs(cashflow.data.current))}`
+									: '—'
 							}
 							loading={cashflow.isLoading}
 							to='/app/payments'

@@ -1,0 +1,11 @@
+companyId,groupId,type,title,description,category,goal,value,currency,probability,expectedDate,status,priority,repeat,notes
+africa-new-life-church,africa-new-life,income,Theology intake tuition,Certificate program tuition for the new cohort,Receive,Fund the next theology cohort,780000,FRW,80,2026-09-15,expected,high,none,Six students confirmed so far
+africa-new-life-school,africa-new-life,goal,Sponsor 20 more children,Expand sponsorship coverage for the next school term,Sponsor,Reach 500 sponsored children,1020000,FRW,60,2026-10-01,expected,medium,none,
+africa-new-life-hospital,africa-new-life,expense,Restock maternal care supplies,Quarterly restock of prenatal and maternal care kits,Restock,Keep maternal care fully supplied,260000,FRW,90,2026-09-05,confirmed,high,quarterly,
+artists-hub-kimihurura,artists-hub,event,Kigali Cultural Night — next edition,Plan the next cultural night event,Host,Sell out the venue,195000,FRW,70,2026-09-20,expected,medium,monthly,Venue tentatively booked
+artists-hub-nyamirambo,artists-hub,income,Homestay bookings for tourist season,Expected homestay revenue for the upcoming season,Receive,Book 10 homestays this season,1170000,FRW,55,2026-11-01,expected,medium,none,
+electronics,,expense,Restock Nova X12 inventory,Reorder smartphones ahead of holiday demand,Restock,Avoid stockouts before holidays,5190000,FRW,85,2026-11-15,confirmed,high,none,
+hardware,,goal,Grow tool set sales,Push tool set promotions for the season,Grow,Increase monthly tool set sales by 20%,110000,FRW,50,2026-09-30,expected,medium,none,
+insurance,,income,Health plan renewals,Expected renewal revenue for individual health plans,Receive,Renew 80% of expiring health plans,416000,FRW,65,2026-09-25,expected,high,none,
+gym,,milestone,Reach 100 monthly members,Membership growth milestone for the gym,Grow,Hit 100 active monthly memberships,0,FRW,60,2026-10-10,expected,medium,none,
+gym,,reminder,Renew facility rent,Facility rent renewal is due,Pay,Keep the facility lease current,1040000,FRW,100,2026-09-01,confirmed,critical,monthly,

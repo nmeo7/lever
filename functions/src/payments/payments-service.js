@@ -9,10 +9,11 @@ const INVENTORY_MOVEMENTS_COLLECTION = 'erp-inventoryMovements'
 const PAYMENT_TYPES = ['incoming', 'outgoing']
 const PAYMENT_CATEGORIES = ['sale', 'salary', 'tax', 'payable', 'receivable', 'refund', 'subscription', 'other']
 const PAYMENT_METHODS = ['cash', 'bank', 'card', 'mobileMoney', 'cheque', 'other']
+const PAYMENT_SOURCES = ['manual', 'sale', 'system']
 
 const listPayments = (companyId) => listDocs(COLLECTION, 'paymentDate', companyId)
 
-const createPayment = async (companyId, { type, category, amount, currency = 'FRW', paymentDate, method, notes }) => {
+const createPayment = async (companyId, { type, category, amount, currency = 'FRW', paymentDate, method, notes }, user) => {
   if (!PAYMENT_TYPES.includes(type)) throw new HttpsError('invalid-argument', `type must be one of ${PAYMENT_TYPES.join(', ')}`)
   if (!PAYMENT_CATEGORIES.includes(category)) {
     throw new HttpsError('invalid-argument', `category must be one of ${PAYMENT_CATEGORIES.join(', ')}`)
@@ -36,6 +37,8 @@ const createPayment = async (companyId, { type, category, amount, currency = 'FR
     paymentDate: resolvedDate,
     fiscalPeriod: resolvedDate.slice(0, 7),
     method,
+    source: 'manual',
+    createdBy: user?.uid ?? null,
     notes: notes ?? '',
   })
 }
@@ -78,6 +81,8 @@ const recordOrderPayment = async (companyId, { orderId, amount, method, referenc
       paymentDate: new Date().toISOString(),
       fiscalPeriod: new Date().toISOString().slice(0, 7),
       method,
+      source: 'sale',
+      createdBy: null,
       relatedType: 'order',
       relatedId: orderId,
       reference: reference ?? '',
@@ -129,4 +134,5 @@ module.exports = {
   PAYMENT_TYPES,
   PAYMENT_CATEGORIES,
   PAYMENT_METHODS,
+  PAYMENT_SOURCES,
 }

@@ -1,5 +1,5 @@
 id,label,description,modules,order
-admin,Admin,Full access to every module and setting.,"{""1"":[""customers"",""conversations""],""2"":[""orders"",""payments"",""plans""],""3"":[""inventory"",""resources"",""people"",""jobs""],""4"":[""knowledge"",""operations"",""settings"",""reports""]}",0
-manager,Manager,"Runs day-to-day operations, no billing/settings access.","{""1"":[""customers"",""conversations""],""2"":[""orders"",""payments"",""plans""],""3"":[""inventory"",""jobs""],""4"":[""knowledge"",""operations"",""reports""]}",1
-employee,Employee,Handles customers and daily tasks.,"{""1"":[""customers"",""conversations""],""2"":[""orders"",""jobs""]}",2
-viewer,Viewer,Read-only access to reports and records.,"{""1"":[""customers""],""2"":[""orders"",""payments"",""plans""],""3"":[""reports""]}",3
+admin,Admin,Full access to every module and setting.,"{""1"":[""customers"",""conversations""],""2"":[""orders"",""payments"",""plans"",""products""],""3"":[""inventory"",""resources"",""people"",""jobs""],""4"":[""knowledge"",""operations"",""settings"",""reports""]}",0
+manager,Manager,"Runs day-to-day operations, no billing/settings access.","{""1"":[""customers"",""conversations""],""2"":[""orders"",""payments"",""plans"",""products""],""3"":[""inventory"",""jobs""],""4"":[""knowledge"",""operations"",""reports""]}",1
+employee,Employee,Handles customers and daily tasks.,"{""1"":[""customers"",""conversations""],""2"":[""orders"",""jobs"",""products""]}",2
+viewer,Viewer,Read-only access to reports and records.,"{""1"":[""customers""],""2"":[""orders"",""payments"",""plans"",""products""],""3"":[""reports""]}",3

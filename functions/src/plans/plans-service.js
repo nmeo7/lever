@@ -25,7 +25,7 @@ const validatePlanFields = ({ type, title, status, priority, repeat }) => {
   }
 }
 
-const createPlan = async (companyId, fields) => {
+const createPlan = async (companyId, fields, user) => {
   validatePlanFields(fields)
   const {
     type, title, description, category, goal, value, currency, probability,
@@ -37,6 +37,7 @@ const createPlan = async (companyId, fields) => {
   return createDoc(COLLECTION, {
     companyId,
     groupId,
+    createdBy: user?.uid ?? null,
     type,
     title,
     description: description ?? '',

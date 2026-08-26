@@ -129,7 +129,7 @@ export const seedCompany = async ({
 }
 
 export const seedCompanyFromCsv = async ({ slug, csv }) => {
-	const { companies, products, customers, conversations, payments, resources, taxonomy, people } = csv
+	const { companies, products, customers, conversations, payments, plans, knowledge, resources, taxonomy, people } = csv
 	const company = companies.find((row) => row.slug === slug)
 	if (!company) throw new Error(`No company row found for slug "${slug}"`)
 
@@ -138,6 +138,8 @@ export const seedCompanyFromCsv = async ({ slug, csv }) => {
 	const companyCustomers = customers.filter((row) => row.companyId === slug).map(({ companyId, groupId: _g, ...rest }) => rest)
 	const companyConversations = conversations.filter((row) => row.companyId === slug).map(({ companyId, groupId: _g, ...rest }) => rest)
 	const companyPayments = payments.filter((row) => row.companyId === slug).map(({ companyId, groupId: _g, ...rest }) => rest)
+	const companyPlans = plans.filter((row) => row.companyId === slug).map(({ companyId, groupId: _g, ...rest }) => rest)
+	const companyKnowledge = knowledge.filter((row) => row.companyId === slug).map(({ companyId, groupId: _g, ...rest }) => rest)
 	const companyResources = resources.filter((row) => row.companyId === slug).map(({ companyId, groupId: _g, ...rest }) => rest)
 	const companyTaxonomy = taxonomy.filter((row) => row.companyId === slug).map(({ companyId, groupId: _g, ...rest }) => rest)
 	const companyPeople = people.filter((row) => row.companyIds.includes(slug)).map(({ companyIds, groupId: _g, ...rest }) => ({ ...rest, companyIds }))
@@ -152,6 +154,8 @@ export const seedCompanyFromCsv = async ({ slug, csv }) => {
 		conversations: companyConversations,
 		companyScoped: {
 			...(companyPayments.length ? { 'erp-payments': companyPayments } : {}),
+			...(companyPlans.length ? { 'erp-plans': companyPlans } : {}),
+			...(companyKnowledge.length ? { 'erp-knowledge': companyKnowledge } : {}),
 			...(companyResources.length ? { 'erp-resources': companyResources } : {}),
 			...(companyTaxonomy.length ? { 'erp-taxonomy': companyTaxonomy } : {}),
 		},

@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Modal, Form, Input, InputNumber, Select, DatePicker } from 'antd'
 import { Plus, Search, X } from 'lucide-react'
 import PageShell from '@/util/components/PageShell'
-import { fetchPayments, createPayment, searchPayments, PAYMENT_TYPES, PAYMENT_CATEGORIES, PAYMENT_METHODS } from './paymentsApi'
+import { fetchPayments, createPayment, searchPayments, PAYMENT_TYPES, PAYMENT_CATEGORIES, PAYMENT_METHODS, PAYMENT_SOURCES } from './paymentsApi'
 
 const formatCurrency = amount =>
 	new Intl.NumberFormat('en-US', { style: 'currency', currency: 'FRW' }).format(amount ?? 0)
@@ -81,6 +81,7 @@ const AddPaymentModal = ({ open, onClose }) => {
 
 const categoryLabel = (value) => PAYMENT_CATEGORIES.find((c) => c.value === value)?.label ?? value
 const methodLabel = (value) => PAYMENT_METHODS.find((m) => m.value === value)?.label ?? value
+const sourceLabel = (value) => PAYMENT_SOURCES.find((s) => s.value === value)?.label ?? value
 
 const PaymentsPage = () => {
 	const { t } = useTranslation()
@@ -164,6 +165,7 @@ const PaymentsPage = () => {
 										t('payments.category', 'Category'),
 										t('common.type', 'Type'),
 										t('common.method', 'Method'),
+										t('payments.source', 'Source'),
 										t('common.amount', 'Amount'),
 										t('common.notes', 'Notes'),
 									].map((col) => (
@@ -185,6 +187,7 @@ const PaymentsPage = () => {
 										<td className='px-4 py-3' style={{ color: 'var(--color-text)' }}>{categoryLabel(payment.category)}</td>
 										<td className='px-4 py-3 capitalize' style={{ color: 'var(--color-text)' }}>{payment.type}</td>
 										<td className='px-4 py-3' style={{ color: 'var(--color-text)' }}>{methodLabel(payment.method)}</td>
+										<td className='px-4 py-3' style={{ color: 'var(--color-muted)' }}>{sourceLabel(payment.source)}</td>
 										<td className='px-4 py-3 font-semibold' style={{ color: payment.type === 'incoming' ? 'var(--color-primary)' : '#dc2626' }}>
 											{payment.type === 'incoming' ? '+' : '-'}{formatCurrency(payment.amount)}
 										</td>

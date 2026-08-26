@@ -193,6 +193,17 @@ const UserMenu = () => {
             </div>
           )}
 
+          {activeCompanyId && (
+            <a
+              href={`/${activeCompanyId}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setOpen(false)}
+              className="px-4 py-2.5 text-sm text-left transition-opacity opacity-70 hover:opacity-100 border-t border-black/10"
+            >
+              {t('common.viewFrontdesk', 'View Frontdesk')}
+            </a>
+          )}
           <button
             onClick={() => { navigate('/app/settings'); setOpen(false) }}
             className="px-4 py-2.5 text-sm text-left transition-opacity opacity-70 hover:opacity-100"

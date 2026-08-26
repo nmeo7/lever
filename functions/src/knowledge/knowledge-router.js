@@ -1,34 +1,34 @@
 const express = require('express')
 const cors = require('cors')
 const { onRequest } = require('firebase-functions/v2/https')
-const { asyncRoute, requireAuth } = require('../util/async-route')
+const { asyncRoute, requireAuth, requireCompanyAccessFromQuery, requireCompanyAccessFromBody } = require('../util/async-route')
 const { listKnowledge, createKnowledgeEntry, updateKnowledgeEntry, deleteKnowledgeEntry, searchKnowledge } = require('./knowledge-service')
 
 const router = express.Router()
 router.use(requireAuth)
 
-router.get('/', asyncRoute(async (req, res) => {
-  const knowledge = await listKnowledge()
+router.get('/', requireCompanyAccessFromQuery, asyncRoute(async (req, res) => {
+  const knowledge = await listKnowledge(req.companyId)
   res.json({ knowledge })
 }))
 
-router.post('/search', asyncRoute(async (req, res) => {
-  const knowledge = await searchKnowledge(req.body ?? {})
+router.post('/search', requireCompanyAccessFromBody, asyncRoute(async (req, res) => {
+  const knowledge = await searchKnowledge(req.companyId, req.body ?? {})
   res.json({ knowledge })
 }))
 
-router.post('/', asyncRoute(async (req, res) => {
-  const result = await createKnowledgeEntry(req.body ?? {})
+router.post('/', requireCompanyAccessFromBody, asyncRoute(async (req, res) => {
+  const result = await createKnowledgeEntry(req.companyId, req.body ?? {})
   res.status(201).json(result)
 }))
 
-router.patch('/:id', asyncRoute(async (req, res) => {
-  const result = await updateKnowledgeEntry(req.params.id, req.body ?? {})
+router.patch('/:id', requireCompanyAccessFromBody, asyncRoute(async (req, res) => {
+  const result = await updateKnowledgeEntry(req.companyId, req.params.id, req.body ?? {})
   res.json(result)
 }))
 
-router.delete('/:id', asyncRoute(async (req, res) => {
-  const result = await deleteKnowledgeEntry(req.params.id)
+router.delete('/:id', requireCompanyAccessFromBody, asyncRoute(async (req, res) => {
+  const result = await deleteKnowledgeEntry(req.companyId, req.params.id)
   res.json(result)
 }))
 

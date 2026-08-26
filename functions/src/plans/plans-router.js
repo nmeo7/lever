@@ -13,7 +13,7 @@ router.get('/', requireCompanyAccessFromQuery, asyncRoute(async (req, res) => {
 }))
 
 router.post('/', requireCompanyAccessFromBody, asyncRoute(async (req, res) => {
-  const result = await createPlan(req.companyId, req.body)
+  const result = await createPlan(req.companyId, req.body, req.user)
   res.status(201).json(result)
 }))
 

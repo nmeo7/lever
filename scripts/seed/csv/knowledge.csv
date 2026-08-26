@@ -1,0 +1,10 @@
+companyId,groupId,title,type,classification,content
+africa-new-life-church,africa-new-life,Sunday Service Volunteer Rota,rule,internal,"Volunteers rotate every Sunday between greeting, ushering, and sound booth duties. Swap requests must be made 48 hours in advance."
+africa-new-life-school,africa-new-life,Sponsorship Agreement Template,template,confidential,"Standard sponsorship agreement covering the sponsor's monthly commitment, reporting cadence, and exit terms."
+africa-new-life-hospital,africa-new-life,Patient Intake Checklist,checklists,internal,1. Verify patient ID. 2. Record vitals. 3. Confirm sponsorship status. 4. Route to the correct department.
+artists-hub-kimihurura,artists-hub,Venue Booking Contract,contract,confidential,Standard venue rental contract for Kigali Cultural Night and similar ticketed events at the Kimihurura space.
+artists-hub-nyamirambo,artists-hub,Homestay Host Guidelines,playbook,internal,"Guidelines for host families participating in the Village Homestay Experience, including safety and hospitality standards."
+electronics,,Warranty Claim Playbook,playbook,internal,"Steps for handling a customer warranty claim: verify purchase, check warranty period, route to manufacturer or in-house repair."
+hardware,,Supplier Rights & Responsibilities,rights_and_responsibilities,internal,"Outlines what BuildRight expects from suppliers regarding delivery timelines, quality standards, and returns."
+insurance,,Claims Processing Rules,rule,confidential,"Internal rules for processing auto, health, home, and life insurance claims within the required turnaround time."
+gym,,New Member Onboarding Note,note,internal,"Walk new members through the facility, explain membership tiers, and collect emergency contact information."

@@ -42,3 +42,9 @@ export const PAYMENT_METHODS = [
 	{ value: 'cheque', label: 'Cheque' },
 	{ value: 'other', label: 'Other' },
 ]
+
+export const PAYMENT_SOURCES = [
+	{ value: 'manual', label: 'Manual' },
+	{ value: 'sale', label: 'Sale' },
+	{ value: 'system', label: 'System' },
+]
