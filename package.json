@@ -13,19 +13,20 @@
 		"deploy:functions:prod": "npx firebase-tools deploy --only functions --project lever-dd60f",
 		"seed:shared": "node scripts/seed/shared.js",
 		"seed:gym": "node scripts/seed/gym.js",
-		"seed:artists-hub": "node scripts/seed/artists-hub.js",
+		"seed:inganzo-bridge": "node scripts/seed/inganzo-bridge.js",
 		"seed:insurance": "node scripts/seed/insurance.js",
 		"seed:electronics": "node scripts/seed/electronics.js",
 		"seed:hardware": "node scripts/seed/hardware.js",
 		"seed:platform": "node scripts/seed/platform.js",
 		"seed:personal": "node scripts/seed/personal.js",
 		"seed:africa-new-life": "node scripts/seed/africa-new-life.js",
-		"seed:all": "npm run seed:shared && npm run seed:gym && npm run seed:artists-hub && npm run seed:insurance && npm run seed:electronics && npm run seed:hardware && npm run seed:platform && npm run seed:personal && npm run seed:africa-new-life"
+		"seed:all": "npm run seed:shared && npm run seed:gym && npm run seed:inganzo-bridge && npm run seed:insurance && npm run seed:electronics && npm run seed:hardware && npm run seed:platform && npm run seed:personal && npm run seed:africa-new-life"
 	},
 	"dependencies": {
 		"@tanstack/react-query": "^5.40.0",
 		"@xyflow/react": "^12.11.1",
 		"antd": "^6.4.5",
+		"bcryptjs": "^3.0.3",
 		"clsx": "^2.1.1",
 		"firebase": "^10.12.0",
 		"i18next": "^26.4.0",

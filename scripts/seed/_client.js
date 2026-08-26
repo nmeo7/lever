@@ -12,7 +12,7 @@ const serviceAccount = JSON.parse(readFileSync(serviceAccountPath, 'utf-8'))
 const app = initializeApp({ credential: cert(serviceAccount) })
 export const db = getFirestore(app)
 
-const hashPassword = (password) => createHash('sha256').update(password).digest('hex')
+const hashPassword = (password) => createHash('sha256').update(String(password)).digest('hex')
 
 const CURRENT_SCHEMA_VERSION = 1
 

@@ -1,6 +1,6 @@
 const { onCall, HttpsError } = require('firebase-functions/v2/https')
 const { db } = require('../util/data')
-const { signToken, hashPassword } = require('../util/auth')
+const { signToken, hashPassword, verifyPassword, isLegacySha256Hash } = require('../util/auth')
 
 exports.authLogin = onCall({ cors: true, secrets: ['JWT_SECRET'] }, async ({ data }) => {
   const { email, password } = data ?? {}
@@ -14,8 +14,11 @@ exports.authLogin = onCall({ cors: true, secrets: ['JWT_SECRET'] }, async ({ dat
 
   if (!person.passwordHash) throw new HttpsError('not-found', 'Invalid credentials')
   if (!person.isActive) throw new HttpsError('permission-denied', 'Account disabled')
-  if (person.passwordHash !== hashPassword(password)) {
+  if (!(await verifyPassword(password, person.passwordHash))) {
     throw new HttpsError('unauthenticated', 'Invalid credentials')
+  }
+  if (isLegacySha256Hash(person.passwordHash)) {
+    await personDoc.ref.update({ passwordHash: await hashPassword(password) })
   }
 
   const payload = {

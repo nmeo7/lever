@@ -12,6 +12,7 @@
 		"deploy": "npx firebase-tools deploy --only functions"
 	},
 	"dependencies": {
+		"bcryptjs": "^3.0.3",
 		"cors": "^2.8.6",
 		"express": "^4.22.2",
 		"firebase-admin": "^12.1.0",

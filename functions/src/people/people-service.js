@@ -27,7 +27,7 @@ const createPerson = async (companyId, { name, email, password, roleId }) => {
   const result = await createDoc(COLLECTION, {
     name,
     email,
-    passwordHash: hashPassword(password),
+    passwordHash: await hashPassword(password),
     isActive: true,
     roleId,
     companyIds: [companyId],

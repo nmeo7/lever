@@ -1,4 +1,4 @@
-# AI ERP
+# Lever
 
 A lightweight, AI-enabled ERP with a built-in CRM and customer-facing sales portal. Designed for small-to-medium organizations that want a single system for managing customers, orders, inventory, people, assets, and workflows — with an AI layer for customer intelligence.
 
@@ -77,15 +77,7 @@ Enter the output of `openssl rand -hex 32` when prompted.
 Create a document at `organization/default` in Firestore with at minimum:
 
 ```json
-{
-	"name": "Your Org Name",
-	"brandIdentity": {
-		"template": "empathy"
-	},
-	"configurations": {
-		"openAIKey": "sk-..."
-	}
-}
+{ "name": "Your Org Name", "brandIdentity": { "template": "empathy" }, "configurations": { "openAIKey": "sk-..." } }
 ```
 
 The `openAIKey` is only read server-side by Functions — it never leaves Firebase.
@@ -95,13 +87,7 @@ The `openAIKey` is only read server-side by Functions — it never leaves Fireba
 Create a document in the `users` collection:
 
 ```json
-{
-	"email": "admin@example.com",
-	"passwordHash": "<sha256 of your password>",
-	"role": "admin",
-	"isActive": true,
-	"personId": ""
-}
+{ "email": "admin@example.com", "passwordHash": "<sha256 of your password>", "role": "admin", "isActive": true, "personId": "" }
 ```
 
 You can generate a SHA-256 hash with:

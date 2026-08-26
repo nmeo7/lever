@@ -1,11 +1,24 @@
 const { SignJWT, jwtVerify } = require('jose')
 const { HttpsError } = require('firebase-functions/v2/https')
 const crypto = require('crypto')
+const bcrypt = require('bcryptjs')
 
 const EXPIRY = '8h'
+const BCRYPT_ROUNDS = 12
 
-const hashPassword = (password) =>
+const hashPassword = (password) => bcrypt.hash(password, BCRYPT_ROUNDS)
+
+const isLegacySha256Hash = (hash) => /^[0-9a-f]{64}$/.test(hash)
+
+const legacySha256Hash = (password) =>
   crypto.createHash('sha256').update(password).digest('hex')
+
+const verifyPassword = async (password, storedHash) => {
+  if (isLegacySha256Hash(storedHash)) {
+    return legacySha256Hash(password) === storedHash
+  }
+  return bcrypt.compare(password, storedHash)
+}
 
 const secret = () => {
   const key = process.env.JWT_SECRET
@@ -47,6 +60,8 @@ const requireCompanyAccess = (user, companyId) => {
 
 module.exports = {
   hashPassword,
+  verifyPassword,
+  isLegacySha256Hash,
   signToken,
   verifyToken,
   requireAuth,

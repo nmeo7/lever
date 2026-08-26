@@ -83,7 +83,7 @@ const createCompany = async (user, { slug, name, contact, groupId, adminEmail, a
   await createDoc(PEOPLE_COLLECTION, {
     name,
     email: adminEmail,
-    passwordHash: hashPassword(adminPassword),
+    passwordHash: await hashPassword(adminPassword),
     isActive: true,
     roleId: 'admin',
     companyIds: [slug],
@@ -116,7 +116,7 @@ const createCompanyPerson = async (user, { groupId, companySlug, name, email, pa
   const result = await createDoc(PEOPLE_COLLECTION, {
     name,
     email,
-    passwordHash: hashPassword(password),
+    passwordHash: await hashPassword(password),
     isActive: true,
     roleId,
     companyIds: [companySlug],
@@ -194,7 +194,7 @@ const upsertPersonRow = async (user, { id, name, email, password, roleId, compan
     companyIds,
     groupId,
     isPlatformAdmin: existing?.isPlatformAdmin ?? false,
-    ...(password ? { passwordHash: hashPassword(password) } : {}),
+    ...(password ? { passwordHash: await hashPassword(password) } : {}),
   }
 
   const docRef = existingId ? db.collection(PEOPLE_COLLECTION).doc(existingId) : db.collection(PEOPLE_COLLECTION).doc()

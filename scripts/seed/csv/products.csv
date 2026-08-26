@@ -70,17 +70,8 @@ insurance,Business Property Plan,104000,Business,membership,ongoing,monthly,true
 platform,Starter Plan,26000,Memberships,membership,ongoing,monthly,,,"Storefront + backoffice for one business, up to 50 products.",https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=400&h=400&fit=crop
 platform,Growth Plan,58000,Memberships,membership,ongoing,monthly,,,"Unlimited products, priority support, custom branding.",https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=400&fit=crop
 platform,Enterprise Plan,156000,Memberships,membership,ongoing,monthly,,,"Multi-location support, dedicated onboarding, custom integrations.",https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=400&h=400&fit=crop
-gym,Monthly Membership,58000,Memberships,membership,ongoing,monthly,,,Unlimited gym floor access for one month.,https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400&h=400&fit=crop
-gym,Annual Membership,546000,Memberships,membership,ongoing,yearly,,,"Full year access, two months free.",https://images.unsplash.com/photo-1571731956672-f2b94d7dd0cb?w=400&h=400&fit=crop
-gym,Day Pass,10400,Memberships,membership,dated,,,"{""date"":null,""capacity"":null}",Single-day access for visitors.,https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=400&h=400&fit=crop
-gym,HIIT Class Pack (10),78000,Classes,service,,,,,Ten high-intensity interval training sessions.,https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=400&h=400&fit=crop
-gym,Yoga Class Pack (10),72000,Classes,service,,,,,Ten guided yoga and mobility sessions.,https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400&h=400&fit=crop
-gym,Spin Class Drop-In,13000,Classes,membership,dated,,,"{""date"":null,""capacity"":20}",Single indoor cycling session.,https://images.unsplash.com/photo-1517963628607-235ccdd5476c?w=400&h=400&fit=crop
-gym,Whey Protein 2kg,41500,Supplements,physical,,,,,"Chocolate flavor, 24g protein per serving.",https://images.unsplash.com/photo-1579722820258-8f723e6d9a3b?w=400&h=400&fit=crop
-gym,Pre-Workout 300g,31000,Supplements,physical,,,,,"Energy and focus blend, fruit punch.",https://images.unsplash.com/photo-1579758629938-03607ccdbaba?w=400&h=400&fit=crop
-gym,BCAA Capsules,23500,Supplements,physical,,,,,90-capsule bottle for muscle recovery.,https://images.unsplash.com/photo-1556228720-195a672e8a03?w=400&h=400&fit=crop
-gym,Performance Tee,19500,Apparel,physical,,,,,Moisture-wicking training t-shirt.,https://images.unsplash.com/photo-1519861531473-9200262188bf?w=400&h=400&fit=crop
-gym,Compression Leggings,36500,Apparel,physical,,,,,High-waist leggings with side pockets.,https://images.unsplash.com/photo-1506629905607-c28b47e8b6b3?w=400&h=400&fit=crop
-gym,Gym Duffel Bag,28500,Apparel,physical,,,,,Water-resistant bag with shoe compartment.,https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400&h=400&fit=crop
-gym,1-on-1 Session,32500,Personal Training,service,,,,,One hour with a certified trainer.,https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=400&h=400&fit=crop
-gym,5-Session Package,143000,Personal Training,service,,,,,"Five personal training sessions, save 12%.",https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=400&fit=crop
+gym,Day Entrance,3000,Memberships,membership,dated,,,"{""date"":null,""capacity"":null}",Single-day gym floor access.,https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400&h=400&fit=crop
+gym,Gym Tonic (Aerobics) Pack (10),50000,Aerobics,service,,,,,Ten aerobics sessions.,https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=400&h=400&fit=crop
+gym,Body Building Monthly,58000,Body Building,membership,ongoing,monthly,,,Unlimited body building floor access for one month.,https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=400&h=400&fit=crop
+gym,Karate Kids (Coming Soon),0,Karate Kids,service,,,,,Karate classes for kids — coming soon.,https://images.unsplash.com/photo-1517963628607-235ccdd5476c?w=400&h=400&fit=crop
+gym,Sauna (Coming Soon),0,Sauna,service,,,,,Sauna access — coming soon.,https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=400&fit=crop
