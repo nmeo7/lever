@@ -1,10 +1,21 @@
 const express = require('express')
 const cors = require('cors')
-const { onRequest } = require('firebase-functions/v2/https')
+const { HttpsError, onRequest } = require('firebase-functions/v2/https')
 const { asyncRoute, requireAuth, requireCompanyAccessFromQuery, requireCompanyAccessFromBody } = require('../util/async-route')
 const { listOrders, createOrder } = require('./orders-service')
+const { findOrCreateCustomer } = require('../customers/customers-service')
 
 const router = express.Router()
+
+router.post('/frontdesk', asyncRoute(async (req, res) => {
+  const { companyId, customerName, customerPhone, ...order } = req.body ?? {}
+  if (!companyId) throw new HttpsError('invalid-argument', 'companyId is required')
+
+  const { id: customerId } = await findOrCreateCustomer(companyId, { name: customerName, phone: customerPhone })
+  const result = await createOrder(companyId, { ...order, customerId })
+  res.status(201).json(result)
+}))
+
 router.use(requireAuth)
 
 router.get('/', requireCompanyAccessFromQuery, asyncRoute(async (req, res) => {

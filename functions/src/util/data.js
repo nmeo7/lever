@@ -43,12 +43,23 @@ const stampNewDoc = (data) => {
 const stampUpdatedDoc = (data) => ({ ...data, updatedAt: new Date().toISOString() })
 
 const listDocs = async (collectionName, orderByField, companyId) => {
-  const snap = await db
-    .collection(collectionName)
-    .where('companyId', '==', companyId)
-    .orderBy(orderByField, 'desc')
-    .get()
-  return snap.docs.map((doc) => ({ id: doc.id, ...stripInternalFields(doc.data()) }))
+  const snap = await db.collection(collectionName).where('companyId', '==', companyId).get()
+  const docs = snap.docs.map((doc) => ({ id: doc.id, ...stripInternalFields(doc.data()) }))
+  return docs.sort((a, b) => {
+    const left = b[orderByField]
+    const right = a[orderByField]
+    if (left == null) return right == null ? 0 : 1
+    if (right == null) return -1
+    return left > right ? 1 : left < right ? -1 : 0
+  })
+}
+
+const findOne = async (collectionName, companyId, field, value) => {
+  let ref = db.collection(collectionName).where('companyId', '==', companyId)
+  if (field) ref = ref.where(field, '==', value)
+
+  const snap = await ref.limit(1).get()
+  return snap.empty ? null : { id: snap.docs[0].id, ...stripInternalFields(snap.docs[0].data()) }
 }
 
 const createDoc = async (collectionName, data, id) => {
@@ -141,6 +152,7 @@ module.exports = {
   findSimilar,
   resolveGroupId,
   listDocs,
+  findOne,
   createDoc,
   updateDoc,
   createDocInTx,

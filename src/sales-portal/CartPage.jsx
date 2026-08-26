@@ -6,6 +6,7 @@ import { ArrowLeft, Trash2 } from 'lucide-react'
 import { useOrg } from '@/org/useOrg'
 import { placeFrontdeskOrder } from '@/orders/ordersApi'
 import { useCartStore } from './cartStore'
+import { useCustomerIdentityStore } from './customerIdentityStore'
 
 const formatCurrency = (amount) =>
 	new Intl.NumberFormat('en-US', { style: 'currency', currency: 'FRW' }).format(amount ?? 0)
@@ -38,6 +39,56 @@ const CartLine = ({ item, onQuantityChange, onRemove }) => {
 	)
 }
 
+const IdentityModal = ({ onSubmit, onCancel }) => {
+	const { t } = useTranslation()
+	const [name, setName] = useState('')
+	const [phone, setPhone] = useState('')
+
+	const canSubmit = name.trim() || phone.trim()
+
+	return (
+		<div className='fixed inset-0 z-50 flex items-center justify-center p-4' style={{ background: 'rgba(0,0,0,0.4)' }}>
+			<div className='w-full max-w-sm rounded-2xl p-5 flex flex-col gap-3' style={{ background: 'var(--color-surface)' }}>
+				<h2 className='text-base font-bold' style={{ color: 'var(--color-text)' }}>
+					{t('salesPortal.identityTitle', "Who's this order for?")}
+				</h2>
+				<p className='text-xs' style={{ color: 'var(--color-muted)' }}>
+					{t('salesPortal.identitySubtitle', 'Give us at least your name or phone number so we can reach you about this order.')}
+				</p>
+				<input
+					value={name}
+					onChange={(e) => setName(e.target.value)}
+					placeholder={t('salesPortal.namePlaceholder', 'Name or username')}
+					className='w-full rounded-xl px-3 py-2 text-sm outline-none border'
+					style={{ background: 'var(--color-background)', borderColor: 'var(--color-border)', color: 'var(--color-text)' }}
+				/>
+				<input
+					value={phone}
+					onChange={(e) => setPhone(e.target.value)}
+					placeholder={t('salesPortal.phonePlaceholder', 'Phone number')}
+					className='w-full rounded-xl px-3 py-2 text-sm outline-none border'
+					style={{ background: 'var(--color-background)', borderColor: 'var(--color-border)', color: 'var(--color-text)' }}
+				/>
+				<div className='flex items-center justify-end gap-2 pt-1'>
+					<button
+						onClick={onCancel}
+						className='text-sm font-medium px-3 py-2 rounded-xl transition-opacity opacity-70 hover:opacity-100'
+						style={{ color: 'var(--color-text)' }}>
+						{t('common.cancel', 'Cancel')}
+					</button>
+					<button
+						onClick={() => onSubmit({ name: name.trim(), phone: phone.trim() })}
+						disabled={!canSubmit}
+						className='text-sm font-semibold px-4 py-2 rounded-xl transition-opacity hover:opacity-90 disabled:opacity-50'
+						style={{ background: 'var(--color-primary)', color: '#fff' }}>
+						{t('salesPortal.continueCheckout', 'Continue')}
+					</button>
+				</div>
+			</div>
+		</div>
+	)
+}
+
 const CartPage = () => {
 	const { t } = useTranslation()
 	const { orgSlug } = useParams()
@@ -47,14 +98,19 @@ const CartPage = () => {
 	const setItemQuantity = useCartStore((state) => state.setItemQuantity)
 	const removeItem = useCartStore((state) => state.removeItem)
 	const clearCart = useCartStore((state) => state.clearCart)
+	const identity = useCustomerIdentityStore((state) => state.identity)
+	const setIdentity = useCustomerIdentityStore((state) => state.setIdentity)
 	const [placedOrderId, setPlacedOrderId] = useState(null)
+	const [showIdentityModal, setShowIdentityModal] = useState(false)
 
 	const total = items.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0)
 
 	const { mutate: checkout, isPending, error } = useMutation({
-		mutationFn: () =>
+		mutationFn: (customer) =>
 			placeFrontdeskOrder({
 				companyId: org.id,
+				customerName: customer?.name || identity?.name,
+				customerPhone: customer?.phone || identity?.phone,
 				items: items.map(({ productId, quantity }) => ({ productId, quantity })),
 			}),
 		onSuccess: ({ orderId }) => {
@@ -62,6 +118,20 @@ const CartPage = () => {
 			setPlacedOrderId(orderId)
 		},
 	})
+
+	const handleCheckoutClick = () => {
+		if (!identity) {
+			setShowIdentityModal(true)
+			return
+		}
+		checkout()
+	}
+
+	const handleIdentitySubmit = (customer) => {
+		setIdentity(customer)
+		setShowIdentityModal(false)
+		checkout(customer)
+	}
 
 	if (placedOrderId) {
 		return (
@@ -119,13 +189,20 @@ const CartPage = () => {
 					{error && <p className='text-xs' style={{ color: '#dc2626' }}>{error.message}</p>}
 
 					<button
-						onClick={() => checkout()}
+						onClick={handleCheckoutClick}
 						disabled={isPending || !org?.id}
 						className='text-sm font-semibold px-5 py-3 rounded-xl transition-opacity hover:opacity-90 disabled:opacity-50'
 						style={{ background: 'var(--color-primary)', color: '#fff' }}>
 						{isPending ? t('salesPortal.placingOrder', 'Placing order…') : t('salesPortal.placeOrder', 'Place order')}
 					</button>
 				</>
+			)}
+
+			{showIdentityModal && (
+				<IdentityModal
+					onSubmit={handleIdentitySubmit}
+					onCancel={() => setShowIdentityModal(false)}
+				/>
 			)}
 		</div>
 	)

@@ -1,4 +1,4 @@
-import { callAuthedFunction } from '@/util/functionsClient'
+import { callAuthedFunction, callPublicFunction } from '@/util/functionsClient'
 
 export const fetchOrders = async () => {
 	const { orders } = await callAuthedFunction('orders')
@@ -9,8 +9,12 @@ export const createOrder = async (order) => {
 	return callAuthedFunction('orders', { method: 'POST', body: order })
 }
 
-export const placeFrontdeskOrder = async ({ companyId, ...order }) => {
-	return callAuthedFunction('orders', { method: 'POST', body: { companyId, ...order } })
+export const placeFrontdeskOrder = async ({ companyId, customerName, customerPhone, ...order }) => {
+	return callPublicFunction('orders', {
+		method: 'POST',
+		path: '/frontdesk',
+		body: { companyId, customerName, customerPhone, ...order },
+	})
 }
 
 export const recordOrderPayment = async (payment) => {

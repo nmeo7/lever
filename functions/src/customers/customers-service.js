@@ -1,5 +1,5 @@
 const { HttpsError } = require('firebase-functions/v2/https')
-const { listDocs, createDoc, resolveGroupId, batchUpsert } = require('../util/data')
+const { listDocs, findOne, createDoc, resolveGroupId, batchUpsert } = require('../util/data')
 
 const COLLECTION = 'erp-customers'
 const CUSTOMER_STATUSES = ['lead', 'active', 'inactive', 'blocked']
@@ -41,4 +41,16 @@ const createCustomer = async (companyId, fields) => {
 
 const batchUpsertCustomers = (companyId, rows) => batchUpsert(companyId, rows, createCustomer)
 
-module.exports = { listCustomers, createCustomer, batchUpsertCustomers, CUSTOMER_STATUSES }
+const findOrCreateCustomer = async (companyId, { name, phone }) => {
+  if (!name && !phone) throw new HttpsError('invalid-argument', 'name or phone is required')
+
+  if (phone) {
+    const existing = await findOne(COLLECTION, companyId, 'phone', phone)
+    if (existing) return { id: existing.id }
+  }
+
+  const { id } = await createCustomer(companyId, { name: name || phone, phone, source: 'frontdesk' })
+  return { id }
+}
+
+module.exports = { listCustomers, createCustomer, findOrCreateCustomer, batchUpsertCustomers, CUSTOMER_STATUSES }

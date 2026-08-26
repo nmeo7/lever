@@ -31,3 +31,18 @@ export const callAuthedFunction = async (functionName, { method = 'GET', path = 
 
 	return data
 }
+
+export const callPublicFunction = async (functionName, { method = 'GET', path = '', body } = {}) => {
+	const url = new URL(`${FUNCTIONS_BASE_URL}/${functionName}${path}`)
+
+	const response = await fetch(url, {
+		method,
+		headers: { 'Content-Type': 'application/json' },
+		...(body ? { body: JSON.stringify(body) } : {}),
+	})
+
+	const data = await response.json()
+	if (!response.ok) throw new Error(data.error ?? 'Request failed')
+
+	return data
+}
