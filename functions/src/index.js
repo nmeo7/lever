@@ -1,3 +1,7 @@
+const { setGlobalOptions } = require('firebase-functions/v2')
+
+setGlobalOptions({ region: process.env.FUNCTIONS_REGION ?? 'us-central1' })
+
 const { authLogin } = require('./auth/login')
 const { generateMemory } = require('./people/generate-memory')
 const { triggerWorkflowStep } = require('./workflows/trigger-workflow-step')

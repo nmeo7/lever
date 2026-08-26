@@ -16,16 +16,16 @@ const fileToDataUrl = file =>
 		reader.readAsDataURL(file)
 	})
 
-export const useChatConversation = ({ businessId } = {}) => {
+export const useChatConversation = () => {
 	const [messages, setMessages] = useState([])
 	const startedRef = useRef(false)
 
 	const { mutate: sendMessage, isPending } = useMutation({
 		mutationFn: async ({ message, history, imageFiles = [] }) => {
-			const imagePaths = await Promise.all(
-				imageFiles.map(async file => uploadChatImage({ dataUrl: await fileToDataUrl(file), businessId })),
+			const attachmentIds = await Promise.all(
+				imageFiles.map(async file => uploadChatImage({ dataUrl: await fileToDataUrl(file) })),
 			)
-			return sendChatMessage({ message, imagePaths, history, businessId })
+			return sendChatMessage({ message, attachmentIds, history })
 		},
 		onSuccess: reply => {
 			setMessages(prev => [...prev, { role: 'assistant', content: reply }])

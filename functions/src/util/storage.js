@@ -1,7 +1,9 @@
 const { randomUUID } = require('crypto')
 const { getStorage } = require('firebase-admin/storage')
+const { HttpsError } = require('firebase-functions/v2/https')
+const { createDoc, getDoc } = require('./data')
 
-const SIGNED_URL_TTL_MS = 5 * 60 * 1000
+const ATTACHMENTS_COLLECTION = 'erp-attachments'
 
 const parseDataUrl = (dataUrl) => {
   const match = /^data:([^;]+);base64,(.+)$/.exec(dataUrl)
@@ -10,21 +12,34 @@ const parseDataUrl = (dataUrl) => {
   return { contentType, buffer: Buffer.from(base64, 'base64') }
 }
 
-const uploadChatImage = async ({ businessId, dataUrl }) => {
+const uploadAttachment = async ({ companyId, dataUrl }) => {
   const { contentType, buffer } = parseDataUrl(dataUrl)
   const extension = contentType.split('/')[1] ?? 'bin'
-  const path = `chat-uploads/${businessId}/${randomUUID()}.${extension}`
+  const storagePath = `chat-uploads/${companyId}/${randomUUID()}.${extension}`
 
-  const file = getStorage().bucket().file(path)
-  await file.save(buffer, { contentType })
+  await getStorage().bucket().file(storagePath).save(buffer, { contentType })
 
-  return path
+  const { id } = await createDoc(ATTACHMENTS_COLLECTION, { companyId, storagePath, contentType })
+  return id
 }
 
-const getSignedImageUrl = async (path) => {
-  const file = getStorage().bucket().file(path)
-  const [url] = await file.getSignedUrl({ action: 'read', expires: Date.now() + SIGNED_URL_TTL_MS })
-  return url
+const requireOwnedAttachment = async (attachmentId, companyId) => {
+  const attachment = await getDoc(ATTACHMENTS_COLLECTION, attachmentId)
+  if (!attachment) throw new HttpsError('not-found', `Attachment "${attachmentId}" not found`)
+  if (attachment.companyId !== companyId) throw new HttpsError('permission-denied', 'No access to this attachment')
+  return attachment
 }
 
-module.exports = { uploadChatImage, getSignedImageUrl }
+const downloadAttachmentAsDataUrl = async (attachmentId, companyId) => {
+  const attachment = await requireOwnedAttachment(attachmentId, companyId)
+  const [buffer] = await getStorage().bucket().file(attachment.storagePath).download()
+  return `data:${attachment.contentType};base64,${buffer.toString('base64')}`
+}
+
+const downloadAttachmentFile = async (attachmentId, companyId) => {
+  const attachment = await requireOwnedAttachment(attachmentId, companyId)
+  const [buffer] = await getStorage().bucket().file(attachment.storagePath).download()
+  return { buffer, contentType: attachment.contentType }
+}
+
+module.exports = { uploadAttachment, downloadAttachmentAsDataUrl, downloadAttachmentFile }
