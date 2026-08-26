@@ -72,15 +72,15 @@ firebase functions:secrets:set FIELD_ENCRYPTION_KEY
 
 Enter the output of `openssl rand -hex 32` when prompted.
 
-### 4. Seed the organization document
+### 4. Seed the settings document
 
-Create a document at `organization/default` in Firestore with at minimum:
+Create a document at `erp-settings/config` in Firestore with at minimum:
 
 ```json
-{ "name": "Your Org Name", "brandIdentity": { "template": "empathy" }, "configurations": { "openAIKey": "sk-..." } }
+{ "openai_api_key": "sk-...", "openai_model": "gpt-4o-mini" }
 ```
 
-The `openAIKey` is only read server-side by Functions — it never leaves Firebase.
+This is the default config used when a company doesn't have its own override. A company can override any of these keys by setting a `config` map on its `erp-companies/{slug}` document. The key is only read server-side by Functions — it never leaves Firebase.
 
 ### 5. Create the first user
 

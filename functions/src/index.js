@@ -13,6 +13,7 @@ const { inventory } = require('./inventory/inventory-router')
 const { knowledge } = require('./knowledge/knowledge-router')
 const { knowledgeOnWriteEmbedding } = require('./knowledge/knowledge-on-write-embedding')
 const { controlPanel } = require('./control-panel/control-panel-router')
+const { orgSettings } = require('./org-settings/org-settings-router')
 const { dataImport } = require('./data-import/data-import-router')
 const { people } = require('./people/people-router')
 const { customers } = require('./customers/customers-router')
@@ -40,6 +41,7 @@ module.exports = {
   knowledge,
   knowledgeOnWriteEmbedding,
   controlPanel,
+  orgSettings,
   dataImport,
   people,
   customers,

@@ -18,7 +18,16 @@ const toOpenAiHistory = (history) =>
     content,
   }))
 
-const generateAgentCompletion = async ({ apiKey, model = 'gpt-4o-mini', systemPrompt, message, history = [], tools = [], executeTool }) => {
+const toUserContent = (message, images = []) => {
+  if (images.length === 0) return message
+
+  return [
+    { type: 'text', text: message },
+    ...images.map((image) => ({ type: 'image_url', image_url: { url: image } })),
+  ]
+}
+
+const generateAgentCompletion = async ({ apiKey, model = 'gpt-4o-mini', systemPrompt, message, images = [], history = [], tools = [], executeTool }) => {
   if (!apiKey) throw new Error('OpenAI key not configured')
 
   const openai = new OpenAI({ apiKey })
@@ -26,7 +35,7 @@ const generateAgentCompletion = async ({ apiKey, model = 'gpt-4o-mini', systemPr
   const messages = [
     { role: 'system', content: systemPrompt },
     ...toOpenAiHistory(history),
-    { role: 'user', content: message },
+    { role: 'user', content: toUserContent(message, images) },
   ]
 
   const openAiTools = tools.map(toOpenAiTool)
@@ -59,7 +68,7 @@ const generateAgentCompletion = async ({ apiKey, model = 'gpt-4o-mini', systemPr
   throw new Error('Max tool-call rounds exceeded')
 }
 
-const generateCompletion = async ({ apiKey, model = 'gpt-4o-mini', systemPrompt, message, jsonMode = false }) => {
+const generateCompletion = async ({ apiKey, model = 'gpt-4o-mini', systemPrompt, message, images = [], jsonMode = false }) => {
   if (!apiKey) throw new Error('OpenAI key not configured')
 
   const openai = new OpenAI({ apiKey })
@@ -68,7 +77,7 @@ const generateCompletion = async ({ apiKey, model = 'gpt-4o-mini', systemPrompt,
     model,
     messages: [
       { role: 'system', content: systemPrompt },
-      { role: 'user', content: message },
+      { role: 'user', content: toUserContent(message, images) },
     ],
     ...(jsonMode ? { response_format: { type: 'json_object' } } : {}),
   })

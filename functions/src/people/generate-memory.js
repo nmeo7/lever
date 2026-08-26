@@ -1,6 +1,7 @@
 const { onCall, HttpsError } = require('firebase-functions/v2/https')
 const { db } = require('../util/data')
 const { requireAuth } = require('../util/auth')
+const { getOrgConfig } = require('../util/get-org-config')
 const { generateJsonCompletion } = require('../ai')
 
 const MEMORY_SYSTEM_PROMPT =
@@ -16,14 +17,13 @@ exports.generateMemory = onCall({ cors: true, secrets: ['JWT_SECRET'] }, async (
     throw new HttpsError('invalid-argument', 'customerId and context required')
   }
 
-  const accountDoc = await db.collection('erp-accounts').doc('default').get()
-  const account = accountDoc.data()?.config
-  const openAIKey = account?.openai_api_key
+  const config = await getOrgConfig()
+  const openAIKey = config.openai_api_key
   if (!openAIKey) throw new HttpsError('failed-precondition', 'OpenAI key not configured')
 
   const result = await generateJsonCompletion({
     apiKey: openAIKey,
-    model: account?.openai_model,
+    model: config.openai_model,
     systemPrompt: MEMORY_SYSTEM_PROMPT,
     message: context,
   })

@@ -1,7 +1,7 @@
-const { getBusinessConfig } = require('./storage')
+const { getOrgConfig } = require('../util/get-org-config')
 
 const buildSystemPrompt = async (businessId, summary) => {
-  const config = await getBusinessConfig(businessId)
+  const config = await getOrgConfig(businessId)
 
   const labels = config.labels ?? {}
   const businessName = config.businessName ?? 'this business'
