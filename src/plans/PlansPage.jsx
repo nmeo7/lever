@@ -12,10 +12,11 @@ import {
 	PLAN_STATUSES,
 	PLAN_PRIORITIES,
 	PLAN_REPEATS,
+	PLAN_SCOPES,
 	DEFAULT_CURRENCY,
 } from './plansApi'
 
-const COLUMNS = ['type', 'category', 'title', 'goal', 'description', 'value', 'expectedDate', 'status', 'priority', 'repeat']
+const COLUMNS = ['type', 'category', 'scope', 'title', 'goal', 'description', 'value', 'expectedDate', 'status', 'priority', 'repeat']
 
 const formatCurrency = (amount, currency) =>
 	new Intl.NumberFormat('en-US', { style: 'currency', currency: currency || DEFAULT_CURRENCY }).format(amount ?? 0)
@@ -40,6 +41,13 @@ const PlanCard = ({ plan }) => (
 				{plan.type}
 			</span>
 		</div>
+		{plan.scope && (
+			<span
+				className='text-[10px] font-semibold uppercase tracking-wide w-fit px-2 py-0.5 rounded-full'
+				style={{ background: 'var(--color-background)', color: 'var(--color-muted)' }}>
+				{plan.scope}
+			</span>
+		)}
 		{plan.goal && <p className='text-xs' style={{ color: 'var(--color-muted)' }}>Goal: {plan.goal}</p>}
 		{plan.description && <p className='text-xs line-clamp-2' style={{ color: 'var(--color-muted)' }}>{plan.description}</p>}
 		{plan.value > 0 && (
@@ -107,6 +115,10 @@ const AddPlanModal = ({ open, onClose }) => {
 
 				<Form.Item name='category' label='Verb' rules={[{ required: true, message: 'Verb is required' }]}>
 					<Input placeholder='e.g. Receive, Go out' />
+				</Form.Item>
+
+				<Form.Item name='scope' label='Scope' initialValue='business' rules={[{ required: true }]}>
+					<Select options={PLAN_SCOPES} />
 				</Form.Item>
 
 				<Form.Item name='title' label='Object' rules={[{ required: true, message: 'Object is required' }]}>

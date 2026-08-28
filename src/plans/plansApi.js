@@ -45,4 +45,9 @@ export const PLAN_REPEATS = [
 	{ value: 'yearly', label: 'Yearly' },
 ]
 
+export const PLAN_SCOPES = [
+	{ value: 'personal', label: 'Personal' },
+	{ value: 'business', label: 'Business' },
+]
+
 export const DEFAULT_CURRENCY = 'FRW'
