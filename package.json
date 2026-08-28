@@ -12,6 +12,7 @@
 		"deploy:frontend:prod": "npm run build && npx firebase-tools deploy --only hosting --project prod",
 		"deploy:functions:prod": "npx firebase-tools deploy --only functions --project prod",
 		"seed:shared": "node scripts/seed/shared.js",
+		"seed:schema": "node scripts/seed/seed-schema.js",
 		"seed:gym": "node scripts/seed/gym.js",
 		"seed:inganzo-bridge": "node scripts/seed/inganzo-bridge.js",
 		"seed:insurance": "node scripts/seed/insurance.js",

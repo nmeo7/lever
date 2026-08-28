@@ -21,7 +21,7 @@ const stampNewDoc = (data) => {
 	return { ...data, createdAt: now, updatedAt: now, version: CURRENT_SCHEMA_VERSION }
 }
 
-const createAnyDoc = async ({ collection, id, data }) => {
+export const createAnyDoc = async ({ collection, id, data }) => {
 	const docRef = id ? db.collection(collection).doc(id) : db.collection(collection).doc()
 	await docRef.set(stampNewDoc(data))
 	return docRef.id

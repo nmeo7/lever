@@ -1,6 +1,8 @@
 Up Next:
 
 - create company, group, users, profiles / portfolio
+- dynamic schema: let schema fields be customized per company/group without redeploying — a "schema" system setting, DB-driven, overridable per company/group like module/role overrides today
+- Consolidate all CRUD
 - register customers, products, services, knowledge, plans, etc.
 - payments, expenses, taxes - financials?
 - reports
