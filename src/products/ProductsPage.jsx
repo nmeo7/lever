@@ -1,10 +1,11 @@
 import { useState } from 'react'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useQuery, useMutation } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
-import { Modal, Form, Input, InputNumber, Select } from 'antd'
 import { Plus, Search, X } from 'lucide-react'
 import PageShell from '@/util/components/PageShell'
-import { fetchProducts, createProduct, searchProducts, PRODUCT_TYPES } from './productsApi'
+import AddModal from '@/util/components/AddModal'
+import { productsCrud, PRODUCTS_COLLECTION } from './productsApi'
+import { fetchSchema } from '@/util/schemaApi'
 
 const formatCurrency = amount =>
 	new Intl.NumberFormat('en-US', { style: 'currency', currency: 'FRW' }).format(amount ?? 0)
@@ -57,70 +58,6 @@ const ProductCard = ({ product }) => {
 	)
 }
 
-const AddProductModal = ({ open, onClose }) => {
-	const { t } = useTranslation()
-	const queryClient = useQueryClient()
-	const [form] = Form.useForm()
-
-	const { mutate, isPending, error, reset } = useMutation({
-		mutationFn: (values) => createProduct({ ...values, sellingPrice: Number(values.sellingPrice) || 0 }),
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ['products'] })
-			form.resetFields()
-			onClose()
-		},
-	})
-
-	const handleClose = () => {
-		reset()
-		form.resetFields()
-		onClose()
-	}
-
-	return (
-		<Modal
-			title={t('products.addProduct', 'Add product')}
-			open={open}
-			onCancel={handleClose}
-			onOk={() => form.submit()}
-			confirmLoading={isPending}
-			okText={t('products.saveProduct', 'Save product')}
-			destroyOnHidden>
-			<Form form={form} layout='vertical' onFinish={mutate} className='pt-2'>
-				<Form.Item name='name' label={t('common.name', 'Name')} rules={[{ required: true, message: t('people.nameRequired', 'Name is required') }]}>
-					<Input />
-				</Form.Item>
-
-				<Form.Item name='imageUrl' label={t('products.imageUrl', 'Image URL')}>
-					<Input />
-				</Form.Item>
-
-				<Form.Item name='productType' label={t('common.type', 'Type')} initialValue='physical' rules={[{ required: true }]}>
-					<Select options={PRODUCT_TYPES.map(({ value, label }) => ({ value, label }))} />
-				</Form.Item>
-
-				<Form.Item name='sellingPrice' label={t('products.price', 'Price')}>
-					<InputNumber min={0} step={0.01} className='w-full' />
-				</Form.Item>
-
-				<Form.Item name='category' label={t('products.category', 'Category')}>
-					<Input />
-				</Form.Item>
-
-				<Form.Item name='tags' label={t('products.tags', 'Tags')}>
-					<Select mode='tags' open={false} tokenSeparators={[',']} placeholder={t('products.tagsPlaceholder', 'Type a tag and press enter')} />
-				</Form.Item>
-
-				<Form.Item name='description' label={t('products.description', 'Description')}>
-					<Input.TextArea rows={3} />
-				</Form.Item>
-
-				{error && <p className='text-xs' style={{ color: '#dc2626' }}>{error.message}</p>}
-			</Form>
-		</Modal>
-	)
-}
-
 const ProductsPage = () => {
 	const { t } = useTranslation()
 	const [panelOpen, setPanelOpen] = useState(false)
@@ -129,11 +66,16 @@ const ProductsPage = () => {
 
 	const { data: products, isLoading } = useQuery({
 		queryKey: ['products'],
-		queryFn: fetchProducts,
+		queryFn: productsCrud.fetchAll,
+	})
+
+	const { data: productFields } = useQuery({
+		queryKey: ['schema', PRODUCTS_COLLECTION],
+		queryFn: () => fetchSchema(PRODUCTS_COLLECTION),
 	})
 
 	const { mutate: runSearch, isPending: isSearching } = useMutation({
-		mutationFn: searchProducts,
+		mutationFn: productsCrud.search,
 		onSuccess: setSearchResults,
 	})
 
@@ -195,7 +137,15 @@ const ProductsPage = () => {
 				)}
 			</div>
 
-			<AddProductModal open={panelOpen} onClose={() => setPanelOpen(false)} />
+			<AddModal
+				open={panelOpen}
+				onClose={() => setPanelOpen(false)}
+				title={t('products.addProduct', 'Add product')}
+				fields={productFields ?? []}
+				queryKey='products'
+				createFn={productsCrud.create}
+				transformSubmit={(values) => ({ ...values, sellingPrice: Number(values.sellingPrice) || 0 })}
+			/>
 		</PageShell>
 	)
 }

@@ -31,7 +31,8 @@
 			"reports": "Reports",
 			"plans": "Plans",
 			"knowledge": "Knowledge",
-			"operations": "Operations"
+			"operations": "Operations",
+			"telemetry": "Telemetry"
 		},
 		"todaysOrders": "Today's Orders",
 		"cashflowMtd": "Cashflow MTD",

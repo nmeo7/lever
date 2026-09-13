@@ -5,7 +5,7 @@ import { Modal, Form, Input, InputNumber, Select } from 'antd'
 import { Plus } from 'lucide-react'
 import PageShell from '@/util/components/PageShell'
 import { fetchInventory, fetchInventoryMovements, adjustInventory } from './inventoryApi'
-import { fetchProducts } from '@/products/productsApi'
+import { productsCrud } from '@/products/productsApi'
 
 const formatDate = (value) => (value ? new Date(value).toLocaleString() : '—')
 
@@ -90,7 +90,7 @@ const InventoryPage = () => {
 
 	const { data: products } = useQuery({
 		queryKey: ['products'],
-		queryFn: fetchProducts,
+		queryFn: productsCrud.fetchAll,
 	})
 
 	const productName = (productId) => products?.find((p) => p.id === productId)?.name ?? productId

@@ -2,6 +2,41 @@ const { HttpsError } = require('firebase-functions/v2/https')
 const { getDoc, updateDoc } = require('../util/data')
 
 const COMPANIES_COLLECTION = 'erp-companies'
+const SETTINGS_COLLECTION = 'erp-settings'
+const CACHE_TTL_MS = 5 * 60 * 1000
+
+const schemaCache = new Map()
+
+const getCached = async (cacheKey, fetchValue) => {
+  const cached = schemaCache.get(cacheKey)
+  if (cached && Date.now() - cached.fetchedAt < CACHE_TTL_MS) return cached.value
+
+  const value = await fetchValue()
+  schemaCache.set(cacheKey, { value, fetchedAt: Date.now() })
+  return value
+}
+
+const getBaseSchema = () =>
+  getCached('schema', async () => (await getDoc(SETTINGS_COLLECTION, 'schema')) ?? {})
+
+const getSchemaOverride = (companyId) =>
+  getCached(`override:${companyId}`, async () => {
+    const company = await getDoc(COMPANIES_COLLECTION, companyId)
+    return company?.schemaOverrides ?? {}
+  })
+
+const getSchema = async (companyId, collection) => {
+  const baseSchema = await getBaseSchema()
+  const override = companyId ? await getSchemaOverride(companyId) : {}
+
+  const fields = { ...baseSchema, ...override }
+
+  if (!collection) return fields
+
+  if (!fields[collection]) throw new HttpsError('not-found', `No schema found for collection "${collection}"`)
+
+  return fields[collection]
+}
 
 const getCompanyContact = async (companyId) => {
   const company = await getDoc(COMPANIES_COLLECTION, companyId)
@@ -23,4 +58,4 @@ const updateCompanyContact = async (companyId, { whatsapp, momo }) => {
   return { slug: companyId, name: company.name, contact }
 }
 
-module.exports = { getCompanyContact, updateCompanyContact }
+module.exports = { getCompanyContact, updateCompanyContact, getSchema }

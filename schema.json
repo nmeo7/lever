@@ -19,27 +19,11 @@
 			"createdAt": "",
 			"updatedAt": "",
 
-			"memories": [
-				{
-					"memory": "",
-					"importance": "low | medium | high",
-					"source": "manual | ai | workflow | transaction",
-					"embedding": [],
-					"createdAt": ""
-				}
-			]
+			"memories": [{ "memory": "", "importance": "low | medium | high", "source": "manual | ai | workflow | transaction", "embedding": [], "createdAt": "" }]
 		},
 		"conversations": {
 			"customerId": {
-				"messages": [
-					{
-						"id": "",
-						"type": "sent | received",
-						"content": "",
-						"attachments": [],
-						"timestamp": ""
-					}
-				],
+				"messages": [{ "id": "", "type": "sent | received", "content": "", "attachments": [], "timestamp": "" }],
 				"context": "",
 				"summary": "",
 				"lastMessage": ""
@@ -53,29 +37,14 @@
 			"parentTypeId": "",
 			"name": "",
 			"description": "",
-			"frontdesk": {
-				"template": "empathy | winter | ...",
-				"sections": []
-			},
+			"frontdesk": { "template": "empathy | winter | ...", "sections": [] },
 			"createdAt": "",
 			"updatedAt": ""
 		},
 
-		"moduleDefinitions": {
-			"id": "customers",
-			"label": "Customers",
-			"description": "People or accounts you sell to or serve.",
-			"icon": "",
-			"order": 0
-		},
+		"moduleDefinitions": { "id": "customers", "label": "Customers", "description": "People or accounts you sell to or serve.", "icon": "", "order": 0 },
 
-		"group": {
-			"id": "",
-			"name": "",
-			"description": "",
-			"createdAt": "",
-			"updatedAt": ""
-		},
+		"group": { "id": "", "name": "", "description": "", "createdAt": "", "updatedAt": "" },
 
 		"company": {
 			"id": "",
@@ -85,29 +54,11 @@
 			"description": "",
 			"isDefault": true,
 			"status": "active | inactive",
-			"moduleOverrides": {
-				"customers": {
-					"label": "",
-					"description": "",
-					"icon": "",
-					"order": 0,
-					"isVisible": true
-				}
-			},
+			"moduleOverrides": { "customers": { "label": "", "description": "", "icon": "", "order": 0, "isVisible": true } },
 			"roleOverrides": {
-				"admin": {
-					"label": "",
-					"description": "",
-					"modules": {
-						"1": ["customers", "conversations"],
-						"2": ["orders", "payments", "plans"]
-					}
-				}
+				"admin": { "label": "", "description": "", "modules": { "1": ["customers", "conversations"], "2": ["orders", "payments", "plans"] } }
 			},
-			"frontdeskOverride": {
-				"template": "empathy | winter | ...",
-				"sections": []
-			},
+			"frontdeskOverride": { "template": "empathy | winter | ...", "sections": [] },
 			"brandIdentity": {
 				"logoUrl": "",
 				"backgroundImageUrl": "",
@@ -115,24 +66,9 @@
 				"secondaryColor": "",
 				"faviconUrl": "",
 				"fontFamily": "",
-				"socialLinks": {
-					"facebook": "",
-					"twitter": "",
-					"linkedin": "",
-					"instagram": "",
-					"youtube": "",
-					"tiktok": "",
-					"pinterest": "",
-					"reddit": ""
-				}
+				"socialLinks": { "facebook": "", "twitter": "", "linkedin": "", "instagram": "", "youtube": "", "tiktok": "", "pinterest": "", "reddit": "" }
 			},
-			"configurations": {
-				"openAIKey": "",
-				"whatsappAccessToken": "",
-				"whatsappPhoneNumberId": "",
-				"whatsappVerifyToken": "",
-				"defaultCurrency": "FRW"
-			},
+			"configurations": { "openAIKey": "", "whatsappAccessToken": "", "whatsappPhoneNumberId": "", "whatsappVerifyToken": "", "defaultCurrency": "FRW" },
 			"metadata": {},
 			"createdAt": "",
 			"updatedAt": ""
@@ -142,10 +78,7 @@
 			"id": "admin",
 			"label": "Admin",
 			"description": "Full access to every module and setting.",
-			"modules": {
-				"1": ["customers", "conversations"],
-				"2": ["orders", "payments", "plans"]
-			},
+			"modules": { "1": ["customers", "conversations"], "2": ["orders", "payments", "plans"] },
 			"order": 0
 		},
 
@@ -228,17 +161,10 @@
 			"createdAt": "",
 			"updatedAt": "",
 
-			"events": [
-				{
-					"type": "maintenance | repair | inspection | assignment | incident | relocation",
-					"description": "",
-					"performedBy": "",
-					"createdAt": ""
-				}
-			]
+			"events": [{ "type": "maintenance | repair | inspection | assignment | incident | relocation", "description": "", "performedBy": "", "createdAt": "" }]
 		},
 
-		"knowledge": {
+		"books": {
 			"id": "",
 			"title": "",
 			"type": "document | publication | sop | training | certificate | other",
@@ -275,12 +201,7 @@
 					"notifyAssignee": true,
 					"metadata": {},
 
-					"transitions": [
-						{
-							"condition": "",
-							"nextStepId": ""
-						}
-					]
+					"transitions": [{ "condition": "", "nextStepId": "" }]
 				}
 			]
 		},
@@ -415,21 +336,9 @@
 			"createdAt": "",
 			"updatedAt": "",
 
-			"items": [
-				{
-					"productId": "",
-					"quantity": 0,
-					"unitPrice": 0,
-					"subtotal": 0,
-					"currency": ""
-				}
-			],
+			"items": [{ "productId": "", "quantity": 0, "unitPrice": 0, "subtotal": 0, "currency": "" }],
 
-			"feedback": {
-				"rating": 0,
-				"comment": "",
-				"createdAt": ""
-			}
+			"feedback": { "rating": 0, "comment": "", "createdAt": "" }
 		},
 
 		"payments": {

@@ -13,3 +13,4 @@ knowledge,Knowledge,"Contracts, templates, rules, and playbooks.",file-text,10
 operations,Operations,Automation and process workflows.,shuffle,11
 settings,Settings,Company configuration.,tag,13
 reports,Reports,"Analytics, revenue, and finance charts.",bar-chart-3,14
+telemetry,Telemetry,"Digital twin, live footage, and AI comments.",radar,15

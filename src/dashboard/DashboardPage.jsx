@@ -10,6 +10,7 @@ import {
 	CreditCard,
 	Archive,
 	Monitor,
+	Radar,
 	UserRound,
 	Tag,
 	BarChart3,
@@ -166,6 +167,13 @@ const ALL_ROUTES = [
 	{ labelKey: 'dashboard.nav.people', label: 'People', to: '/app/people', keywords: 'hr staff employees org', moduleId: 'people' },
 	{ labelKey: 'dashboard.nav.resources', label: 'Resources', to: '/app/resources', keywords: 'equipment org', moduleId: 'resources' },
 	{
+		labelKey: 'dashboard.nav.telemetry',
+		label: 'Telemetry',
+		to: '/app/telemetry',
+		keywords: 'digital twin live footage ai comments monitoring',
+		moduleId: 'telemetry',
+	},
+	{
 		labelKey: 'dashboard.nav.knowledge',
 		label: 'Knowledge',
 		to: '/app/knowledge',
@@ -314,6 +322,7 @@ const DashboardPage = () => {
 							{ icon: Users, label: customersLabel, to: '/app/customers', moduleId: 'customers' },
 							{ icon: UserRound, label: t('dashboard.nav.people', 'People'), to: '/app/people', moduleId: 'people' },
 							{ icon: Monitor, label: t('dashboard.nav.resources', 'Resources'), to: '/app/resources', moduleId: 'resources' },
+							{ icon: Radar, label: t('dashboard.nav.telemetry', 'Telemetry'), to: '/app/telemetry', moduleId: 'telemetry' },
 							...(user?.isPlatformAdmin || (user?.groupId && user?.roleId === 'admin')
 								? [{ icon: Building2, label: t('dashboard.nav.controlPanel', 'Control Panel'), to: '/app/control-panel', moduleId: null }]
 								: []),

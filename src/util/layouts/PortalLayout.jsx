@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { Outlet, useNavigate, Link } from 'react-router-dom'
+import { Outlet, useNavigate, useParams, Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useCartStore } from '@/sales-portal/cartStore'
 
@@ -56,7 +56,7 @@ export const CartTray = ({ orgSlug }) => {
 
 			{open && (
 				<div
-					className='absolute right-0 top-full mt-2 w-72 rounded-2xl overflow-hidden z-50 flex flex-col'
+					className='absolute right-0 top-full mt-2 w-72 rounded-2xl overflow-hidden z-[70] flex flex-col'
 					style={{
 						background: 'var(--color-surface)',
 						border: '1px solid var(--color-border)',
@@ -127,6 +127,7 @@ export const CartTray = ({ orgSlug }) => {
 
 const PortalLayout = () => {
 	const { t } = useTranslation()
+	const { orgSlug } = useParams()
 	return (
 		<div
 			className='min-h-screen'
@@ -135,8 +136,10 @@ const PortalLayout = () => {
 				color: 'var(--color-text)',
 				fontFamily: 'var(--font-family)',
 			}}>
-			<div className='sticky top-0 z-50 max-w-6xl mx-auto px-6'>
-				<div className='flex justify-between pt-5'>
+			<div
+				className='sticky top-0 z-[70]'
+				style={{ background: 'var(--color-background)' }}>
+				<div className='max-w-6xl mx-auto px-6 flex justify-between items-center py-5'>
 					<Link
 						to='/'
 						title={t('common.home', 'Home')}
@@ -144,10 +147,11 @@ const PortalLayout = () => {
 						style={{ color: 'var(--color-text)' }}>
 						Lever
 					</Link>
+					{orgSlug && <CartTray orgSlug={orgSlug} />}
 				</div>
 			</div>
 
-			<main className='max-w-6xl mx-auto px-6 -mt-14'>
+			<main className='max-w-6xl mx-auto px-6'>
 				<Outlet />
 			</main>
 		</div>

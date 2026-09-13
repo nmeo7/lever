@@ -16,6 +16,7 @@ import InventoryPage from '@/inventory/InventoryPage'
 import PaymentsPage from '@/payments/PaymentsPage'
 import PeoplePage from '@/people/PeoplePage'
 import ResourcesPage from '@/resources/ResourcesPage'
+import TelemetryPage from '@/telemetry/TelemetryPage'
 import OperationsPage from '@/workflows/WorkflowsPage'
 import KnowledgePage from '@/knowledge/KnowledgePage'
 import JobsPage from '@/workflows/JobsPage'
@@ -64,6 +65,7 @@ const App = () => {
         <Route path="/app/payments" element={<PaymentsPage />} />
         <Route path="/app/people" element={<PeoplePage />} />
         <Route path="/app/resources" element={<ResourcesPage />} />
+        <Route path="/app/telemetry" element={<TelemetryPage />} />
         <Route path="/app/operations" element={<OperationsPage />} />
         <Route path="/app/jobs" element={<JobsPage />} />
         <Route path="/app/plans" element={<PlansPage />} />
